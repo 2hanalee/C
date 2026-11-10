@@ -222,3 +222,25 @@ masterpiece, best quality, highres, absurdres, best illustration, novel illustra
 ```
 lowres, worst quality, bad quality, bad anatomy, bad hands, extra fingers, missing fingers, extra limbs, deformed face, asymmetrical eyes, cross-eyed, blurry, jpeg artifacts, text, watermark, signature, half-closed eyes, half-lidded eyes, smirk, huge breasts, shoes, boots, footwear, feet, lower body focus
 ```
+
+---
+
+## 6. 결과 피드백 로그
+
+### 2026-11-10 · 다크톤 마법소녀 1차 (강세아 / 노아 / 유채린, PixAI)
+
+| 기준 | 강세아 | 노아 | 유채린 |
+|---|---|---|---|
+| 실루엣 | 4 | 5 | 5 |
+| 팔레트 | 3 (빨강이 4곳 이상으로 번짐) | 4 (촛불이 파랗게 나와 웜/쿨 대비가 사라짐) | 5 |
+| 시선 집중 | 4 | 5 | 5 |
+| 컨셉 일관성 | 3 (다크톤 약함, 야외풍 수영장) | 4 | 5 |
+| 태그 반영률 | 3 (호루라기, 녹슨 사다리, 형광등, 실내 누락) | 3 (교실, 시안 링, 따뜻한 촛불 누락) | 4 (음모론 보드 누락, 별자리 선 약함) |
+
+**공통 발견**
+1. **얼굴 중심 구도에서 배경 소품은 2~3개만 반영된다.** `(upper body:1.5)`, `(face focus)`, `depth of field`를 함께 쓰면 소품 대부분이 보케로 녹는다. 소품은 가장 상징적인 1~2개만 고르고 하나에 가중치를 준다.
+2. **배경 분위기는 소품보다 광원 색 태그가 결정한다.** 광원 색은 반드시 명시한다(예: warm orange candle flame). 색이 없으면 장면 전체 톤에 맞춰 바뀐다(노아의 촛불이 파랗게 나옴).
+3. **bokeh와 light particles는 둥근 오브젝트로 변할 수 있다.** 강세아 컷의 비치볼이 그 예다. 수영장이나 바다 장면에서는 bokeh를 뺀다.
+4. **리본과 수영복에 글자 아티팩트가 생긴다.** 네거티브에 `english text, logo, letters`를 추가하고 포지티브는 `plain ~`으로 쓴다.
+5. **모델이 얼굴 장식을 스스로 추가한다.** 노아 뺨의 파란 크리스털 패치, 유채린 뺨의 별 마크가 그 예다. 좋으면 역추출해서 고정한다.
+6. **모델이 만든 좋은 디테일의 예**: 노아의 검은 기계 손과 버클 하네스 재킷, 유채린의 별+깃털 머리장식과 붕대 감은 손으로 뺨을 괸 포즈.
