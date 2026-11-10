@@ -127,3 +127,90 @@ AI 이미지 생성(NAI V4.5 / Local)용 캐릭터 프롬프트를 쓸 때 따�
 - [Creative Bloq – Costumes for character designs](https://www.creativebloq.com/art/character-design/how-to-make-fabulously-fitting-costumes-for-character-designs)
 - [Polycount – The Rot (디테일과 휴식 영역)](https://polycount.com/discussion/76862/the-rot)
 - [Telkom University – 원신 캐릭터 디자인과 가챠 결정 연구](https://repository.telkomuniversity.ac.id/pustaka/files/212962/abstract/pengaruh-desain-karakter-terhadap-keputusan-gacha-pada-gim-genshin-impact-dalam-bentuk-buku-karya-ilmiah.pdf)
+
+---
+
+## 5. 참치 상시 규칙 (최우선 적용)
+
+이 섹션이 앞의 규칙과 충돌하면 **이 섹션을 따른다.**
+
+### 5-1. 환경
+
+- 기본 환경은 **PixAI**(Local 문법): 가중치는 `(tag:1.2)`로 쓴다.
+- NAI 전용 문법(`-3::artist collaboration ::`, `-1::tag::`)은 쓰지 않는다. 억제하고 싶은 태그는 네거티브로 보낸다.
+
+### 5-2. 작가 태그 (순서 고정)
+
+```
+artist:nid417, artist:mocha_(cotton), artist:huashijw, artist:pei_(sumurai), artist:ciloranko, artist:pottsness, artist:nanoless, artist:mengxin_huazha, artist:qys3, artist:zhaofeng_yinyue, artist:yaguo, artist:LAM, artist:lack, artist:Fuzichoco, artist:toi8, artist:redjuice
+```
+
+- **전투 상황이나 능력 발동 상황**이면 맨 뒤에 `artist:murata_yusuke`를 추가한다.
+
+### 5-3. 작성 원칙
+
+1. Danbooru에 실제로 있는 태그가 뼈대다. 태그로 표현할 수 없는 디테일은 **짧은 자연어 구절로 보강**한다.
+2. 배경이 있으면 **배경 디테일과 광원 묘사를 반드시 자세히** 쓴다. 광원은 아래 레이어 순서로 짠다.
+   - 주광원(시간·장소, 예: moonlight, hard overhead spotlight)
+   - 보조광·측광(예: amber side light)
+   - 림라이트(포인트 컬러와 같은 색, 예: cyan rim lighting)
+   - 반사광(예: wet surface reflections, stars reflected in water)
+   - 이펙트광(예: glowing sword edge, light particles)
+   - 대기(예: atmospheric fog, suspended dust, volumetric lighting)
+   - 렌즈(예: depth of field, bokeh, subtle bloom)
+   - 같은 광원 이야기로 설명되면 개수 제한은 두지 않는다. 이 규칙이 3절 11번(최대 5개)을 대체한다.
+3. 의상은 **사용자 컨셉에 더해 추가할 만한 장식 후보**를 함께 제시한다. 후보는 프롬프트 밖 표로 보여주고 태그, 위치, 효과를 적는다.
+4. **태그 삭제의 역설**: 태그가 애매하게 많으면 모델이 자율적으로 채우던 의상 디테일이 줄어든다. 대응은 두 가지다.
+   - 의상 핵심 부품과 결합 방식을 프롬프트에 명시한다. 소재, 트림, 패스너, 안감 색을 써서 디테일을 직접 보장한다.
+   - 의상과 무관한 군더더기 태그는 뺀다.
+
+### 5-4. 기본 구도
+
+`upper body, face focus, three quarter view` (필요하면 `straight on`, `looking at viewer`). 가중치 예: `(upper body:1.5), (face focus:1.1~1.35)`
+
+### 5-5. 금지 태그
+
+| 분류 | 금지 | 이유 |
+|---|---|---|
+| 눈 디테일을 낮추는 태그 | half-lidded eyes, half-closed eyes, smirk, closed eyes(예외는 감정 연출 컨셉일 때만) | 눈 디테일 손실 |
+| 인체 비율을 무시하는 태그 | huge breasts, gigantic breasts 등 | 비선호 |
+| 벨트 아래 하반신 태그 | skirt, pants, thighhighs, shoes, legs 계열 | 얼굴 디테일이 크게 감소함 |
+
+- 위 태그들은 네거티브 기본값에도 추가한다.
+- 1번 레퍼런스 세트의 half-closed eyes 사용 패턴은 폐기한다.
+- 대체할 눈 모양 태그: sharp eyes, tsurime, tareme, upturned eyes, narrowed eyes 대신 focused gaze
+
+### 5-6. 눈 디테일 뱅크 (캐릭터마다 다르게 조합: 색 1 + 구조 2 + 광택 1~2 + 메이크업 0~1)
+
+- 구조: detailed iris, detailed pupils, slit pupils, symbol-shaped pupils, ringed eyes, gradient eyes, heterochromia(컨셉이 필요할 때만)
+- 광택: glossy eyes, eye highlights, sparkling eyes, light in eyes, reflection in eyes, glowing eyes, subtle eye highlights
+- 속눈썹·메이크업: long eyelashes, colored eyelashes, eyeshadow, red eyeliner, eyeliner
+- 시선: focused gaze, piercing gaze, gentle gaze, looking at viewer
+- 자연어 보강 예: crystal-clear iris, starlight reflected in eyes
+
+### 5-7. 전투 프롬프트
+
+1. 능력의 효과보다 **발동 직전 장면**을 그린다(충전, 기세, 빛이 모이는 순간).
+2. 동작 동사 태그는 필수: punching, slashing, kicking, aiming, casting spell 등
+3. 능력은 정확한 시각화가 불가능하다. 기본 이펙트, 광원, 설정 전달에 집중한다.
+4. 범용 태그 풀: dynamic pose, motion blur, motion lines, attack, attack effect, incoming attack, light trail, glowing eye, three quarter view, (impact frame), (concentric shockwave)
+5. upper body 구도에서는 out of frame, ultimate attack 같은 원거리·전신 계열 태그는 필요할 때만 쓴다.
+
+### 5-8. 출력 형식
+
+1. Step 1: 의도 확인 + 외형 포인트 3가지
+2. Step 3: ① 포지티브 ② 네거티브 (코드 블록, 한 줄)
+3. **③ 장식 후보 표** (태그 / 위치 / 효과)
+
+### 5-9. PixAI 포지티브 순서
+
+```
+작가 → 소체·직업 → 구도 → 헤어 → 눈 → 표정 → 의상 → 장식
+→ (전투: 동작 → 이펙트) → 배경 → 광원 → 분위기 → 퀄리티
+```
+
+### 5-10. 네거티브 기본값 (PixAI)
+
+```
+lowres, worst quality, bad quality, bad anatomy, bad hands, extra fingers, missing fingers, extra limbs, deformed face, asymmetrical eyes, cross-eyed, blurry, jpeg artifacts, text, watermark, signature, half-closed eyes, half-lidded eyes, smirk, huge breasts, lower body, legs, feet
+```
