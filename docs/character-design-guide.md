@@ -146,6 +146,13 @@ artist:nid417, artist:mocha_(cotton), artist:huashijw, artist:pei_(sumurai), art
 ```
 
 - **전투 상황이나 능력 발동 상황**이면 맨 뒤에 `artist:murata_yusuke`를 추가한다.
+- 표기는 항상 `artist:이름` 형식으로 통일한다(콜론 뒤 공백 없음).
+
+### 5-2-1. PixAI 고정 퀄리티 태그 (포지티브 맨 끝에 항상 추가)
+
+```
+masterpiece, best quality, highres, absurdres, best illustration, novel illustration, no text, illustchuky (style), illustchuky, good body, flawless eyes, yuki18 style, 8k
+```
 
 ### 5-3. 작성 원칙
 
@@ -174,7 +181,8 @@ artist:nid417, artist:mocha_(cotton), artist:huashijw, artist:pei_(sumurai), art
 |---|---|---|
 | 눈 디테일을 낮추는 태그 | half-lidded eyes, half-closed eyes, smirk, closed eyes(예외는 감정 연출 컨셉일 때만) | 눈 디테일 손실 |
 | 인체 비율을 무시하는 태그 | huge breasts, gigantic breasts 등 | 비선호 |
-| 벨트 아래 하반신 태그 | skirt, pants, thighhighs, shoes, legs 계열 | 얼굴 디테일이 크게 감소함 |
+| 신발 태그 (**예외 없이 배제**) | shoes, boots, high heels, sandals, sneakers, footwear 계열 | 비선호. 얼굴 디테일 감소 |
+| 하반신 태그 (**최소 사용**) | 컨셉상 필요한 간단한 것만 허용: skirt, pleated skirt, shorts, pants 등 1~2개. 다리 장식·legwear·feet 등 세부 태그는 쓰지 않음 | 얼굴 디테일이 크게 감소함 |
 
 - 위 태그들은 네거티브 기본값에도 추가한다.
 - 1번 레퍼런스 세트의 half-closed eyes 사용 패턴은 폐기한다.
@@ -212,5 +220,5 @@ artist:nid417, artist:mocha_(cotton), artist:huashijw, artist:pei_(sumurai), art
 ### 5-10. 네거티브 기본값 (PixAI)
 
 ```
-lowres, worst quality, bad quality, bad anatomy, bad hands, extra fingers, missing fingers, extra limbs, deformed face, asymmetrical eyes, cross-eyed, blurry, jpeg artifacts, text, watermark, signature, half-closed eyes, half-lidded eyes, smirk, huge breasts, lower body, legs, feet
+lowres, worst quality, bad quality, bad anatomy, bad hands, extra fingers, missing fingers, extra limbs, deformed face, asymmetrical eyes, cross-eyed, blurry, jpeg artifacts, text, watermark, signature, half-closed eyes, half-lidded eyes, smirk, huge breasts, shoes, boots, footwear, feet, lower body focus
 ```
