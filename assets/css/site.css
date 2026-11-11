@@ -32,7 +32,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background: var(--ink); }
 body {
   margin: 0;
   background: var(--ink);
@@ -637,7 +637,7 @@ body::after {
   font-family: var(--f-display); font-weight: 900; font-size: clamp(3.6rem, 15vw, 9.5rem); line-height: 1; letter-spacing: -0.03em;
   color: transparent; -webkit-text-stroke: 1px var(--rule);
 }
-@media (max-width: 899.98px) { [data-ghost]::before { top: -0.95em; font-size: 13vw; } .page-head[data-ghost]::before { top: 0.4rem; } }
+@media (max-width: 899.98px) { [data-ghost]::before { top: -0.95em; font-size: 13vw; } .page-head[data-ghost]::before { top: 0.2rem; font-size: 12vw; } }
 .block-head[data-ghost] { position: relative; }
 .page-head[data-ghost]::before { top: 0.9rem; }
 .page-head { overflow-x: clip; }
@@ -688,3 +688,59 @@ a.plaque:hover img { filter: drop-shadow(0 0 0.9rem rgba(175, 203, 209, 0.7)); }
   .seats .plaque { width: 7rem; grid-row: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .plate img, .plaque { transition: none; } }
+
+/* ═════════ 화면별 손질 ═════════ */
+/* 건너뛰기 링크 */
+.skip { position: absolute; left: -999rem; top: 0; z-index: 200; background: var(--paper); color: var(--ink); padding: 0.6rem 1rem; font-weight: 600; }
+.skip:focus { left: 0.5rem; top: 0.5rem; }
+
+/* 화면이 바뀔 때 내용이 살짝 떠오른다 */
+@keyframes rise { from { opacity: 0; transform: translateY(0.5rem); } to { opacity: 1; transform: none; } }
+#app > * { animation: rise 0.35s ease both; }
+@media (prefers-reduced-motion: reduce) { #app > * { animation: none; } }
+
+/* 소속마다 다른 빛. 그림이 없는 자리와 목록의 표시에 쓴다 */
+.f-academy { --tint: 175, 203, 209; }
+.f-outsider { --tint: 166, 90, 90; }
+.f-throne { --tint: 125, 135, 148; }
+.f-border { --tint: 182, 157, 112; }
+.plate[class*="f-"] { background: radial-gradient(ellipse at 78% 20%, rgba(var(--tint), 0.22), transparent 60%), linear-gradient(150deg, var(--slate), var(--ink-2) 72%); box-shadow: inset 0 -2px 0 rgba(var(--tint), 0.55); }
+.plate[class*="f-"] b { color: rgba(var(--tint), 0.3); }
+.plate .plate-rank { position: absolute; right: 4cqw; top: 1cqw; font-style: normal; font-family: var(--f-display); font-weight: 900; font-size: 26cqw; line-height: 1; letter-spacing: -0.06em; color: rgba(var(--tint, 232, 230, 220), 0.16); }
+.plate.has-sym[class*="f-"] { background: radial-gradient(circle at 50% 45%, rgba(175, 203, 209, 0.16), transparent 60%), linear-gradient(150deg, var(--slate), var(--ink-2) 70%); }
+
+/* 목록: 줄마다 소속 표시, 가리키면 밝아진다 */
+.list-board li { position: relative; padding-left: 0.75rem; transition: background 0.15s; }
+.list-board li::before { content: ""; position: absolute; left: 0; top: 0.8rem; bottom: 0.8rem; width: 3px; background: rgba(var(--tint, 34, 48, 58), 0.85); }
+.list-board li:hover { background: linear-gradient(90deg, rgba(var(--tint, 175, 203, 209), 0.09), transparent 70%); }
+.list-board li.void::before { background: var(--rust); }
+.docs a { transition: background 0.15s; padding-inline: 0.5rem; margin-inline: -0.5rem; }
+.docs a:hover { background: linear-gradient(90deg, rgba(182, 157, 112, 0.1), transparent 75%); }
+.docs .doc-mark { grid-column: 1; grid-row: 2; width: 2.6rem; height: 2.6rem; opacity: 0.85; }
+
+/* 상세: 능력은 판으로 세우고 한계는 녹색 이름표를 단다 */
+.spec .ability { padding: 1rem 1.1rem 1.1rem; border-top: 0; background: linear-gradient(100deg, rgba(175, 203, 209, 0.1), rgba(175, 203, 209, 0.02) 70%); box-shadow: inset 3px 0 0 var(--char, var(--boundary)); }
+.spec .ability dd b { font-size: 1.55rem; line-height: 1.3; margin-bottom: 0.25rem; }
+.spec .limit { border-top: 0; padding-top: 0.2rem; padding-left: 1.1rem; }
+.spec .limit dt { color: var(--rust-text); }
+.spec .limit dd { color: var(--paper-dim); }
+.id { padding-top: 0.25rem; }
+.emotes button[data-src] { cursor: pointer; }
+
+/* 연표: 날짜와 내용 사이에 세로 줄과 매듭을 둔다 */
+.events { --railx: calc(5.2rem + 0.5rem); position: relative; }
+.events::before { content: ""; position: absolute; left: var(--railx); top: 1.9rem; bottom: 1.5rem; width: 1px; background: var(--rule); }
+.ev { position: relative; }
+.ev::before { content: ""; position: absolute; left: calc(var(--railx) - 4px); top: 1.85rem; width: 9px; height: 9px; background: var(--brass); box-shadow: 0 0 0 4px var(--ink); }
+.ev.sealed::before { background: var(--ink); box-shadow: 0 0 0 4px var(--ink), inset 0 0 0 2px var(--rust); }
+.ev > div { padding-left: 0.6rem; }
+.era:last-of-type .ev::before { background: var(--boundary); }
+.era:last-of-type .ev.sealed::before { background: var(--ink); }
+.pin[aria-pressed="true"] { box-shadow: 0 0 0 4px rgba(175, 203, 209, 0.25), 0 0 1.2rem rgba(175, 203, 209, 0.6); }
+
+@media (min-width: 900px) {
+  .events { --railx: calc(8rem + 1rem); }
+  .ev > div { padding-left: 0.5rem; }
+  .docs .doc-mark { grid-row: 1 / span 2; grid-column: 3; width: 3.4rem; height: 3.4rem; align-self: center; }
+  .docs a { grid-template-columns: 3.4rem minmax(0, 1fr) auto; }
+}

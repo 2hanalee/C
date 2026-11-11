@@ -48,7 +48,8 @@
       '<ol class="docs">' + DOCS.map(function (d) {
         return '<li><a href="#' + d.id + '"><span class="no">' + d.no + "</span>" +
           "<span><b>" + esc(d.title) + "</b><span>" + esc(d.lead) + "</span></span>" +
-          '<span class="mono">' + hiddenCount(d) + "</span></a></li>";
+          '<span class="mono">' + hiddenCount(d) + "</span>" +
+          (MARKS[d.id] ? '<img class="doc-mark" src="assets/img/symbols/' + MARKS[d.id] + '.svg" alt="">' : "") + "</a></li>";
       }).join("") + "</ol>" +
       '<p class="after"><a class="btn" href="characters.html">이 세계의 사람들 48인</a>' +
       '<a class="btn" href="timeline.html">연표와 지도</a></p>';

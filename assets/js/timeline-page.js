@@ -26,7 +26,7 @@
     var when = '<span class="when">' + esc(ev.when) + (ev.day ? "<small>" + esc(ev.day) + "</small>" : "") + "</span>";
     if (ev.level > 0) {
       // 사건 전체가 가려진 경우: 날짜만 보인다
-      return '<li class="ev">' + when + "<div>" + B.bar(ev.title + ". " + ev.text, ev.level, ev.when) + "</div></li>";
+      return '<li class="ev sealed">' + when + "<div>" + B.bar(ev.title + ". " + ev.text, ev.level, ev.when) + "</div></li>";
     }
     var more = (ev.more || []).map(function (m) { return B.bar(m.text, m.level, ev.title); }).join("");
     var links = [];

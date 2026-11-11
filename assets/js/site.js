@@ -112,6 +112,8 @@
     var list = (window.SITE && window.SITE.chat) || [];
     slot.textContent = "";
     if (!list.length) {
+      // 인물 화면처럼 자리가 작은 곳에서는 빈 단추를 보이지 않는다
+      if (slot.hasAttribute("data-chat-quiet")) { slot.hidden = true; return; }
       var off = document.createElement("button");
       off.className = "btn"; off.type = "button"; off.disabled = true;
       off.textContent = "대화 링크 준비 중";
