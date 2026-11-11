@@ -10,7 +10,7 @@ N+: smile, bright room, sunlight
 ## 2. 레이나 드 로즈 (로즈 세라핌 · 2위)
 
 ```
-1girl, solo, magical girl, student council president, ojou-sama, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, blonde hair, long hair, wavy hair, voluminous hair, shiny hair, side swept bangs, small white wing hair ornament, magenta eyes, red-violet eyes, detailed iris, glossy eyes, eye highlights, long eyelashes, sharp eyes, gentle smile, calm, piercing gaze, elegant, white military uniform, double-breasted, high collar, structured shoulders, gold aiguillette, gold buttons, white capelet, crimson inner lining, black ribbon tie, (rose bud brooch:1.15), crimson rose, thorny vine embroidery, student council room at sunset, tall arched window, rose vase on desk, golden hour, warm side light, golden rim light, long shadows, falling rose petals, subtle bloom, depth of field, bokeh, elegant, cold, calculated
+1girl, solo, academy courtyard, rose garden, (upper body:1.5), (face focus:1.35), three quarter view, straight on, hand on chest, looking at viewer, poised, light blonde hair, long hair, wavy hair, voluminous hair, side swept bangs, thin metal hairpin, magenta eyes, detailed iris, glossy eyes, eye highlights, long eyelashes, cream white tailcoat, double-breasted, fitted jacket, high collar, structured shoulders, capelet, red inner lining, white collared shirt, crimson neck ribbon, rose brooch, rose embroidery, gold clasps, white gloves, tailored uniform, (rose brooch:1.2), (cream tailcoat:1.2), falling rose petals, soft sunlight, dappled sunlight, warm reflected light, golden rim lighting, subtle bloom, depth of field
 ```
 N+: open mouth, laughing, pink roses
 
@@ -45,7 +45,7 @@ N+: smile with teeth, armor, gauntlets
 ## 7. 이벨린 로제 (성검)
 
 ```
-1girl, solo, magical girl, ghost, former magical girl, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, red-brown hair, auburn hair, long hair, high ponytail, shiny hair, translucent hair ends, (sword-shaped hair ornament:1.15), silver eyes, detailed iris, glossy eyes, eye highlights, long eyelashes, smug, confident smile, proud, theatrical, silver-white armored corset, polished metal, high collar, dramatic black cape, crimson inner lining, silver filigree, faint ghostly afterimage, translucent edges, empty theater stage, red velvet curtains, single spotlight from above, dust in spotlight beam, silver rim light, spectral glow, dark auditorium, deep shadows, high contrast, depth of field, dramatic, nostalgic, theatrical
+1girl, solo, (upper body:1.5), (face focus:1.35), three quarter view, mature woman, long auburn hair, golden eyes, elegant, translucent body, black belt, holy sword, crimson gemstone, golden sword guard, grand hall
 ```
 N+: holding sword, multiple girls, full armor
 
@@ -59,6 +59,6 @@ N+: closed eyes, wink, crying
 ## 9. 강도윤 (아이언 벨 · 10~20위)
 
 ```
-1girl, solo, magical girl, boxer, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, black hair, dark teal hair, short hair, spiked hair, messy hair, amber eyes, orange eyes, detailed iris, focused gaze, glossy eyes, subtle eye highlights, determined, serious, slight blush, petite, short stature, toned arms, muscular female, sweat, charcoal sports bra, open charcoal track jacket, high collar, white stripes, (boxing gloves hanging around neck:1.15), amber glove trim, small iron bell charm on glove lace, bandaid on cheek, academy boxing gym, boxing ring ropes, hard overhead spotlight, amber side light, sharp shoulder rim light, suspended dust in light, deep gym shadows, sweat highlights, depth of field, gritty, focused
+1girl, solo, boxer, indoor boxing gym, (upper body:1.4), (face focus:1.3), three quarter view, clenched fists, looking at viewer, expressionless, sweat drop, amber eyes, sharp eyes, detailed iris, focused eyes, subtle eye highlights, short hair, blue black hair, messy hair, petite, loli, short stature, small frame, charcoal track jacket, high collar, zipped up, red hand wraps, (charcoal athletic zip-up jacket:1.3), high neck, front zipper, zipper pull, raglan sleeves, reinforced shoulder panels, red contrast piping, red sleeve stripes, ribbed cuffs, black compression shirt, fitted sportswear, double stitched seams, padded hand wraps, wrapped wrists, boxing ring, spotlight, dim lighting, (dramatic lighting:1.2), overhead spotlight, hard side lighting, deep shadows, sweat highlights, strong rim lighting, depth of field
 ```
 N+: large breasts, smile, tall

@@ -24,7 +24,7 @@ N+: angry, weapon, multiple girls
 ## 19. 메에 (고트벨 · 81~99위)
 
 ```
-1girl, solo, magical girl, goat girl, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, white hair, short hair, fluffy hair, curly hair, (goat horns:1.1), goat ears, light brown eyes, (horizontal pupils:1.15), detailed iris, glossy eyes, eye highlights, long eyelashes, pout, stubborn, puffy cheeks, olive overalls, cream knit sweater, rolled sleeves, (brass goat bell on collar:1.1), red bandana, hay in hair, farm barn at sunset, hay bales, wooden fence, golden sunset through barn slats, light rays, warm rim light, floating dust, depth of field, bokeh, rustic, stubborn, comedic
+1girl, solo, magical girl, goat girl, mountain farm, upper body, face focus, three quarter view, looking at viewer, leaning forward, slight frown, light brown eyes, horizontal pupils, short hair, fluffy hair, white hair, cream puff sleeve blouse, brown pinafore dress, square neckline, smocked bodice, linen apron, wooden buttons, scalloped collar, cottagecore dress, woven trim, curled horns, goat ears, bell necklace, brass bell, brown bodice, wool trim, stitched patches, leaf brooch, hayloft, wooden fence, grass, cliff, blue sky, natural lighting, depth of field
 ```
 N+: meat, food, furry, animal nose, multiple girls
 
@@ -52,7 +52,7 @@ N+: child, crying, multiple girls
 ## 23. 오윤서 (라스트 라이트 · 특별교관)
 
 ```
-1girl, solo, magical girl, instructor, mature female, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, grey hair, silver hair, long hair, messy hair, low ponytail, yellow eyes, muted gold eyes, detailed iris, glossy eyes, subtle eye highlights, long eyelashes, tired, expressionless, cynical, (cigarette in mouth:1.1), cigarette smoke, nicotine patch on neck, old scar on cheek, charcoal trench coat, high collar, turtleneck, worn fabric, silver insignia, cracked translucent light barrier fragments floating, empty training field at dawn, floodlights, chain-link fence, cold blue dawn light, warm ember glow, backlit cigarette smoke, gold rim light, mist, depth of field, weary, dry, protective
+1girl, solo, retired magical girl, veteran instructor, rooftop at dusk, (upper body:1.5), (face focus:1.35), straight-on, holding old lighter, cigarette, smoke, looking away at viewer, tired expression, dark circles, dull gold eyes, detailed iris, subtle eye highlights, long hair, grey hair, loosely tied hair, loose hair strands, worn military coat, open coat, asymmetrical collar, faded shoulder patch, removed insignia mark, worn epaulette, repaired sleeve, visible stitches, wrinkled off-white shirt, open collar, worn buttons, aged lighter, faded canvas, cotton, leather fasteners, sunset backlighting, warm rim lighting, smoke illuminated by sunlight, low-key lighting, atmospheric haze, city skyline, melancholy, shallow depth of field
 ```
 N+: smile, blush, young, multiple girls
 
