@@ -1,64 +1,105 @@
 (function () {
   "use strict";
   var root = document.documentElement;
-  var store = {
-    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
-    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  var mem = function (area) {
+    return {
+      get: function (k) { try { return window[area].getItem(k); } catch (e) { return null; } },
+      set: function (k, v) { try { window[area].setItem(k, v); } catch (e) {} },
+    };
   };
+  var local = mem("localStorage");
+  var session = mem("sessionStorage");
 
-  /* ── 게이트: 문서 세 줄 → 가림 → 정전 → 제목 ── */
+  /* ── 게이트: 인물 대사 → 가림 → 정전 → 제목 ── */
   var gate = document.getElementById("gate");
   if (gate) {
     var timers = [];
-    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var setPhase = function (n) { gate.dataset.phase = String(n); };
+    var later = function (fn, ms) { timers.push(setTimeout(fn, ms)); };
     var clear = function () { timers.forEach(clearTimeout); timers = []; };
+    var setPhase = function (p) { gate.dataset.phase = p; };
     var close = function () {
       clear();
       gate.hidden = true;
       root.classList.remove("gate-open");
-      store.set("blackout.gate", "seen");
+      session.set("blackout.gate", "seen");
     };
-    var toEnd = function () { clear(); setPhase(6); };
 
-    if (store.get("blackout.gate") === "seen" && location.hash !== "#gate") {
+    // 방문 중 한 번만 보여 준다. 주소 끝에 #gate 를 붙이면 다시 본다.
+    if (session.get("blackout.gate") === "seen" && location.hash !== "#gate") {
       gate.hidden = true;
     } else {
       root.classList.add("gate-open");
-      if (reduce) {
-        setPhase(6);
-      } else {
-        var at = [[2, 1900], [3, 3800], [4, 5600], [5, 7600], [6, 9200]];
-        at.forEach(function (s) { timers.push(setTimeout(function () { setPhase(s[0]); }, s[1])); });
+
+      // 대사 고르기: 직전에 본 대사는 피한다
+      var pool = window.QUOTES || [];
+      var quoteEl = document.getElementById("gate-quote");
+      var byEl = document.getElementById("gate-by");
+      var lineEls = [];
+      if (pool.length && quoteEl && byEl) {
+        var last = parseInt(local.get("blackout.quote"), 10);
+        var idx = Math.floor(Math.random() * pool.length);
+        if (pool.length > 1 && idx === last) idx = (idx + 1) % pool.length;
+        local.set("blackout.quote", String(idx));
+        var pick = pool[idx];
+        quoteEl.textContent = "";
+        pick.lines.forEach(function (text) {
+          var gl = document.createElement("span");
+          gl.className = "gl";
+          var q = document.createElement("span");
+          q.className = "q";
+          q.textContent = text;
+          gl.appendChild(q);
+          quoteEl.appendChild(gl);
+          lineEls.push(gl);
+        });
+        byEl.textContent = pick.name + (pick.alias ? " · " + pick.alias : "");
+        byEl.classList.remove("in");
       }
-      document.getElementById("gate-skip").addEventListener("click", toEnd);
+
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) {
+        setPhase("title");
+      } else {
+        var t = 150;
+        lineEls.forEach(function (el) {
+          later(function () { el.classList.add("in"); }, t);
+          t += 1500;
+        });
+        later(function () { byEl.classList.add("in"); }, t - 500);
+        later(function () { setPhase("struck"); }, t + 1900);
+        later(function () { setPhase("dark"); }, t + 3100);
+        later(function () { setPhase("title"); }, t + 4100);
+      }
+      document.getElementById("gate-skip").addEventListener("click", function () { clear(); setPhase("title"); });
       document.getElementById("gate-enter").addEventListener("click", close);
       document.addEventListener("keydown", function (e) {
-        if (gate.hidden) return;
-        if (e.key === "Escape") close();
+        if (!gate.hidden && e.key === "Escape") close();
       });
     }
   }
 
-  /* ── 기밀 막대: 개별 열람과 일괄 열람 ── */
+  /* ── 열람 등급: 0 공개, 1 스포일러, 2 기밀 ── */
   var bars = Array.prototype.slice.call(document.querySelectorAll(".bar"));
-  var sw = document.getElementById("clearance");
+  var levelBtns = Array.prototype.slice.call(document.querySelectorAll("#clearance button"));
   var openBar = function (b, on) { b.setAttribute("aria-expanded", on ? "true" : "false"); };
   bars.forEach(function (b) {
-    b.addEventListener("click", function () {
-      if (b.getAttribute("aria-expanded") !== "true") openBar(b, true);
-    });
+    b.addEventListener("click", function () { openBar(b, true); });
   });
-  if (sw) {
-    var apply = function (on) {
-      sw.setAttribute("aria-pressed", on ? "true" : "false");
-      bars.forEach(function (b) { openBar(b, on); });
-    };
-    if (store.get("blackout.clearance") === "all") apply(true);
-    sw.addEventListener("click", function () {
-      var on = sw.getAttribute("aria-pressed") !== "true";
-      apply(on);
-      store.set("blackout.clearance", on ? "all" : "none");
+  var applyLevel = function (level) {
+    levelBtns.forEach(function (btn) {
+      btn.setAttribute("aria-pressed", Number(btn.dataset.level) === level ? "true" : "false");
+    });
+    bars.forEach(function (b) { openBar(b, Number(b.dataset.level) <= level); });
+  };
+  if (levelBtns.length) {
+    var saved = parseInt(local.get("blackout.level"), 10);
+    if (saved === 1 || saved === 2) applyLevel(saved);
+    levelBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var level = Number(btn.dataset.level);
+        applyLevel(level);
+        local.set("blackout.level", String(level));
+      });
     });
   }
 

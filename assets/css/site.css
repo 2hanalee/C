@@ -71,19 +71,12 @@ body::before {
 .top-nav a { text-decoration: none; font-size: 0.9rem; color: var(--paper-dim); padding-block: 0.25rem; }
 .top-nav a[aria-current="page"], .top-nav a:hover { color: var(--paper); box-shadow: 0 2px 0 var(--paper); }
 
-/* 기밀 일괄 열람 스위치 */
-.clearance { display: flex; align-items: center; gap: 0.55rem; font-size: 0.8rem; color: var(--paper-dim); white-space: nowrap; }
-.clearance i {
-  display: block; width: 2.3rem; height: 1.15rem; background: var(--paper);
-  position: relative; transition: background 0.2s;
-}
-.clearance i::after {
-  content: ""; position: absolute; inset: 3px auto 3px 3px; width: 0.8rem;
-  background: var(--ink); transition: transform 0.2s;
-}
-.clearance[aria-pressed="true"] { color: var(--paper); }
-.clearance[aria-pressed="true"] i { background: transparent; box-shadow: inset 0 0 0 1px var(--paper); }
-.clearance[aria-pressed="true"] i::after { background: var(--paper); transform: translateX(1.05rem); }
+/* 열람 등급: 공개 / 스포일러 / 기밀 */
+.clearance { display: flex; box-shadow: inset 0 0 0 1px var(--rule); flex: none; }
+.clearance button { font-size: 0.8rem; line-height: 1; padding: 0.55rem 0.7rem; color: var(--paper-dim); white-space: nowrap; }
+.clearance button:hover { color: var(--paper); }
+.clearance button[aria-pressed="true"] { background: var(--paper); color: var(--ink); font-weight: 600; }
+@media (max-width: 479.98px) { .lockup span { display: none; } }
 
 /* ───────── 기록철 틀 ───────── */
 .sheet {
@@ -117,12 +110,7 @@ body::before {
   line-height: 0.92; letter-spacing: -0.06em; margin-left: -0.05em;
   display: block; padding-bottom: 0.1em;
 }
-/* 사전 뜻풀이: 제목의 두 뜻 */
-.gloss { display: grid; gap: 0.6rem; max-width: 30rem; border-left: 0.5rem solid var(--paper); padding-left: 1rem; }
-.gloss div { display: grid; grid-template-columns: 4.6rem 1fr; gap: 0.75rem; align-items: baseline; }
-.gloss dt { font-family: var(--f-display); font-weight: 700; }
-.gloss dt span { font-weight: 400; color: var(--paper-dim); font-size: 0.85rem; margin-left: 0.2rem; }
-.gloss dd { color: var(--paper-dim); line-height: 1.55; }
+.tagline { font-family: var(--f-display); font-weight: 500; font-size: clamp(1.1rem, 3.8vw, 1.6rem); line-height: 1.45; color: var(--paper-dim); text-wrap: balance; }
 .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 .btn {
   display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.4rem;
@@ -156,16 +144,19 @@ body::before {
 .board .who { display: grid; gap: 0.1rem; }
 .board .who b { font-weight: 600; font-size: 1.05rem; line-height: 1.35; }
 .board .who span { font-size: 0.85rem; color: var(--paper-dim); line-height: 1.35; }
-.board .st { font-size: 0.8rem; color: var(--paper-dim); text-align: right; }
+.board .st { display: grid; justify-items: end; gap: 0.1rem; font-size: 0.8rem; line-height: 1.4; color: var(--paper-dim); text-align: right; }
+.board .mv { font-family: var(--f-mono); font-weight: 500; font-size: 0.85rem; letter-spacing: 0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.board .mv.up { color: var(--paper); }
+.board .mv.down { color: var(--paper-faint); }
+.board-wrap { display: grid; gap: 0.75rem; }
+.board-key { color: var(--paper-faint); }
 .board li.void .rk, .board li.void .st { color: var(--paper-faint); }
 .board .struck { display: block; height: 1.15rem; width: min(11rem, 100%); background: var(--paper); }
 .board a { text-decoration: none; }
 .board a:hover b { box-shadow: 0 1px 0 var(--paper); }
 
-/* ───────── 소문 / 기밀 ───────── */
+/* ───────── 스포일러 / 기밀 ───────── */
 .notes { display: grid; gap: 1.5rem; align-content: start; }
-.rumor { display: grid; gap: 0.35rem; padding-left: 1rem; border-left: 1px dashed var(--paper-faint); }
-.rumor p { font-size: 0.95rem; line-height: 1.6; }
 .secret { display: grid; gap: 0.5rem; }
 .secret .warn { color: var(--paper-dim); font-size: 0.8rem; line-height: 1.5; }
 .bar {
@@ -179,8 +170,15 @@ body::before {
   font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em; color: var(--ink);
 }
 .bar:hover { background: #fff; }
-.bar[aria-expanded="true"] { background: var(--ink-2); color: var(--paper); user-select: text; cursor: default; }
-.bar[aria-expanded="true"]::after { content: none; }
+/* 스포일러는 빗금, 기밀은 통막대 */
+.bar[data-level="1"] {
+  background: repeating-linear-gradient(-45deg, var(--paper-faint) 0 2px, transparent 2px 9px);
+  box-shadow: inset 0 0 0 1px var(--paper-faint);
+}
+.bar[data-level="1"]::after { content: "스포일러 · 눌러서 열람"; color: var(--paper); background: var(--ink); padding: 0.1rem 0.45rem; left: 0.6rem; top: 0.55rem; }
+.bar[data-level="1"]:hover { box-shadow: inset 0 0 0 1px var(--paper); }
+.bar[aria-expanded="true"], .bar[data-level="1"][aria-expanded="true"] { background: var(--ink-2); box-shadow: none; color: var(--paper); user-select: text; cursor: default; }
+.bar[aria-expanded="true"]::after, .bar[data-level="1"][aria-expanded="true"]::after { content: none; }
 
 /* ───────── 인물 ───────── */
 .figure { display: grid; gap: 1.5rem; }
@@ -242,7 +240,7 @@ body::before {
   .block { grid-template-columns: minmax(0, 1fr) 17rem; column-gap: 4rem; }
   .block > .block-head, .block > .wide { grid-column: 1 / -1; }
   .block > .notes { grid-column: 2; }
-  .cover { grid-template-columns: minmax(0, 1fr) 30rem; align-items: end; column-gap: 4rem; }
+  .cover { grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 4rem; }
   .cover > .cover-meta, .cover > .title { grid-column: 1 / -1; }
   .scenes { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 2rem; }
   .scenes li { grid-template-columns: 1fr; border-top: 0.5rem solid var(--rule); padding-block: 1rem 0; gap: 0.6rem; }
@@ -250,6 +248,7 @@ body::before {
   .scenes li.now { border-top-color: var(--paper); }
   .scenes .when { padding-top: 0; }
   .board li { grid-template-columns: 5rem minmax(0, 1fr) 12rem; }
+  .board .st { grid-auto-flow: column; justify-content: end; align-items: baseline; gap: 1rem; }
   .board .rk { font-size: 2.6rem; }
   .dossier { grid-template-columns: minmax(0, 1fr); }
   .thrones { grid-template-columns: repeat(7, minmax(0, 1fr)); }
@@ -274,38 +273,33 @@ body::before {
 }
 .gate .mono { color: #4d534c; }
 .gate-head { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 2px solid var(--ink); padding-bottom: 0.6rem; }
-.gate-body { align-self: center; display: grid; gap: 1.1rem; max-width: 46rem; width: 100%; margin-inline: auto; }
-.gate-line {
-  font-family: var(--f-display); font-weight: 600; font-size: clamp(1.25rem, 4.6vw, 2rem);
-  line-height: 1.5; letter-spacing: -0.02em; text-wrap: balance;
-  opacity: 0; transform: translateY(0.4rem); transition: opacity 0.7s, transform 0.7s;
+.gate-body { align-self: center; display: grid; gap: 1.5rem; max-width: 46rem; width: 100%; margin-inline: auto; }
+.gate-quote { display: grid; gap: 0.35rem; font-family: var(--f-display); font-weight: 600; font-size: clamp(1.6rem, 6.2vw, 2.9rem); line-height: 1.5; letter-spacing: -0.02em; }
+.gl { opacity: 0; transform: translateY(0.4rem); transition: opacity 0.8s, transform 0.8s; }
+.gl.in { opacity: 1; transform: none; }
+/* 대사를 덮는 가림 막대. 줄마다 따로 덮인다 */
+.q {
+  padding: 0.05em 0.14em; margin-left: -0.14em;
+  background: linear-gradient(var(--ink), var(--ink)) no-repeat left center / 0% 100%;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  transition: background-size 0.5s cubic-bezier(0.7, 0, 0.2, 1);
 }
-.gate[data-phase="1"] .gate-line:nth-child(-n+1),
-.gate[data-phase="2"] .gate-line:nth-child(-n+2),
-.gate[data-phase="3"] .gate-line:nth-child(-n+3),
-.gate[data-phase="4"] .gate-line:nth-child(-n+3) { opacity: 1; transform: none; }
-.gate-line .word { position: relative; white-space: nowrap; }
-.gate-line .word::after {
-  content: ""; position: absolute; inset: 0.12em -0.12em; background: var(--ink);
-  transform: scaleX(0); transform-origin: left; transition: transform 0.35s cubic-bezier(0.7, 0, 0.2, 1);
-}
-.gate[data-phase="4"] .word::after { transform: scaleX(1); }
-.gate-note { opacity: 0; transition: opacity 0.4s 0.35s; }
-.gate[data-phase="4"] .gate-note { opacity: 1; }
+.gate[data-phase="struck"] .q { background-size: 100% 100%; }
+.gate-by { opacity: 0; transition: opacity 0.6s; }
+.gate-by.in { opacity: 1; }
 .gate-dark { display: none; align-self: center; justify-items: start; gap: 1.5rem; max-width: 46rem; width: 100%; margin-inline: auto; }
-.gate-dark q { quotes: none; font-family: var(--f-display); font-weight: 500; font-size: clamp(1.1rem, 4vw, 1.6rem); color: var(--paper-dim); }
 .gate-dark .title strong { font-size: clamp(4rem, 20vw, 11rem); }
 .gate-dark .title, .gate-dark .btn { opacity: 0; transition: opacity 0.9s; }
 .gate-foot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
 .gate-skip { font-size: 0.85rem; box-shadow: 0 1px 0 currentColor; }
 /* 정전: 전환 없이 한 번에 꺼진다 */
-.gate[data-phase="5"], .gate[data-phase="6"] { background: var(--ink); color: var(--paper); }
-.gate[data-phase="5"] .gate-body, .gate[data-phase="6"] .gate-body { display: none; }
-.gate[data-phase="5"] .gate-dark, .gate[data-phase="6"] .gate-dark { display: grid; }
-.gate[data-phase="5"] .gate-head, .gate[data-phase="6"] .gate-head { border-color: var(--rule); }
-.gate[data-phase="5"] .mono, .gate[data-phase="6"] .mono { color: var(--paper-faint); }
-.gate[data-phase="6"] .gate-dark .title, .gate[data-phase="6"] .gate-dark .btn { opacity: 1; }
-.gate[data-phase="6"] .gate-skip { visibility: hidden; }
+.gate[data-phase="dark"], .gate[data-phase="title"] { background: var(--ink); color: var(--paper); }
+.gate[data-phase="dark"] .gate-body, .gate[data-phase="title"] .gate-body { display: none; }
+.gate[data-phase="dark"] .gate-dark, .gate[data-phase="title"] .gate-dark { display: grid; }
+.gate[data-phase="dark"] .gate-head, .gate[data-phase="title"] .gate-head { border-color: var(--rule); }
+.gate[data-phase="dark"] .mono, .gate[data-phase="title"] .mono { color: var(--paper-faint); }
+.gate[data-phase="title"] .gate-dark .title, .gate[data-phase="title"] .gate-dark .btn { opacity: 1; }
+.gate[data-phase="title"] .gate-skip { visibility: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

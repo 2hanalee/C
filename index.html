@@ -14,21 +14,18 @@
 <body>
 
 <!-- 게이트 -->
-<div class="gate" id="gate" data-phase="1" role="dialog" aria-label="입장">
+<div class="gate" id="gate" data-phase="quote" role="dialog" aria-label="입장">
   <div class="gate-head">
     <span class="mono">방위청 공개 기록</span>
     <span class="mono">하란 · 0712</span>
   </div>
 
   <div class="gate-body">
-    <p class="gate-line">20년 전 7월 12일, 하란항의 하늘이 일곱 시간 동안 찢어졌다.</p>
-    <p class="gate-line">6년 전, 한 사람이 그 균열을 멈춰 세웠다.</p>
-    <p class="gate-line">사람들은 그날을 <span class="word">종전</span>이라 부른다.</p>
-    <p class="gate-note mono">공식 용어: 휴전</p>
+    <p class="gate-quote" id="gate-quote"><span class="gl in"><span class="q">오늘도 평안한 하루가 되시기를♡</span></span></p>
+    <p class="gate-by mono in" id="gate-by">레이나 드 로즈 · 로즈 세라핌</p>
   </div>
 
   <div class="gate-dark">
-    <q>정지는 유예다.</q>
     <p class="title"><small>마법소녀 아카데미</small><strong>블랙아웃</strong></p>
     <button class="btn solid" id="gate-enter" type="button">기록 열람</button>
   </div>
@@ -49,7 +46,11 @@
       <a href="#">웹툰</a>
       <a href="#">연표·지도</a>
     </nav>
-    <button class="clearance" id="clearance" type="button" aria-pressed="false">기밀 전체 열람 <i></i></button>
+    <div class="clearance" id="clearance" role="group" aria-label="열람 등급">
+      <button type="button" data-level="0" aria-pressed="true">공개</button>
+      <button type="button" data-level="1" aria-pressed="false">스포일러</button>
+      <button type="button" data-level="2" aria-pressed="false">기밀</button>
+    </div>
   </div>
 </header>
 
@@ -68,12 +69,9 @@
   <main>
     <!-- 표지 -->
     <section class="cover" id="cover">
-      <p class="cover-meta mono"><span>무대: 하란</span><span>칠월의 밤 +20년</span><span>휴전 6년째</span></p>
+      <p class="cover-meta mono"><span>방위청 공개 기록</span><span>무대: 하란</span></p>
       <h1 class="title"><small>마법소녀 아카데미</small><strong>블랙아웃</strong></h1>
-      <dl class="gloss">
-        <div><dt>정전<span>停電</span></dt><dd>불이 나감.</dd></div>
-        <div><dt>정전<span>停戰</span></dt><dd>싸움을 멈춤. 끝난 것은 아니다.</dd></div>
-      </dl>
+      <p class="tagline">칠월의 밤으로부터 20년, 휴전 6년째.</p>
       <div class="actions">
         <a class="btn solid" href="#scenes">세계관 읽기</a>
         <a class="btn" href="#figures">인물 48인</a>
@@ -113,23 +111,26 @@
         <h2>아카데미 공개 랭킹</h2>
         <p>전투력만으로 정해지지 않는다. 임무 성과와 여론, 윗선의 이해관계가 함께 반영된다.</p>
       </div>
-      <ol class="board">
-        <li><span class="rk">1</span><a class="who" href="#"><b>정하은</b><span>제로 나이트</span></a><span class="st">안개고개 참전</span></li>
-        <li><span class="rk">2</span><a class="who" href="#figures"><b>레이나 드 로즈</b><span>로즈 세라핌</span></a><span class="st">학생위원장</span></li>
-        <li class="void"><span class="rk">3</span><span class="who"><i class="struck" role="img" aria-label="기록 말소"></i></span><span class="st">말소 · 2년 전</span></li>
-        <li class="void"><span class="rk">5</span><span class="who"><b>공석</b></span><span class="st">전사 · 1년 전 3월</span></li>
-        <li><span class="rk">7</span><a class="who" href="#"><b>이서현</b><span>트윈 시그널</span></a><span class="st">기생체 공동 등록</span></li>
-        <li><span class="rk">9</span><a class="who" href="#"><b>박시온</b><span>블러드 하운드</span></a><span class="st">특수 전력</span></li>
-        <li><span class="rk">12</span><a class="who" href="#"><b>엘리제 드 아르망</b><span>세인트 릴리</span></a><span class="st">성검 사용자</span></li>
-      </ol>
+      <div class="board-wrap">
+        <ol class="board">
+          <li><span class="rk">1</span><a class="who" href="#"><b>정하은</b><span>제로 나이트</span></a><span class="st"><span>안개고개 참전</span></span></li>
+          <li><span class="rk">2</span><a class="who" href="#figures"><b>레이나 드 로즈</b><span>로즈 세라핌</span></a><span class="st"><span>학생위원장</span></span></li>
+          <li class="void"><span class="rk">3</span><span class="who"><i class="struck" role="img" aria-label="기록 말소"></i></span><span class="st"><span>말소 · 2년 전</span></span></li>
+          <li class="void"><span class="rk">5</span><span class="who"><b>공석</b></span><span class="st"><span>전사 · 1년 전 3월</span></span></li>
+          <li><span class="rk">7</span><a class="who" href="#"><b>이서현</b><span>트윈 시그널</span></a><span class="st"><b class="mv up" aria-label="2계단 상승">▲ 2</b><span>기생체 공동 등록</span></span></li>
+          <li><span class="rk">9</span><a class="who" href="#"><b>박시온</b><span>블러드 하운드</span></a><span class="st"><b class="mv down" aria-label="1계단 하락">▼ 1</b><span>특수 전력</span></span></li>
+          <li><span class="rk">12</span><a class="who" href="#"><b>엘리제 드 아르망</b><span>세인트 릴리</span></a><span class="st"><b class="mv up" aria-label="3계단 상승">▲ 3</b><span>성검 사용자</span></span></li>
+        </ol>
+        <p class="mono board-key">▲ ▼ 직전 발표 대비 등수 변동</p>
+      </div>
       <div class="notes">
-        <div class="rumor">
-          <span class="mono">소문 · 아카데미 익명 게시판</span>
-          <p>1위 위에 0위가 있다더라. 명단에는 없는데 학장한테 반말하는 사람을 봤다는 애가 있음.</p>
+        <div class="secret">
+          <p class="warn">지워진 3위에 관한 스포일러입니다.</p>
+          <button class="bar" data-level="1" type="button" aria-expanded="false" aria-label="스포일러 열람: 3위">지워진 3위는 신유안이다. 2년 전 지하상가 대피전 뒤 반역했고 등수가 기록에서 말소됐다.</button>
         </div>
         <div class="secret">
           <p class="warn">천시온에 관한 기밀입니다. 직접 알아내고 싶다면 열지 마세요.</p>
-          <button class="bar" type="button" aria-expanded="false" aria-label="기밀 열람: 천시온">천시온은 큰 능력을 쓸 때마다 자신의 기록이 지워진다. 가족, 출생지, 사진, 명부가 사라지고 주변 사람들의 기억도 흐려진다.</button>
+          <button class="bar" data-level="2" type="button" aria-expanded="false" aria-label="기밀 열람: 천시온">천시온은 큰 능력을 쓸 때마다 자신의 기록이 지워진다. 가족, 출생지, 사진, 명부가 사라지고 주변 사람들의 기억도 흐려진다.</button>
         </div>
       </div>
       <a class="more" href="#">99위까지 전체 보기</a>
@@ -157,13 +158,13 @@
         </div>
       </div>
       <div class="notes">
-        <div class="rumor">
-          <span class="mono">소문 · 학생위원회 주변</span>
-          <p>위원장이 검술 자세 한 번 봐 준 걸로 세 쪽짜리 보고서를 써 온 후배가 있다고 함.</p>
+        <div class="secret">
+          <p class="warn">최소라와의 관계에 관한 스포일러입니다.</p>
+          <button class="bar" data-level="1" type="button" aria-expanded="false" aria-label="스포일러 열람: 최소라">72위 최소라는 레이나에게 몇 번 이용당했다.</button>
         </div>
         <div class="secret">
           <p class="warn">2년 전 지하상가 대피전에 관한 기밀입니다.</p>
-          <button class="bar" type="button" aria-expanded="false" aria-label="기밀 열람: 지하상가 대피전">제3구 지하상가 B동에 일곱 명이 남았고 한 명이 죽었다. 위원회는 이 사건을 「현장 판단」으로 종결했다.</button>
+          <button class="bar" data-level="2" type="button" aria-expanded="false" aria-label="기밀 열람: 지하상가 대피전">제3구 지하상가 B동에 일곱 명이 남았고 한 명이 죽었다. 위원회는 이 사건을 「현장 판단」으로 종결했다.</button>
         </div>
       </div>
       <a class="more" href="#">48인 전체 보기</a>
@@ -189,12 +190,12 @@
 
     <!-- 입장 -->
     <section class="enter" id="enter">
-      <h2>기록은 여기까지. 나머지는 직접 물어보세요.</h2>
+      <h2>이 세계로 들어가기</h2>
       <p>48인 모두와 대화할 수 있습니다.</p>
       <div class="platforms" id="platforms"><button class="btn" type="button" disabled>대화 링크 준비 중</button></div>
     </section>
 
-    <footer class="foot mono"><span>마법소녀 아카데미: 블랙아웃</span><span>시안 v0.1 · 게이트와 메인</span></footer>
+    <footer class="foot mono"><span>마법소녀 아카데미: 블랙아웃</span><span>시안 v0.2 · 게이트와 메인</span></footer>
   </main>
 </div>
 
@@ -207,6 +208,7 @@
 </nav>
 
 <script src="assets/js/config.js"></script>
+<script src="assets/js/quotes.js"></script>
 <script src="assets/js/site.js"></script>
 </body>
 </html>
