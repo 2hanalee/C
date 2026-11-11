@@ -5,7 +5,8 @@ window.ERAS = [
   {
     id: "before", title: "이전",
     events: [
-      { when: "약 300년 전", title: "첫 균열", level: 2, text: "경계에 처음 금이 간다. 이계의 왕과 인간 쪽 증인이 「임시 봉합」 계약을 맺는다.", topic: "seal" },
+      { when: "약 300년 전", title: "첫 균열", level: 0, text: "경계에 처음 금이 간다. 이때 맺어진 계약이 있다고만 전해진다.", topic: "seal",
+        more: [{ level: 2, text: "이계의 왕과 인간 쪽 증인이 「임시 봉합」 계약을 맺었다." }] },
     ],
   },
   {
@@ -15,7 +16,7 @@ window.ERAS = [
         people: ["oh-yunseo", "park-sion"], place: "haran-port", topic: "july-night",
         more: [{ level: 1, text: "천시온이 부두에서 학장 라명숙을 구한다." }] },
       { when: "16년 전", title: "랭킹제 도입", level: 0, text: "방위청이 예산 배분 기준으로 랭킹제를 들인다.", topic: "academy" },
-      { when: "15년 전", title: "첫 비공식 접촉", level: 1, text: "왕과 아카데미가 처음으로 비공식 접촉을 한다. 열아홉의 유다 이스타로드가 통역을 맡는다.", people: ["yuda-istarod"], topic: "seal" },
+      { when: "15년 전", title: "첫 비공식 접촉", level: 0, text: "왕과 아카데미가 처음으로 비공식 접촉을 한다. 열아홉의 유다 이스타로드가 통역을 맡는다.", people: ["yuda-istarod"], topic: "seal" },
       { when: "12년 전", title: "산업연합 회장 취임", level: 0, text: "강명주가 하란 산업연합 회장이 된다.", people: ["kang-myeongju"], topic: "consortium" },
       { when: "8년 전", title: "월곶 하수 터널", level: 1, text: "월곶 해안 하수 터널 소탕 작전에서 강세아가 동료 둘을 잃고 홀로 살아남는다.", people: ["kang-sea"], place: "wolgot" },
       { when: "7년 전", title: "윤하진 데뷔", level: 0, text: "열일곱의 윤하진이 아이돌 마법소녀로 데뷔한다.", people: ["yoon-hajin"] },
@@ -34,13 +35,13 @@ window.ERAS = [
       { when: "4년 전", title: "칠좌 재편", level: 0, text: "이계의 칠좌가 재편되고 라그바르가 제6좌에 오른다.", people: ["lagbar"], topic: "thrones",
         more: [
           { level: 1, text: "같은 해 강태오가 외부 감독관으로 감독부에 파견된다." },
-          { level: 2, text: "늦가을, 이서현이 지하 공동구에서 이계 기생체 쿠오와 계약한다." },
+          { level: 1, text: "늦가을, 이서현이 지하 공동구에서 이계 기생체 쿠오와 한 몸이 된다." },
         ] },
       { when: "3년 전", title: "폐항 사건", level: 0, text: "폐쇄 부두에서 사건이 일어난다. 상세는 공개되지 않았다.", place: "closed-pier",
-        more: [{ level: 1, text: "이계인 포로가 석 달 동안 구금됐다." }] },
+        more: [{ level: 2, text: "이계인 포로가 석 달 동안 구금됐다." }] },
       { when: "3년 전", day: "겨울", title: "체육관 오염 사고", level: 0, text: "하란시립체육관 지하 창고에서 이계 오염 사고가 난다. 복서 강도윤의 몸이 바뀐다.", people: ["kang-doyun"], place: "gym",
         more: [{ level: 1, text: "같은 해 인공 마법소녀 노아가 기동하고, 윤마조가 시한부 진단을 받는다." }] },
-      { when: "2년 전", day: "11월 20일", title: "제3구 지하상가 대피전", level: 0, text: "제3구 지하상가에서 대피전이 벌어진다. 이 사건 뒤 3위가 말소된다.", people: ["reina-de-rose", "shin-yuan"], place: "district-3",
+      { when: "2년 전", day: "11월 20일", title: "제3구 지하상가 대피전", level: 0, text: "제3구 지하상가에서 대피전이 벌어진다. 이 사건 뒤 3위가 말소된다.", people: ["shin-yuan"], place: "district-3",
         more: [
           { level: 1, text: "안쪽 B동에 남은 일곱 명이 「자진 이탈자」로 분류되고 송하연이 사망한다. 3위 신유안이 반역한다." },
           { level: 2, text: "위원회는 이 사건을 「현장 판단」으로 종결했다." },
@@ -52,7 +53,8 @@ window.ERAS = [
         ] },
       { when: "올봄", title: "휴전 기념식", level: 0, text: "휴전을 기념하는 행사가 열린다.", topic: "truce",
         more: [{ level: 1, text: "기념식장 뒤편에서 오윤서와 마리아 오르텐이 마주친다." }] },
-      { when: "3개월 전", title: "전학생", level: 2, text: "제7좌 네무리가 전학생으로 아카데미에 잠입한다.", people: ["nemuri"] },
+      { when: "3개월 전", title: "전학생", level: 0, text: "네무리가 전학생으로 아카데미에 들어온다.", people: ["nemuri"],
+        more: [{ level: 2, text: "제7좌의 잠입 임무다. 정하은의 전쟁 기록과 봉인된 전쟁 보고서를 조사한다." }] },
     ],
   },
 ];
@@ -62,10 +64,10 @@ window.ERAS = [
 window.PLACES = [
   { id: "haran-port", name: "하란항", x: 39.5, y: 50.5, note: "칠월의 밤의 진원", text: "20년 전 7월 12일 이곳 상공이 찢어졌다. 사람들이 칠월의 밤이라 부르는 하란항 대균열의 한가운데다.", people: ["oh-yunseo", "park-sion"], topic: "july-night" },
   { id: "closed-pier", name: "폐항", x: 38, y: 70, note: "폐쇄 부두", text: "지금은 닫힌 부두. 3년 전 이곳에서 사건이 있었다.", people: [],
-    internal: [{ topic: "폐항 사건", text: "이계인 포로가 석 달 동안 구금됐다." }] },
+    secret: [{ topic: "폐항 사건", text: "이계인 포로가 석 달 동안 구금됐다." }] },
   { id: "grey-zone", name: "회색 구역", x: 50, y: 43, note: "이계 균류 오염지", text: "하란항 일대에 이계 균류가 뿌리내린 땅. 토양과 수계가 잠식됐고 감염자는 손끝부터 회색으로 굳는다.", people: ["kang-myeongju", "yoon-sehyeok", "mano-akira"], topic: "grey-zone" },
-  { id: "gocheol", name: "고철동 폐공장 지대", x: 59, y: 30, note: "버려진 공장들", text: "최소라가 자란 동네다. 이아름은 이 폐공장 지대에서 이계인 부부에게 발견돼 그들의 딸로 자랐다.", people: ["choi-sora", "lee-areum"] },
-  { id: "district-3", name: "제3구 지하상가", x: 70, y: 59, note: "2년 전 대피전", text: "2년 전 11월 20일 대피전이 벌어진 곳이다.", people: ["reina-de-rose", "shin-yuan"],
+  { id: "gocheol", name: "고철동 폐공장 지대", x: 59, y: 30, note: "버려진 공장들", text: "최소라가 자란 동네다. 빚쟁이에게 빼앗긴 아버지의 도장을 되찾으며 도둑질을 배운 곳이다.", people: ["choi-sora"] },
+  { id: "district-3", name: "제3구 지하상가", x: 70, y: 59, note: "2년 전 대피전", text: "2년 전 11월 20일 대피전이 벌어진 곳이다.", people: ["shin-yuan"],
     internal: [{ topic: "B동", text: "안쪽 B동에 남은 일곱 명이 「자진 이탈자」로 분류됐고 송하연이 사망했다." }] },
   { id: "gym", name: "하란시립체육관", x: 64, y: 80, note: "3년 전 오염 사고", text: "3년 전 겨울 지하 창고에서 이계 오염 사고가 났다. 전국대회 은메달리스트였던 복서 강도윤의 몸이 이곳에서 바뀌었다.", people: ["kang-doyun"],
     secret: [{ topic: "오염체", text: "지하 창고의 오염체는 제5좌 오르감 계통이다." }] },
