@@ -84,8 +84,7 @@
       '<text x="70" y="300" class="m-label big">서해</text>' +
       '<text x="640" y="480" class="m-label big">하란</text>' +
       '<text x="568" y="388" class="m-label">제3구</text>' +
-      '<text x="720" y="46" class="m-label">안개고개 방면</text>' +
-      '<path d="M742 86 L772 56 M772 56 h-12 M772 56 v12" class="m-arrow"/>' +
+      '<text x="612" y="54" class="m-label">안개고개 방면</text>' +
       // 방위
       '<path d="M40 70 V30 M40 30 l-6 10 M40 30 l6 10" class="m-arrow"/><text x="34" y="88" class="m-label">N</text>' +
       "</svg>";
@@ -124,13 +123,11 @@
               '" style="left:' + p.x + "%;top:" + p.y + '%">' + (n + 1) + "</button>";
           }).join("") +
         "</div>" +
-        '<div class="place-side">' +
-          '<div class="place" id="place" aria-live="polite"></div>' +
-          '<ol class="place-list">' + PLACES.map(function (p, n) {
+        '<div class="place" id="place" aria-live="polite"></div>' +
+        '<ol class="place-list">' + PLACES.map(function (p, n) {
             return '<li><button type="button" data-place="' + p.id + '" aria-pressed="false"><i>' + (n + 1) + "</i><span><b>" +
               esc(p.name) + "</b><span>" + esc(p.note) + "</span></span></button></li>";
           }).join("") + "</ol>" +
-        "</div>" +
       "</div>";
     selectPlace(selected);
   };

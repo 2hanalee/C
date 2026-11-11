@@ -478,10 +478,9 @@ body::before {
 .pin:hover { background: var(--rule); }
 .pin[aria-pressed="true"] { background: var(--paper); color: var(--ink); width: 2.4rem; height: 2.4rem; font-size: 1.15rem; z-index: 2; }
 .pin.off { box-shadow: inset 0 0 0 1.5px var(--paper-faint); }
-.place-side { display: grid; gap: 1.5rem; align-content: start; }
 .place { display: grid; gap: 0.7rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--rule); min-height: 9rem; align-content: start; }
-.place h2 { font-family: var(--f-display); font-weight: 900; font-size: 1.9rem; line-height: 1.2; letter-spacing: -0.03em; }
-.place p { color: var(--paper-dim); }
+.place > h2 { font-family: var(--f-display); font-weight: 900; font-size: 1.9rem; line-height: 1.2; letter-spacing: -0.03em; }
+.place > p { color: var(--paper-dim); }
 .place .notes { margin-top: 0.5rem; }
 .place-list { display: grid; gap: 0; }
 .place-list button { display: grid; grid-template-columns: 1.9rem minmax(0, 1fr); gap: 0.8rem; width: 100%; text-align: left; padding-block: 0.6rem; align-items: start; }
@@ -511,7 +510,7 @@ body::before {
 .cuts { display: grid; margin-inline: calc(var(--gutter-l) * -1) calc(var(--gutter-r) * -1); }
 .cuts img { display: block; width: 100%; height: auto; }
 .cut-blank { aspect-ratio: 3 / 4; background: var(--ink-2); display: grid; place-items: center; border-bottom: 1px solid var(--ink); text-align: center; padding: 1rem; }
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; position: sticky; bottom: calc(var(--tabbar) + env(safe-area-inset-bottom, 0px)); background: var(--ink); padding-block: 0.75rem; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; padding-block: 0.75rem; }
 .steps .btn { justify-content: center; padding: 0 0.5rem; }
 
 @media (min-width: 900px) {
@@ -521,8 +520,18 @@ body::before {
   .seats p { grid-column: auto; }
   .ev { grid-template-columns: 8rem minmax(0, 1fr); gap: 2rem; }
   .ev .when { font-size: 0.85rem; }
-  .mapwrap { grid-template-columns: minmax(0, 1fr) 19rem; column-gap: 3rem; align-items: start; }
+  .mapwrap { grid-template-columns: minmax(0, 1fr) 19rem; column-gap: 3rem; align-items: start; grid-template-areas: "map list" "place list"; }
+  .mapwrap .map { grid-area: map; }
+  .mapwrap .place { grid-area: place; border-bottom: 0; }
+  .mapwrap .place-list { grid-area: list; }
   .series { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); column-gap: 3rem; align-items: end; }
   .episodes a { grid-template-columns: 12rem minmax(0, 1fr); gap: 1.5rem; }
   .cuts { margin-inline: 0; }
+}
+
+@media (min-width: 1240px) {
+  /* 넓은 화면에서는 사건에 딸린 가려진 기록을 오른쪽 여백으로 뺀다 */
+  .ev > div { grid-template-columns: minmax(0, 1fr) 19rem; column-gap: 3rem; align-content: start; }
+  .ev > div > * { grid-column: 1; }
+  .ev > div > .more-bars { grid-column: 2; grid-row: 1 / span 5; align-content: start; }
 }
