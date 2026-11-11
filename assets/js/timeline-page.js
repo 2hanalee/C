@@ -97,7 +97,8 @@
     var hidden = "";
     if (p.internal && p.internal.length) hidden += B.notes(p.internal, 1, "내부용");
     if (p.secret && p.secret.length) hidden += B.notes(p.secret, 2, "기밀");
-    return '<span class="mono">' + esc(p.note) + "</span><h2>" + esc(p.name) + "</h2><p>" + esc(p.text) + "</p>" +
+    return (p.image ? '<img class="scene" src="' + esc(p.image) + '" alt="' + esc(p.name) + '">' : "") +
+      '<span class="mono">' + esc(p.note) + "</span><h2>" + esc(p.name) + "</h2><p>" + esc(p.text) + "</p>" +
       B.people(p.people) + topic + (hidden ? '<div class="notes">' + hidden + "</div>" : "");
   };
 

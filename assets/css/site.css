@@ -751,3 +751,6 @@ a.plaque:hover img { filter: drop-shadow(0 0 0.9rem rgba(175, 203, 209, 0.7)); }
 .lockup { min-height: 2.75rem; }
 .people { gap: 0 1.1rem; }
 .crumbs a { padding-block: 0.4rem; }
+
+/* 장소와 문서에 넣는 배경 그림 */
+.scene { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--slate); box-shadow: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, 0.8); }

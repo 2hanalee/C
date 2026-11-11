@@ -87,6 +87,7 @@
         '<div class="profile-main doc">' +
           '<header class="doc-head' + (MARKS[d.id] ? " marked" : "") + (d.id === "grey-zone" ? " myc" : "") + '"><span class="no">' + d.no + "</span><h1>" + esc(d.title) + '</h1><p>' + esc(d.lead) + "</p>" +
             (MARKS[d.id] ? '<img class="mark" src="assets/img/symbols/' + MARKS[d.id] + '.svg" alt="">' : "") + "</header>" +
+          (d.image ? '<img class="scene" src="' + esc(d.image) + '" alt="' + esc(d.title) + '">' : "") +
           body +
           '<dl class="spec">' +
             (people ? "<div><dt>관련 인물</dt><dd>" + people + "</dd></div>" : "") +

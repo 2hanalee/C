@@ -13,13 +13,26 @@
 "quote": "프로필 카드의 한 줄 대사"
 ```
 
-3. 표정 그림이 있으면 `"emotes"` 를 더합니다. 있는 표정만 적으면 그 단추만 켜집니다.
+3. 표정 그림이 있으면 `"emotes"` 를 더합니다. 이름은 웃음, 의문, 부끄러움, 슬픔, 분노, 기술 여섯 가지이고, 평상시는 `"image"` 가 맡습니다. 있는 표정만 적으면 그 단추만 켜집니다.
 
 ```js
-"emotes": { "기쁨": "assets/img/characters/jeong-haeun-joy.webp", "분노": "..." }
+"emotes": { "웃음": "assets/img/characters/jeong-haeun-smile.webp", "분노": "..." }
 ```
 
 그림이 없는 인물은 활동명을 새긴 자리 표시가 대신 나옵니다. 칠좌는 기호가 나옵니다.
+
+## 배경 그림 넣기
+
+16:9 그림을 `assets/img/places/` 에 넣고, 쓸 곳에 `"image"` 한 줄을 더합니다.
+
+- 지도의 장소: `assets/js/timeline.js` 의 `PLACES` 에서 그 장소 항목에 `image: "assets/img/places/academy.webp"`
+- 세계관 문서: `assets/js/world.js` 에서 그 문서 항목에 같은 방식으로
+
+지도에 없는 장소(용병 사무소 등)는 `PLACES` 에 항목을 새로 더하면 번호와 목록이 자동으로 늘어납니다.
+
+## ChatGPT 로 만든 엠블럼과 제목 넣기
+
+`docs/chatgpt-master-prompt.md` 로 만든 그림은 파일만 보내 주시면 제가 자리에 맞춰 넣습니다.
 
 ## 메인 표지 그림 바꾸기
 

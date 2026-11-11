@@ -22,7 +22,7 @@
     { rank: 3, struck: true, note: "말소 · 2년 전" },
     { rank: 5, name: "공석", note: "전사 · 1년 전 3월" },
   ];
-  var EMOTES = ["기본", "기쁨", "분노", "슬픔", "놀람"];
+  var EMOTES = ["평상시", "웃음", "의문", "부끄러움", "슬픔", "분노", "기술"];
   var SEAT_SYMBOL = {
     celestis: "faction-seven-seats", arbel: "seat-arbel", merkan: "seat-merkan", sitriel: "seat-sitriel",
     neisa: "seat-neisa", orgam: "seat-orgam", lagbar: "seat-lagbar", nemuri: "seat-nemuri",
