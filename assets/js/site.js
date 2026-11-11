@@ -78,49 +78,58 @@
     }
   }
 
-  /* ── 열람 등급: 0 공개, 1 스포일러, 2 기밀 ── */
-  var bars = Array.prototype.slice.call(document.querySelectorAll(".bar"));
+  /* ── 열람 등급: 0 공개, 1 내부용, 2 기밀 ──
+     막대는 화면이 바뀔 때 새로 그려지므로 그때마다 refresh() 로 현재 등급을 다시 적용한다. */
+  var level = 0;
   var levelBtns = Array.prototype.slice.call(document.querySelectorAll("#clearance button"));
-  var openBar = function (b, on) { b.setAttribute("aria-expanded", on ? "true" : "false"); };
-  bars.forEach(function (b) {
-    b.addEventListener("click", function () { openBar(b, true); });
-  });
-  var applyLevel = function (level) {
+  var allBars = function () { return Array.prototype.slice.call(document.querySelectorAll(".bar")); };
+  var applyLevel = function (n) {
+    level = n;
     levelBtns.forEach(function (btn) {
-      btn.setAttribute("aria-pressed", Number(btn.dataset.level) === level ? "true" : "false");
+      btn.setAttribute("aria-pressed", Number(btn.dataset.level) === n ? "true" : "false");
     });
-    bars.forEach(function (b) { openBar(b, Number(b.dataset.level) <= level); });
+    allBars().forEach(function (b) {
+      b.setAttribute("aria-expanded", Number(b.dataset.level) <= n ? "true" : "false");
+    });
   };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".bar") : null;
+    if (b) b.setAttribute("aria-expanded", "true");
+  });
   if (levelBtns.length) {
     var saved = parseInt(local.get("blackout.level"), 10);
     if (saved === 1 || saved === 2) applyLevel(saved);
     levelBtns.forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var level = Number(btn.dataset.level);
-        applyLevel(level);
+        applyLevel(Number(btn.dataset.level));
         local.set("blackout.level", String(level));
       });
     });
   }
 
   /* ── 대화 버튼: 설정에 등록된 플랫폼만 보여 준다 ── */
-  var slot = document.getElementById("platforms");
-  if (slot) {
+  var fillChat = function (slot) {
     var list = (window.SITE && window.SITE.chat) || [];
-    if (list.length) {
-      slot.textContent = "";
-      list.forEach(function (p, i) {
-        var a = document.createElement("a");
-        a.className = "btn" + (i === 0 ? " solid" : "");
-        a.href = p.url; a.target = "_blank"; a.rel = "noopener";
-        a.textContent = p.name + "에서 대화하기";
-        slot.appendChild(a);
-      });
+    slot.textContent = "";
+    if (!list.length) {
+      var off = document.createElement("button");
+      off.className = "btn"; off.type = "button"; off.disabled = true;
+      off.textContent = "대화 링크 준비 중";
+      slot.appendChild(off);
+      return;
     }
-  }
+    list.forEach(function (p, i) {
+      var a = document.createElement("a");
+      a.className = "btn" + (i === 0 ? " solid" : "");
+      a.href = p.url; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = p.name + "에서 대화하기";
+      slot.appendChild(a);
+    });
+  };
+  Array.prototype.forEach.call(document.querySelectorAll("[data-chat]"), fillChat);
 
   /* ── 목차: 지금 보는 구획 표시 ── */
-  var links = Array.prototype.slice.call(document.querySelectorAll(".rail a"));
+  var links = Array.prototype.slice.call(document.querySelectorAll(".rail a[href^='#']"));
   if (links.length && "IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
@@ -133,4 +142,10 @@
       if (t) io.observe(t);
     });
   }
+
+  window.BLACKOUT = {
+    local: local,
+    refresh: function () { applyLevel(level); },
+    fillChat: fillChat,
+  };
 })();
