@@ -52,3 +52,13 @@ window.SITE = { chat: [ { name: "플랫폼 이름", url: "https://..." } ] };
 ## 지도
 
 `timeline.js` 의 `PLACES` 에서 장소마다 `x`, `y` 를 0 부터 100 사이 숫자로 고칩니다.
+
+## 사이트 공개하기
+
+GitHub Pages 로 공개하는 작업을 준비해 두었습니다. 자동으로는 돌지 않습니다.
+
+1. 이 브랜치를 기본 브랜치에 합칩니다.
+2. 저장소 Settings > Pages 에서 Source 를 "GitHub Actions" 로 바꿉니다.
+3. Actions 탭에서 "Publish site" 를 골라 "Run workflow" 를 누릅니다.
+
+공개 주소가 정해지면 다섯 개 HTML 파일의 `og:image` 값을 그 주소가 붙은 전체 경로로 바꿔야 링크를 공유할 때 그림이 뜹니다.

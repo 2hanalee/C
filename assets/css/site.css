@@ -12,7 +12,7 @@
   --slate: #17232B;        /* 눌린 면, 그림 자리 */
   --paper: #E8E6DC;        /* 기록 용지. 본문 글자색이자 가림 막대 색 */
   --paper-dim: #A6B0B3;    /* 보조 글자 */
-  --paper-faint: #74838A;  /* 주석, 비활성 */
+  --paper-faint: #7E8D94;  /* 주석, 비활성 */
   --rule: #22303A;         /* 구획선 */
   --boundary: #AFCBD1;     /* 경계빛 */
   --brass: #B69D70;        /* 황동색 */
@@ -88,7 +88,7 @@ body::before {
 .clearance button:hover { color: var(--paper); }
 .clearance button[aria-pressed="true"] { background: var(--paper); color: var(--ink); font-weight: 600; }
 .clearance button[data-level="1"][aria-pressed="true"] { background: var(--brass); }
-.clearance button[data-level="2"][aria-pressed="true"] { background: var(--rust); color: var(--paper); }
+.clearance button[data-level="2"][aria-pressed="true"] { background: var(--rust-text); color: var(--ink); }
 @media (max-width: 479.98px) { .lockup span { display: none; } }
 
 /* ───────── 기록철 틀 ───────── */
@@ -744,3 +744,10 @@ a.plaque:hover img { filter: drop-shadow(0 0 0.9rem rgba(175, 203, 209, 0.7)); }
   .docs .doc-mark { grid-row: 1 / span 2; grid-column: 3; width: 3.4rem; height: 3.4rem; align-self: center; }
   .docs a { grid-template-columns: 3.4rem minmax(0, 1fr) auto; }
 }
+
+/* 손가락으로 누르기 쉽게: 글자 링크의 누르는 면을 넓힌다 */
+.more, .people a, .rel a, .ev-links a, .spec dd a { display: inline-block; padding-block: 0.45rem; }
+.more { padding-bottom: 0.3rem; }
+.lockup { min-height: 2.75rem; }
+.people { gap: 0 1.1rem; }
+.crumbs a { padding-block: 0.4rem; }
