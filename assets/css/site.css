@@ -616,13 +616,13 @@ body::after {
 .cover::before {
   content: ""; position: absolute; z-index: -2; top: 0; bottom: 18%;
   left: calc(var(--gutter-l) * -1); right: calc(var(--gutter-r) * -1);
-  background: url("../img/hero/reina-cover.webp") 62% 18% / cover no-repeat;
+  background: url("../img/hero/reina-cover.webp") 47% 36% / cover no-repeat;
 }
 .cover::after {
   content: ""; position: absolute; z-index: -1; top: 0; bottom: 0;
   left: calc(var(--gutter-l) * -1); right: calc(var(--gutter-r) * -1);
   background:
-    linear-gradient(to top, var(--ink) 18%, rgba(10, 17, 24, 0.86) 40%, rgba(10, 17, 24, 0.25) 72%, rgba(10, 17, 24, 0.5) 100%);
+    linear-gradient(to top, var(--ink) 18%, rgba(10, 17, 24, 0.9) 44%, rgba(10, 17, 24, 0.3) 74%, rgba(10, 17, 24, 0.55) 100%);
 }
 .cover .title strong { text-shadow: 0 0.04em 0.5em rgba(10, 17, 24, 0.55); }
 .cover-credit { position: absolute; top: 1rem; right: 0; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--paper); text-decoration: none; background: rgba(10, 17, 24, 0.6); padding: 0.3rem 0.55rem; box-shadow: inset 2px 0 0 #e2334f; }
@@ -754,3 +754,17 @@ a.plaque:hover img { filter: drop-shadow(0 0 0.9rem rgba(175, 203, 209, 0.7)); }
 
 /* 장소와 문서에 넣는 배경 그림 */
 .scene { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--slate); box-shadow: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, 0.8); }
+
+/* ═════════ 점검 후 손질 (11월 12일) ═════════ */
+/* 그림 없는 인물의 상세 화면: 빈 자리가 화면을 차지하지 않게 낮춘다 */
+.profile-main > .plate.blank { aspect-ratio: 21 / 9; }
+.profile-main > .plate.blank b { bottom: 3cqw; }
+/* 표지 위쪽 표기: 밝은 그림 위에서도 읽히게 먹 바탕을 깐다 */
+.cover-meta span { background: rgba(10, 17, 24, 0.62); padding: 0.1rem 0.4rem; }
+.cover-meta { margin-left: -0.4rem; }
+/* 게이트 마지막 화면: 로고 뒤에 옅은 경계빛 */
+.gate-dark { isolation: isolate; }
+.gate-logo { position: relative; }
+.gate-logo::before { content: ""; position: absolute; z-index: -1; inset: -60% -20% -40% -12%; pointer-events: none;
+  background: radial-gradient(ellipse 50% 45% at 38% 48%, rgba(175, 203, 209, 0.16), transparent 72%); }
+@media (min-width: 900px) { .profile-main > .plate.blank { aspect-ratio: 5 / 2; } }
