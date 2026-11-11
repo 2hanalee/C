@@ -70,7 +70,9 @@
       // 큰길
       '<path d="M350 300 L470 318 L560 330 L800 352 M470 318 L455 185 L430 0 M560 330 L520 440 L500 560 M560 330 L650 170 L760 70" class="m-road"/>' +
       // 회색 구역
-      '<ellipse cx="372" cy="292" rx="112" ry="92" fill="url(#spore)"/>' +
+      '<clipPath id="zone"><ellipse cx="372" cy="292" rx="112" ry="92"/></clipPath>' +
+      '<image class="m-myc" href="assets/img/texture/mycelium-pattern.svg" x="232" y="152" width="280" height="280" clip-path="url(#zone)"/>' +
+      '<ellipse cx="372" cy="292" rx="112" ry="92" fill="url(#spore)" opacity="0.55"/>' +
       '<ellipse cx="372" cy="292" rx="112" ry="92" class="m-zone"/>' +
       // 고철동 폐공장 지대
       '<polygon points="430,140 520,128 530,208 440,220" fill="url(#scrap)"/>' +

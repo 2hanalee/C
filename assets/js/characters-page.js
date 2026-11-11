@@ -23,6 +23,10 @@
     { rank: 5, name: "공석", note: "전사 · 1년 전 3월" },
   ];
   var EMOTES = ["기본", "기쁨", "분노", "슬픔", "놀람"];
+  var SEAT_SYMBOL = {
+    celestis: "faction-seven-seats", arbel: "seat-arbel", merkan: "seat-merkan", sitriel: "seat-sitriel",
+    neisa: "seat-neisa", orgam: "seat-orgam", lagbar: "seat-lagbar", nemuri: "seat-nemuri",
+  };
 
   var state = { faction: "all", q: "", view: B.local.get("blackout.view") === "card" ? "card" : "board", listY: 0 };
 
@@ -52,6 +56,11 @@
   var plate = function (c, big) {
     if (c.image) {
       return '<div class="plate"><img src="' + esc(c.image) + '" alt="' + esc(c.name) + '의 프로필 그림"' + (big ? "" : ' loading="lazy"') + "></div>";
+    }
+    // 칠좌와 왕은 그림이 준비될 때까지 기호로 자리를 채운다
+    var sym = SEAT_SYMBOL[c.id];
+    if (sym) {
+      return '<div class="plate has-sym"><span class="mono">그림 준비 중</span><img src="assets/img/symbols/' + sym + '.svg" alt="' + esc(c.name) + '의 기호"' + (big ? "" : ' loading="lazy"') + "></div>";
     }
     // 활동명이 길면 글자를 줄여 판 안에 들어오게 한다
     var label = c.alias || c.name;

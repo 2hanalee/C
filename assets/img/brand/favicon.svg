@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<title>블랙아웃</title>
+<rect width="64" height="64" rx="10" fill="#0A1118"/>
+<path d="M49.37 23.15 A19.5 19.5 0 1 1 40.85 14.63" fill="none" stroke="#E8E6DC" stroke-width="8"/>
+<rect x="42.59" y="15.01" width="6.4" height="6.4" transform="rotate(45 45.79 18.21)" fill="#AFCBD1"/>
+</svg>

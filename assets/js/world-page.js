@@ -15,6 +15,9 @@
   var placeById = {};
   PLACES.forEach(function (p) { placeById[p.id] = p; });
 
+  // 문서 머리에 놓는 세력 기호
+  var MARKS = { academy: "faction-academy", thrones: "faction-seven-seats", consortium: "faction-consortium", "grey-zone": "faction-grey-zone" };
+
   var hiddenCount = function (d) {
     var parts = [];
     if (d.internal.length) parts.push("내부용 " + d.internal.length);
@@ -38,8 +41,8 @@
   var seatsHtml = function () {
     return '<ol class="seats">' + SEATS.map(function (s) {
       var c = B.charById[s.id];
-      return '<li><span class="ring">' + s.seat + "</span>" +
-        '<div class="who"><a href="characters.html#' + s.id + '">' + esc(c ? c.name : s.id) + "</a>" +
+      return '<li><img class="sym" src="assets/img/symbols/seat-' + s.id + '.svg" alt="">' +
+        '<div class="who"><span class="seat-no">제' + s.seat + '좌</span><a href="characters.html#' + s.id + '">' + esc(c ? c.name : s.id) + "</a>" +
         "<span>" + esc(s.sin) + " · " + esc(s.law) + "의 법</span></div>" +
         '<p><span class="mono">흔드는 것</span>' + esc(s.pillar) + "</p>" +
         '<p><span class="mono">조건과 한계</span>' + esc(s.limit) + "</p></li>";
@@ -65,7 +68,8 @@
         '<div><a href="#' + prev.id + '">이전</a><a href="#' + next.id + '">다음</a></div></nav>' +
       '<article class="profile">' +
         '<div class="profile-main doc">' +
-          '<header class="doc-head"><span class="no">' + d.no + "</span><h1>" + esc(d.title) + '</h1><p>' + esc(d.lead) + "</p></header>" +
+          '<header class="doc-head' + (MARKS[d.id] ? " marked" : "") + (d.id === "grey-zone" ? " myc" : "") + '"><span class="no">' + d.no + "</span><h1>" + esc(d.title) + '</h1><p>' + esc(d.lead) + "</p>" +
+            (MARKS[d.id] ? '<img class="mark" src="assets/img/symbols/' + MARKS[d.id] + '.svg" alt="">' : "") + "</header>" +
           body +
           '<dl class="spec">' +
             (people ? "<div><dt>관련 인물</dt><dd>" + people + "</dd></div>" : "") +

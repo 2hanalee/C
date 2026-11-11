@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="92 92 329 329" role="img" aria-label="회색 구역">
+<title>회색 구역</title>
+<desc>오르감 계통 균류·토양과 수계 잠식·생물학적 오염</desc>
+
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M138 128 V384 M208 105 V407 M278 105 V407 M348 128 V384 M105 178 H407 M105 248 H407 M105 318 H407" stroke="#89969B" stroke-width="2" opacity=".32"/>
+  <path d="M251 258 C210 224 184 204 160 164 M190 205 C165 201 149 187 140 169 M184 204 C180 177 184 156 198 140 M250 258 C290 225 324 213 365 188 M325 214 C334 183 355 166 384 160 M326 214 C355 224 374 245 387 276 M251 258 C216 290 199 325 190 366 M206 313 C178 317 153 334 140 359 M251 258 C286 290 304 327 315 373 M299 313 C329 315 355 335 371 359" stroke="#7D8794" stroke-width="7"/>
+  <path d="M160 164 L146 148 M160 164 L178 158 M198 140 L196 119 M198 140 L214 146 M365 188 L384 182 M365 188 L362 169 M384 160 L400 149 M387 276 L405 282 M387 276 L394 258 M190 366 L181 386 M190 366 L210 367 M140 359 L122 370 M140 359 L144 340 M315 373 L310 396 M315 373 L334 366 M371 359 L391 374 M371 359 L375 340" stroke="#A65A5A" stroke-width="4"/>
+  <path d="M244 222 C269 216 290 235 288 260 C285 286 261 302 239 289 C218 277 219 247 244 222 Z" stroke="#A65A5A" stroke-width="5"/>
+  <circle cx="258" cy="258" r="7" fill="#7D8794" stroke="none"/>
+  <circle cx="160" cy="164" r="6" fill="#89969B" stroke="none"/><circle cx="365" cy="188" r="6" fill="#89969B" stroke="none"/><circle cx="190" cy="366" r="6" fill="#89969B" stroke="none"/><circle cx="315" cy="373" r="6" fill="#89969B" stroke="none"/>
+</g>
+</svg>

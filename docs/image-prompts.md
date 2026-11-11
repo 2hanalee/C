@@ -19,7 +19,7 @@ Scene: Night over Haran, a fictional modern port city on a west-facing coast, se
 
 Subject: On the right third of the image, small in the frame (about one eighth of the image height), one adult woman stands at the edge of the rooftop, seen from behind. She is a magical girl in a short uniform coat with a half cape. Her hair and cape are lifted by the wind. Her face is not visible. She is the only source of color and light in the image: a soft rose-gold glow outlines her figure and falls in a small pool on the rooftop around her feet. Full body visible, feet included.
 
-Style: Japanese anime key-visual illustration with painted backgrounds. Clean architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything except the figure is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c to pale gray #e3e7e0. Only the figure and her glow are in color.
+Style: Japanese anime key-visual illustration with painted backgrounds. Clean architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything except the figure is monochrome: a cool blue-gray scale, from near-black #0A1118 to ivory #E8E6DC. Only the figure and her glow are in color.
 
 Composition: Camera at eye level, just behind and above the rooftop edge, wide-angle view. Horizon in the upper third. The left 55% holds only dark sky and unlit city, with no bright shapes and no fine detail. Keep the figure and the cranes at least 8% away from every edge so the image can be cropped.
 
@@ -47,7 +47,7 @@ Scene: Night over Haran, a fictional modern port city on a west-facing coast, se
 
 Subject: On the right third of the image, the character from Image 1 stands at the edge of the rooftop, shown from the knees up in three-quarter back view, looking over her shoulder toward the viewer with a calm, composed expression. Same face, same hair and hair ornament, same white uniform with red ribbon and brooch as Image 1. She is the only area of color in the image, lit by a soft warm glow that seems to come from her.
 
-Style: The figure matches the painting style of Image 1: soft luminous highlights, fine hair strands, delicate linework. The city behind her is monochrome anime background art in a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c to pale gray #e3e7e0.
+Style: The figure matches the painting style of Image 1: soft luminous highlights, fine hair strands, delicate linework. The city behind her is monochrome anime background art in a cool blue-gray scale, from near-black #0A1118 to ivory #E8E6DC.
 
 Composition: Camera at eye level. The left 55% holds only dark sky and unlit city, with no bright shapes and no fine detail. Keep the figure at least 6% away from the right and top edges.
 
@@ -69,7 +69,7 @@ Use: wide header illustration for a world-setting website, 16:9 landscape. Text 
 
 Scene: A mountain pass at dawn, six years after a battle. Low hills, thin fog lying in the valley, a dirt road, broken farm fence posts, the bare stone foundations of a village that is no longer there. Hanging in the open air above the pass is a scar in the sky: a single pale, slightly luminous fracture line, like a crack in thick glass that was stopped while spreading. It runs diagonally and reads as a few hundred metres long against the hills. It does not move. The fog drifts up to it and does not cross it.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere. The scar is the brightest thing in the image, close to #e3e7e0.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere. The scar is the brightest thing in the image, close to #E8E6DC.
 
 Composition: Very wide view from the road at standing height. The scar sits in the upper right two thirds of the sky. Hills low on the horizon, sky taking up about 60% of the frame. Lower left quarter: dark ground and fog only.
 
@@ -98,7 +98,7 @@ Use: location illustration for a world-setting website, 16:9 landscape. This ima
 
 Scene: Haran Port, twenty years after a disaster. A large commercial harbor on a west-facing coast: gantry cranes, stacked shipping containers, a long concrete quay with bollards, calm open sea beyond. The port is partly abandoned. A pale gray fungal growth has spread from the waterline up the lower parts of the cranes, the container stacks, and the quay wall, in mats and shelf-like layers. Tide marks, rust streaks, cracked concrete.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: Wide view along the quay from standing height, the sea on the left, the cranes receding to the right in clear perspective. Horizon just below the middle.
 
@@ -122,7 +122,7 @@ Use: location illustration for a world-setting website, 16:9 landscape.
 
 Scene: A closed pier at the edge of a port. A chain-link fence and concrete barriers block the entrance. Beyond them: rusting bollards, an empty warehouse with broken skylights and a half-open sliding door, weeds growing through cracks, shallow puddles on the concrete, coils of old rope.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: View from outside the fence, slightly low, looking through the gap between two barriers down the length of the pier toward the warehouse.
 
@@ -146,7 +146,7 @@ Use: location illustration for a world-setting website, 16:9 landscape.
 
 Scene: A street inside a contaminated district beside a harbor. Low concrete buildings, shuttered shops, parked bicycles left for years. A pale gray fungus covers the ground, the gutters, and the lower walls in thick mats and shelf-like layers, and hangs from cables overhead. Fine spores drift in the still air like dust. Plain barrier tape and plastic sheeting close off the side alleys.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: Ground-level view straight down the middle of the street in one-point perspective. Growth thickest at the edges of the frame, the far end of the street fading into haze.
 
@@ -170,7 +170,7 @@ Use: location illustration for a world-setting website, 16:9 landscape.
 
 Scene: A derelict factory district that people still live beside. Sawtooth factory roofs with missing panels, heaps of sorted scrap metal, stacked oil drums, a narrow lane between corrugated metal walls patched with mismatched sheets, a handcart, a small repaired door with a bare bulb above it that is switched off.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: View down the narrow lane toward a large factory hall at the end, walls close on both sides, a strip of sky above.
 
@@ -194,7 +194,7 @@ Use: location illustration for a world-setting website, 16:9 landscape.
 
 Scene: An underground shopping arcade two years after an evacuation battle. A long, low-ceilinged corridor with tiled floor, rows of closed roller shutters on both sides, blank hanging sign boxes, a side passage branching off to the right. Signs of damage and repair: a line of cracked floor tiles, one dented shutter, a section of ceiling panels replaced with newer ones, a folded barrier leaning against a wall.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: One-point perspective straight down the corridor from standing height. The side passage visible in the right middle distance.
 
@@ -218,7 +218,7 @@ Use: location illustration for a world-setting website, 16:9 landscape.
 
 Scene: A basement storage room under a municipal gymnasium, sealed after a contamination accident three years ago. Boxing equipment in storage: heavy bags hanging from a rail, coiled ring ropes, stacked corner pads, a shelf of old gloves. Half of the room is closed off behind thick plastic sheeting taped to the ceiling and floor. On the concrete wall behind the sheeting, a large pale stain spreads from a floor drain.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: View from the doorway at standing height, the equipment on the near side, the sheeted area filling the back half of the room.
 
@@ -242,7 +242,7 @@ Use: location illustration for a world-setting website, 16:9 landscape.
 
 Scene: A public beach on a west-facing coast at low tide, out of season. A wide flat of wet sand, a wooden lifeguard tower with an empty chair, a row of stacked rental parasols tied with rope. At the far end of the beach, a large round concrete drainage tunnel opens onto the sand, with a rusted grille across its mouth.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: Wide view along the shoreline, the sea on the left, the lifeguard tower in the middle distance, the tunnel mouth small but clear at the far right.
 
@@ -266,7 +266,7 @@ Use: location illustration for a world-setting website, 16:9 landscape.
 
 Scene: The main grounds of an academy that is both a school and a defense installation. A broad modern main building with wide front steps, a plain facade, and tall windows; a training field with painted lane markings beside it; bare flagpoles; a row of slim defensive pylons along the perimeter wall; a guard booth by the open main gate. Everything is orderly and well maintained.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: View from just inside the main gate, the steps and main building centered, the training field opening to the right.
 
@@ -290,7 +290,7 @@ Use: location illustration for a world-setting website, 16:9 landscape.
 
 Scene: The site of a village that vanished six years ago, in a mountain pass. Rows of bare stone house foundations in rough grass, a dry well, a leaning farm fence, a single stone step that leads nowhere. Thin fog lies over the ground. Low hills behind.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: Low, wide view across the foundations, the fence in the foreground at left, the hills a soft band across the top third.
 
@@ -314,7 +314,7 @@ Use: location illustration for a world-setting website, 16:9 landscape. This pla
 
 Scene: A vast, dark court hall in another world, built as if by rule rather than by masons: perfectly straight edges, exact symmetry, floor and walls of one seamless dark material. Seven tall, empty seats stand in a shallow arc on a raised tier, each different in shape, all facing the same empty space at the center of the hall. In that space nothing stands, but seven thin plain rings float in the air in a level row, unlit, each a perfect circle.
 
-Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the shadows to pale gray #e3e7e0 in the brightest highlights. No other hues anywhere.
+Style: Japanese anime background art, the kind of painted environment used behind characters in an animated film. Clean, accurate architectural linework, visible gouache-like brushwork on large surfaces, fine film grain. Everything is monochrome: a cool blue-gray scale, from near-black #0A1118 in the shadows to ivory #E8E6DC in the brightest highlights. No other hues anywhere.
 
 Composition: Symmetrical frontal view from the floor of the hall, looking up slightly at the tier. The seven rings centered in the upper half, the seats below them.
 
@@ -342,7 +342,7 @@ Generate one image. Follow this description as written. Do not add subjects, tex
 
 Use: background texture for a web page. It will be placed behind text at low contrast.
 
-Subject: A flat, top-down scan of one blank sheet of uncoated office form paper, pale gray with a slight green tint, average color close to #e3e7e0. Fine paper fibers and a faint, even tooth are visible. A few tiny flecks. Nothing else.
+Subject: A flat, top-down scan of one blank sheet of uncoated office form paper, warm ivory, average color close to #E8E6DC. Fine paper fibers and a faint, even tooth are visible. A few tiny flecks. Nothing else.
 
 Composition: The paper fills the entire image from edge to edge. No sheet edges, no corners, no table visible.
 
@@ -406,7 +406,7 @@ Use: background texture for a section about a contaminated district.
 
 Subject: A macro, top-down view of a pale gray fungal mat growing over rough concrete. Layered, overlapping lobes with fine ridges, small clusters of round caps, a dusting of spores, a few hairline cracks where dark concrete shows through.
 
-Style: Painted illustration with fine detail, monochrome. A neutral gray scale with a slight cool green-gray tint, from near-black #0c0d0c in the cracks to pale gray #e3e7e0 on the highest ridges.
+Style: Painted illustration with fine detail, monochrome. A cool blue-gray scale, from near-black #0A1118 in the cracks to ivory #E8E6DC on the highest ridges.
 
 Composition: The growth fills the entire image from edge to edge with similar density everywhere, no single focal point.
 
@@ -458,7 +458,7 @@ Remove the person and fill the area with the surrounding scene. Change nothing e
 ### 색 빼기
 
 ```text
-Convert the image to strict monochrome: a neutral gray scale with a slight cool green-gray tint, from #0c0d0c to #e3e7e0, with no other hues. Keep the composition, every object, the brushwork, and the grain exactly the same.
+Convert the image to strict monochrome: a cool blue-gray scale, from #0A1118 to #E8E6DC, with no other hues. Keep the composition, every object, the brushwork, and the grain exactly the same.
 ```
 
 ### 세로 판 만들기

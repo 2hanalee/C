@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="66 66 381 381" role="img" aria-label="아카데미">
+<title>아카데미</title>
+<desc>교육·전략 방위·기록·랭킹 체계</desc>
+
+<g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+  <path d="M150 105 H362 M150 407 H362" stroke="#89969B" stroke-width="3" opacity=".72"/>
+  <path d="M150 105 V154 M362 105 V154 M150 358 V407 M362 358 V407" stroke="#E8E6DC" stroke-width="5"/>
+  <path d="M180 135 H332 V377 H180 Z" stroke="#E8E6DC" stroke-width="5"/>
+  <path d="M256 160 V229 M256 283 V352" stroke="#AFCBD1" stroke-width="8"/>
+  <path d="M217 256 H295" stroke="#89969B" stroke-width="4"/>
+  <circle cx="256" cy="256" r="8" fill="#AFCBD1" stroke="none"/>
+  <path d="M256 82 V111 M256 401 V430 M127 256 H158 M354 256 H385" stroke="#B69D70" stroke-width="4"/>
+  <path d="M198 185 H314 M198 327 H314" stroke="#89969B" stroke-width="2" opacity=".8"/>
+</g>
+</svg>

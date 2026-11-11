@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<title>GRAY ZONE MYCELIUM PATTERN — BLACKOUT signature graphic concept</title>
+
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M95 120 L310 120 L310 205 M500 90 L690 90 L690 270 M110 590 L250 590 L250 700 M540 520 L700 520" stroke="#7D8794" stroke-width="1.5" opacity=".45"/>
+ <path d="M170 450 C220 415 235 370 270 340 C305 310 330 315 360 280 C390 245 396 205 432 180 C465 155 495 167 520 140" stroke="#7D8794" stroke-width="4"/>
+ <path d="M270 340 C255 300 240 277 212 258 M270 340 C300 360 314 395 320 430 M360 280 C340 245 335 220 344 190 M360 280 C405 300 432 325 450 365 M432 180 C420 145 430 118 455 95 M432 180 C470 205 500 225 545 230" stroke="#7D8794" stroke-width="2.5"/>
+ <path d="M320 430 C290 455 270 485 274 525 M320 430 C360 430 390 450 405 480 M450 365 C480 350 510 350 542 365 M545 230 C575 210 600 182 610 152 M545 230 C565 270 590 290 630 298" stroke="#7D8794" stroke-width="2"/>
+ <path d="M212 258 C190 230 180 203 188 178 M212 258 C185 275 166 300 160 330 M274 525 C250 550 230 572 195 580 M405 480 C420 515 450 540 485 548 M542 365 C565 390 575 420 570 455" stroke="#7D8794" stroke-width="1.7"/>
+ <g stroke="#89969B" stroke-width="1.4" opacity=".65">
+  <path d="M285 328 L305 313 L329 320 L334 344 L314 361 L290 352 Z M438 355 L460 340 L484 350 L490 375 L470 390 L447 380 Z M520 135 L540 125 L558 138 L555 160 L534 170 L516 155 Z"/>
+  <path d="M180 440 L205 428 L226 444 L224 468 L202 480 L180 465 Z M376 455 L399 445 L421 459 L420 482 L396 495 L376 480 Z"/>
+ </g>
+ <g fill="#7D8794" stroke="none" opacity=".55">
+  <circle cx="270" cy="340" r="5"/><circle cx="360" cy="280" r="6"/><circle cx="432" cy="180" r="4"/><circle cx="320" cy="430" r="4"/><circle cx="450" cy="365" r="5"/><circle cx="545" cy="230" r="5"/>
+ </g>
+</g>
+</svg>

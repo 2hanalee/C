@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="66 66 381 381" role="img" aria-label="하란 산업연합">
+<title>하란 산업연합</title>
+<desc>방어막 인프라·장비·이계 잔해 처리·방송권</desc>
+
+<g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+  <path d="M118 174 H224 V224 H286 V174 H394" stroke="#B69D70" stroke-width="9"/>
+  <path d="M118 338 H224 V288 H286 V338 H394" stroke="#E8E6DC" stroke-width="9"/>
+  <path d="M256 118 V216 M256 296 V394" stroke="#AFCBD1" stroke-width="8"/>
+  <path d="M118 150 V198 M394 150 V198 M118 314 V362 M394 314 V362" stroke="#89969B" stroke-width="4"/>
+  <rect x="224" y="224" width="64" height="64" rx="2" stroke="#E8E6DC" stroke-width="5"/>
+  <circle cx="256" cy="256" r="12" fill="#AFCBD1" stroke="none"/>
+  <path d="M82 256 H174 M338 256 H430" stroke="#89969B" stroke-width="3"/>
+  <path d="M82 242 V270 M430 242 V270" stroke="#B69D70" stroke-width="4"/>
+</g>
+</svg>

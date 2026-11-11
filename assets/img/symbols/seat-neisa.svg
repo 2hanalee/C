@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="113 99 287 287" role="img" aria-label="네이사 · 제4좌 / 질투">
+<title>네이사 · 제4좌 / 질투</title>
+<desc>모사 · 우위 모방 · 거울 통로</desc>
+
+<g fill="none" stroke-linejoin="miter" stroke-linecap="square">
+  <path d="M150 140 H260 V372 H150 Z" stroke="#E8E6DC" stroke-width="5"/>
+  <path d="M252 112 H362 V344 H252 Z" stroke="#AFCBD1" stroke-width="5"/>
+  <path d="M174 164 H236 V348 H174 Z" stroke="#89969B" stroke-width="2" opacity=".8"/>
+  <path d="M276 136 H338 V320 H276 Z" stroke="#7D8794" stroke-width="2" opacity=".8"/>
+  <path d="M210 190 L210 236 M210 278 L210 322" stroke="#E8E6DC" stroke-width="4"/>
+  <path d="M302 160 L302 206 M302 248 L302 294" stroke="#AFCBD1" stroke-width="4"/>
+  <path d="M235 256 H267" stroke="#B69D70" stroke-width="3" stroke-dasharray="4 8"/>
+  <path d="M244 244 L256 256 L244 268 M268 244 L256 256 L268 268" stroke="#89969B" stroke-width="3"/>
+</g>
+</svg>

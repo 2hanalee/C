@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="81 81 350 350" role="img" aria-label="라그바르 · 제6좌 / 분노">
+<title>라그바르 · 제6좌 / 분노</title>
+<desc>분쟁 · 전쟁의 고양 · 충격 저금고</desc>
+
+<g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+  <path d="M116 154 L222 230 L188 246 L278 270" stroke="#E8E6DC" stroke-width="9"/>
+  <path d="M396 358 L290 282 L324 266 L234 242" stroke="#AFCBD1" stroke-width="9"/>
+  <path d="M256 96 L248 188 M256 416 L264 324 M96 256 L188 248 M416 256 L324 264" stroke="#89969B" stroke-width="4"/>
+  <path d="M219 224 L250 211 L280 231 L294 260 L270 286 L241 301 L214 276 L201 248 Z" stroke="#B69D70" stroke-width="5"/>
+  <path d="M232 238 L255 229 L275 244 L281 263 L260 279 L238 282 L225 262 Z" stroke="#89969B" stroke-width="3"/>
+  <path d="M256 214 L247 246 L266 260 L249 291" stroke="#E8E6DC" stroke-width="5"/>
+  <path d="M144 116 L176 148 M368 396 L336 364" stroke="#AFCBD1" stroke-width="4"/>
+</g>
+</svg>

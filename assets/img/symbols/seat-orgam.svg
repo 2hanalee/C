@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="88 88 337 337" role="img" aria-label="오르감 · 제5좌 / 폭식">
+<title>오르감 · 제5좌 / 폭식</title>
+<desc>포식 · 존재 섭취 · 공허의 위장</desc>
+
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M256 104 C286 104 311 128 311 156 C311 178 294 196 278 204" stroke="#7D8794" stroke-width="8"/>
+  <path d="M408 256 C408 286 384 311 356 311 C334 311 316 294 308 278" stroke="#E8E6DC" stroke-width="8"/>
+  <path d="M256 408 C226 408 201 384 201 356 C201 334 218 316 234 308" stroke="#7D8794" stroke-width="8"/>
+  <path d="M104 256 C104 226 128 201 156 201 C178 201 196 218 204 234" stroke="#E8E6DC" stroke-width="8"/>
+  <path d="M256 148 C286 148 304 177 290 203 M364 256 C364 286 335 304 309 290 M256 364 C226 364 208 335 222 309 M148 256 C148 226 177 208 203 222" stroke="#A65A5A" stroke-width="4"/>
+  <path d="M231 231 C245 215 269 215 283 231 C299 247 297 270 281 284 C266 298 243 294 229 279 C216 263 217 245 231 231 Z" stroke="#89969B" stroke-width="3" stroke-dasharray="5 8"/>
+</g>
+</svg>

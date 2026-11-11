@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720">
+<title>마법소녀 아카데미 인장</title>
+<g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+ <circle cx="360" cy="360" r="274" stroke="#E8E6DC" stroke-width="5"/>
+ <circle cx="360" cy="360" r="248" stroke="#89969B" stroke-width="2" stroke-dasharray="2 14"/>
+ <path d="M360 55 V83 M360 637 V665 M55 360 H83 M637 360 H665" stroke="#B69D70" stroke-width="5"/>
+ <path d="M216 184 H504 V536 H216 Z" stroke="#E8E6DC" stroke-width="7"/>
+ <path d="M252 228 H468 M252 492 H468" stroke="#89969B" stroke-width="4"/>
+ <path d="M360 228 V322 M360 398 V492" stroke="#AFCBD1" stroke-width="7"/>
+ <path d="M318 360 H344 M376 360 H402" stroke="#E8E6DC" stroke-width="5"/>
+ <path d="M188 360 H216 M504 360 H532" stroke="#89969B" stroke-width="3"/>
+ <path d="M246 154 L266 174 M474 546 L494 566 M474 174 L494 154 M246 566 L266 546" stroke="#89969B" stroke-width="3"/>
+</g>
+<circle cx="360" cy="360" r="8" fill="#AFCBD1"/>
+</svg>

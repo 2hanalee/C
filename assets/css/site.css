@@ -1,14 +1,25 @@
-/* 배치 개념: 사건 기록철. 왼쪽에 철 목차, 가운데 본문, 오른쪽 여백에 소문과 기밀 주석.
-   색은 먹과 서식 용지 두 가지뿐이고, 색채는 인물 그림과 인물별 고유색에서만 나온다. */
+/* 배치 개념: 사건 기록철. 왼쪽에 철 목차, 가운데 본문, 오른쪽 여백에 가려진 기록.
+   색의 역할
+     용지색   본문과 제목
+     황동색   자리와 제도: 등수, 문서 번호, 날짜와 기록 표기, 내부용 등급
+     경계빛   마법과 경계, 그리고 지금 고른 것: 능력명, 현재 메뉴, 선택, 초점
+     녹       위험과 상실: 기밀 등급, 말소와 전사, 오염
+   인물에게 고유색(--char)이 있으면 그 인물의 등수와 능력명은 고유색을 따른다. */
 :root {
   color-scheme: dark;
-  --ink: #0c0d0c;          /* 바탕: 불 꺼진 화면 */
-  --ink-2: #151715;        /* 한 단 올라온 면 */
-  --paper: #e3e7e0;        /* 서식 용지. 본문 글자색이자 가림 막대 색 */
-  --paper-dim: #a4aaa2;    /* 보조 글자 */
-  --paper-faint: #646a63;  /* 주석, 비활성 */
-  --rule: #2b2f2b;         /* 구획선 */
-  --char: #e3e7e0;         /* 인물 고유색. 그림이 정해진 인물만 자기 색으로 덮어쓴다 */
+  --ink: #0A1118;          /* 바탕: 불 꺼진 화면 */
+  --ink-2: #121D25;        /* 한 단 올라온 면 */
+  --slate: #17232B;        /* 눌린 면, 그림 자리 */
+  --paper: #E8E6DC;        /* 기록 용지. 본문 글자색이자 가림 막대 색 */
+  --paper-dim: #A6B0B3;    /* 보조 글자 */
+  --paper-faint: #74838A;  /* 주석, 비활성 */
+  --rule: #22303A;         /* 구획선 */
+  --boundary: #AFCBD1;     /* 경계빛 */
+  --brass: #B69D70;        /* 황동색 */
+  --rust: #A65A5A;         /* 녹: 선과 면 */
+  --rust-text: #D08C87;    /* 녹: 어두운 바탕 위의 글자 */
+  --rust-ink: #8A3F3F;     /* 녹: 용지 위의 글자 */
+  --distortion: #7D8794;   /* 일그러짐: 이계 쪽 보조선 */
 
   --f-display: "Hahmlet", "Noto Serif KR", "Apple SD Gothic Neo", serif;
   --f-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
@@ -38,7 +49,7 @@ a { color: inherit; }
 h1, h2, h3, p, ol, ul, dl, dd, figure { margin: 0; padding: 0; }
 ol, ul { list-style: none; }
 button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
-:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--boundary); outline-offset: 3px; }
 
 .mono {
   font-family: var(--f-mono);
@@ -69,13 +80,15 @@ body::before {
 .lockup span { font-size: 0.75rem; color: var(--paper-dim); white-space: nowrap; }
 .top-nav { display: none; gap: 1.75rem; }
 .top-nav a { text-decoration: none; font-size: 0.9rem; color: var(--paper-dim); padding-block: 0.25rem; }
-.top-nav a[aria-current="page"], .top-nav a:hover { color: var(--paper); box-shadow: 0 2px 0 var(--paper); }
+.top-nav a[aria-current="page"], .top-nav a:hover { color: var(--paper); box-shadow: 0 2px 0 var(--boundary); }
 
 /* 열람 등급: 공개 / 내부용 / 기밀 */
 .clearance { display: flex; box-shadow: inset 0 0 0 1px var(--rule); flex: none; }
 .clearance button { font-size: 0.8rem; line-height: 1; padding: 0.55rem 0.7rem; color: var(--paper-dim); white-space: nowrap; }
 .clearance button:hover { color: var(--paper); }
 .clearance button[aria-pressed="true"] { background: var(--paper); color: var(--ink); font-weight: 600; }
+.clearance button[data-level="1"][aria-pressed="true"] { background: var(--brass); }
+.clearance button[data-level="2"][aria-pressed="true"] { background: var(--rust); color: var(--paper); }
 @media (max-width: 479.98px) { .lockup span { display: none; } }
 
 /* ───────── 기록철 틀 ───────── */
@@ -94,11 +107,11 @@ body::before {
 }
 .block-head p { color: var(--paper-dim); max-width: 34rem; }
 .more { justify-self: start; font-size: 0.9rem; text-decoration: none; box-shadow: 0 1px 0 var(--paper); padding-bottom: 0.1rem; }
-.more:hover { box-shadow: 0 3px 0 var(--paper); }
+.more:hover { box-shadow: 0 3px 0 var(--boundary); }
 
 /* ───────── 표지 ───────── */
 .cover { padding-block: 3rem 3.5rem; display: grid; gap: 2rem; }
-.cover-meta { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+.cover-meta { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; color: var(--brass); }
 .title { display: grid; gap: 0.25rem; }
 .title small {
   font-family: var(--f-display); font-weight: 500; font-size: clamp(1.05rem, 3.6vw, 1.7rem);
@@ -129,7 +142,8 @@ body::before {
 .scenes .when { font-family: var(--f-mono); font-size: 0.8rem; color: var(--paper-dim); padding-top: 0.45rem; font-variant-numeric: tabular-nums; }
 .scenes h3 { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.3; }
 .scenes p { color: var(--paper-dim); margin-top: 0.3rem; max-width: 28rem; }
-.scenes li.now h3, .scenes li.now .when { color: var(--paper); }
+.scenes li.now h3 { color: var(--paper); }
+.scenes li.now .when { color: var(--boundary); }
 
 /* ───────── 랭킹 보드 ───────── */
 .board { border-bottom: 1px solid var(--rule); }
@@ -138,6 +152,7 @@ body::before {
   align-items: center; padding-block: 0.8rem; border-top: 1px solid var(--rule);
 }
 .board .rk {
+  color: var(--brass);
   font-family: var(--f-display); font-weight: 900; font-size: 2rem; line-height: 1;
   letter-spacing: -0.04em; font-variant-numeric: tabular-nums;
 }
@@ -146,11 +161,12 @@ body::before {
 .board .who span { font-size: 0.85rem; color: var(--paper-dim); line-height: 1.35; }
 .board .st { display: grid; justify-items: end; gap: 0.1rem; font-size: 0.8rem; line-height: 1.4; color: var(--paper-dim); text-align: right; }
 .board .mv { font-family: var(--f-mono); font-weight: 500; font-size: 0.85rem; letter-spacing: 0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.board .mv.up { color: var(--paper); }
+.board .mv.up { color: var(--boundary); }
 .board .mv.down { color: var(--paper-faint); }
 .board-wrap { display: grid; gap: 0.75rem; }
 .board-key { color: var(--paper-faint); }
-.board li.void .rk, .board li.void .st { color: var(--paper-faint); }
+.board li.void .rk { color: var(--paper-faint); }
+.board li.void .st { color: var(--rust-text); }
 .board .struck { display: block; height: 1.15rem; width: min(11rem, 100%); background: var(--paper); }
 .board a { text-decoration: none; }
 .board a:hover b { box-shadow: 0 1px 0 var(--paper); }
@@ -167,17 +183,19 @@ body::before {
 }
 .bar::after {
   content: "기밀 · 눌러서 열람"; position: absolute; left: 0.9rem; top: 0.7rem;
-  font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em; color: var(--ink);
+  font-family: var(--f-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em; color: var(--rust-ink);
 }
 .bar:hover { background: #fff; }
 /* 내부용은 빗금, 기밀은 통막대 */
 .bar[data-level="1"] {
-  background: repeating-linear-gradient(-45deg, var(--paper-faint) 0 2px, transparent 2px 9px);
-  box-shadow: inset 0 0 0 1px var(--paper-faint);
+  background: repeating-linear-gradient(-45deg, var(--brass) 0 1.5px, transparent 1.5px 9px);
+  box-shadow: inset 0 0 0 1px var(--brass);
 }
-.bar[data-level="1"]::after { content: "내부용 · 눌러서 열람"; color: var(--paper); background: var(--ink); padding: 0.1rem 0.45rem; left: 0.6rem; top: 0.55rem; }
+.bar[data-level="1"]::after { content: "내부용 · 눌러서 열람"; color: var(--brass); background: var(--ink); padding: 0.1rem 0.45rem; left: 0.6rem; top: 0.55rem; }
 .bar[data-level="1"]:hover { box-shadow: inset 0 0 0 1px var(--paper); }
-.bar[aria-expanded="true"], .bar[data-level="1"][aria-expanded="true"] { background: var(--ink-2); box-shadow: none; color: var(--paper); user-select: text; cursor: default; }
+.bar[data-level="2"][aria-expanded="true"] { box-shadow: inset 3px 0 0 var(--rust); }
+.bar[data-level="1"][aria-expanded="true"] { box-shadow: inset 3px 0 0 var(--brass); }
+.bar[aria-expanded="true"], .bar[data-level="1"][aria-expanded="true"] { background: var(--ink-2); color: var(--paper); user-select: text; cursor: default; }
 .bar[aria-expanded="true"]::after, .bar[data-level="1"][aria-expanded="true"]::after { content: none; }
 
 /* ───────── 인물 ───────── */
@@ -187,7 +205,7 @@ body::before {
 .id { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1rem; align-items: end; }
 .id .rk {
   font-family: var(--f-display); font-weight: 900; font-size: clamp(4rem, 17vw, 7rem);
-  line-height: 0.8; letter-spacing: -0.06em; color: var(--char);
+  line-height: 0.8; letter-spacing: -0.06em; color: var(--char, var(--brass));
 }
 .id h3, .id .h3 { font-family: var(--f-display); font-weight: 800; font-size: clamp(1.5rem, 5.2vw, 2.1rem); line-height: 1.2; letter-spacing: -0.02em; }
 .id p { color: var(--paper-dim); font-size: 0.9rem; }
@@ -198,9 +216,9 @@ body::before {
 .spec div { display: grid; gap: 0.2rem; padding-top: 0.9rem; border-top: 1px solid var(--rule); }
 .spec dt { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em; color: var(--paper-dim); }
 .spec dd { max-width: 36rem; }
-.spec dd b { font-family: var(--f-display); font-weight: 800; font-size: 1.2rem; color: var(--char); display: block; }
+.spec dd b { font-family: var(--f-display); font-weight: 800; font-size: 1.2rem; color: var(--char, var(--boundary)); display: block; }
 .spec dd a { text-decoration: none; box-shadow: 0 1px 0 var(--paper-faint); }
-.spec dd a:hover { box-shadow: 0 2px 0 var(--char); }
+.spec dd a:hover { box-shadow: 0 2px 0 var(--char, var(--boundary)); }
 
 /* ───────── 칠좌 ───────── */
 .thrones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 1rem; }
@@ -245,7 +263,7 @@ body::before {
   .scenes { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 2rem; }
   .scenes li { grid-template-columns: 1fr; border-top: 0.5rem solid var(--rule); padding-block: 1rem 0; gap: 0.6rem; }
   .scenes li:first-child { border-top: 0.5rem solid var(--rule); padding-top: 1rem; }
-  .scenes li.now { border-top-color: var(--paper); }
+  .scenes li.now { border-top-color: var(--boundary); }
   .scenes .when { padding-top: 0; }
   .board li { grid-template-columns: 5rem minmax(0, 1fr) 12rem; }
   .board .st { grid-auto-flow: column; justify-content: end; align-items: baseline; gap: 1rem; }
@@ -260,7 +278,7 @@ body::before {
   .rail a { display: grid; grid-template-columns: 1.6rem 1fr; text-decoration: none; font-size: 0.8rem; color: var(--paper-faint); padding-block: 0.3rem; }
   .rail a span { font-family: var(--f-mono); }
   .rail a:hover, .rail a.on { color: var(--paper); }
-  .rail a.on { box-shadow: -0.75rem 0 0 -0.5rem var(--paper); }
+  .rail a.on { box-shadow: -0.75rem 0 0 -0.5rem var(--boundary); }
   .block { grid-template-columns: minmax(0, 1fr) 19rem; }
 }
 
@@ -271,7 +289,7 @@ body::before {
   display: grid; grid-template-rows: auto 1fr auto;
   padding: calc(env(safe-area-inset-top, 0px) + 1.25rem) var(--gutter-r) calc(env(safe-area-inset-bottom, 0px) + 1.25rem) var(--gutter-l);
 }
-.gate .mono { color: #4d534c; }
+.gate .mono { color: #4a565c; }
 .gate-head { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 2px solid var(--ink); padding-bottom: 0.6rem; }
 .gate-body { align-self: center; display: grid; gap: 1.5rem; max-width: 46rem; width: 100%; margin-inline: auto; }
 .gate-quote { display: grid; gap: 0.35rem; font-family: var(--f-display); font-weight: 600; font-size: clamp(1.6rem, 6.2vw, 2.9rem); line-height: 1.5; letter-spacing: -0.02em; }
@@ -330,7 +348,7 @@ body::before {
 .chips button[aria-pressed="true"] { background: var(--paper); color: var(--ink); font-weight: 600; box-shadow: none; }
 .rail button { display: flex; justify-content: space-between; width: 100%; text-align: left; font-size: 0.8rem; line-height: 1.4; color: var(--paper-faint); padding-block: 0.4rem; }
 .rail button:hover, .rail button[aria-pressed="true"] { color: var(--paper); }
-.rail button[aria-pressed="true"] { box-shadow: -0.75rem 0 0 -0.5rem var(--paper); }
+.rail button[aria-pressed="true"] { box-shadow: -0.75rem 0 0 -0.5rem var(--boundary); }
 .empty { padding-block: 3rem; color: var(--paper-dim); }
 
 .board .rk.label { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; color: var(--paper-dim); }
@@ -341,14 +359,14 @@ body::before {
 .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 1rem; padding-bottom: 1rem; }
 .cards a { display: grid; gap: 0.6rem; text-decoration: none; align-content: start; }
 .cards .cap { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.6rem; align-items: baseline; }
-.cards .cap i { font-style: normal; font-family: var(--f-display); font-weight: 900; font-size: 1.25rem; letter-spacing: -0.04em; color: var(--char, var(--paper)); font-variant-numeric: tabular-nums; }
+.cards .cap i { font-style: normal; font-family: var(--f-display); font-weight: 900; font-size: 1.25rem; letter-spacing: -0.04em; color: var(--char, var(--brass)); font-variant-numeric: tabular-nums; }
 .cards .cap i.label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0; color: var(--paper-dim); }
 .cards .cap b { display: block; font-weight: 600; line-height: 1.35; }
 .cards .cap span { display: block; font-size: 0.8rem; color: var(--paper-dim); line-height: 1.4; }
 .cards a:hover b { box-shadow: 0 1px 0 var(--paper); }
 
 /* 그림 자리. 그림이 없으면 활동명으로 채운다 */
-.plate { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: var(--ink-2); overflow: hidden; container-type: inline-size; }
+.plate { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: var(--slate); overflow: hidden; container-type: inline-size; }
 .plate img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .plate .mono { position: absolute; left: 0.7rem; top: 0.55rem; color: var(--paper-faint); font-size: 0.7rem; }
 .plate b {
@@ -370,11 +388,11 @@ body::before {
 .emotes button[aria-pressed="true"] { background: var(--paper); color: var(--ink); font-weight: 600; box-shadow: none; }
 .emotes button:disabled { color: var(--paper-faint); cursor: default; }
 .id .rk.label { font-size: clamp(1.6rem, 7vw, 2.6rem); letter-spacing: -0.03em; line-height: 1; }
-.said { font-family: var(--f-display); font-weight: 500; font-size: 1.15rem; line-height: 1.5; padding-left: 1rem; border-left: 0.35rem solid var(--char, var(--paper)); max-width: 34rem; }
+.said { font-family: var(--f-display); font-weight: 500; font-size: 1.15rem; line-height: 1.5; padding-left: 1rem; border-left: 0.35rem solid var(--char, var(--boundary)); max-width: 34rem; }
 .rel { display: grid; gap: 0.5rem; }
 .rel li { display: grid; grid-template-columns: minmax(0, 9.5rem) minmax(0, 1fr); gap: 1rem; align-items: baseline; }
 .rel a { text-decoration: none; font-weight: 600; box-shadow: 0 1px 0 var(--paper-faint); justify-self: start; }
-.rel a:hover { box-shadow: 0 2px 0 var(--char, var(--paper)); }
+.rel a:hover { box-shadow: 0 2px 0 var(--char, var(--boundary)); }
 .rel span { color: var(--paper-dim); line-height: 1.55; }
 .notes h2 { font-family: var(--f-mono); font-weight: 500; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--paper-dim); display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule); }
 .notes .group { display: grid; gap: 1rem; }
@@ -403,7 +421,7 @@ body::before {
 .rail a.on { color: var(--paper); }
 .docs { border-bottom: 1px solid var(--rule); }
 .docs a { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); gap: 0.4rem 0.9rem; padding-block: 1.2rem; border-top: 1px solid var(--rule); text-decoration: none; align-items: start; }
-.docs .no, .doc-head .no { font-family: var(--f-display); font-weight: 900; font-size: 2rem; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.docs .no, .doc-head .no { color: var(--brass); font-family: var(--f-display); font-weight: 900; font-size: 2rem; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
 .docs b { display: block; font-family: var(--f-display); font-weight: 800; font-size: 1.45rem; line-height: 1.3; letter-spacing: -0.02em; }
 .docs a > span > span { display: block; color: var(--paper-dim); margin-top: 0.2rem; line-height: 1.6; }
 .docs .mono { grid-column: 2; color: var(--paper-faint); }
@@ -412,7 +430,7 @@ body::before {
 
 .doc { gap: 2.25rem; }
 .doc-head { display: grid; gap: 0.6rem; }
-.doc-head .no { color: var(--paper-faint); font-size: 1.5rem; }
+.doc-head .no { font-size: 1.5rem; }
 .doc-head h1 { font-family: var(--f-display); font-weight: 900; font-size: clamp(2.4rem, 10vw, 4.4rem); line-height: 1.05; letter-spacing: -0.04em; text-wrap: balance; }
 .doc-head p { font-family: var(--f-display); font-weight: 500; font-size: clamp(1.1rem, 3.8vw, 1.45rem); line-height: 1.5; color: var(--paper-dim); max-width: 34rem; text-wrap: balance; }
 .doc section { display: grid; gap: 0.6rem; max-width: 38rem; }
@@ -434,11 +452,11 @@ body::before {
 .tabs a { font-size: 0.85rem; line-height: 1; padding: 0.7rem 1.1rem; color: var(--paper-dim); text-decoration: none; }
 .tabs a[aria-current="true"] { background: var(--paper); color: var(--ink); font-weight: 600; }
 .era { padding-block: 1.5rem 2.5rem; border-top: 0.5rem solid var(--rule); display: grid; gap: 0.5rem; scroll-margin-top: 5rem; }
-.era:last-of-type { border-top-color: var(--paper); }
+.era:last-of-type { border-top-color: var(--boundary); }
 .era > h2 { font-family: var(--f-mono); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.04em; color: var(--paper-dim); }
 .ev { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 1rem; padding-block: 1.25rem; border-top: 1px solid var(--rule); }
 .ev:first-child { border-top: 0; }
-.ev .when { font-family: var(--f-mono); font-size: 0.8rem; color: var(--paper); padding-top: 0.4rem; font-variant-numeric: tabular-nums; line-height: 1.5; }
+.ev .when { font-family: var(--f-mono); font-size: 0.8rem; color: var(--brass); padding-top: 0.4rem; font-variant-numeric: tabular-nums; line-height: 1.5; }
 .ev .when small { display: block; font-size: 0.72rem; color: var(--paper-faint); }
 .ev > div { display: grid; gap: 0.6rem; min-width: 0; }
 .ev h3 { font-family: var(--f-display); font-weight: 800; font-size: 1.4rem; line-height: 1.3; letter-spacing: -0.02em; }
@@ -455,13 +473,14 @@ body::before {
 .map { position: relative; aspect-ratio: 800 / 560; max-width: 100%; background: var(--ink-2); overflow: hidden; }
 .map svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .m-land { fill: var(--ink-2); }
+.m-myc { opacity: 0.9; }
 .m-sea { fill: var(--ink); }
 .m-sea-line { stroke: var(--rule); stroke-width: 1; fill: none; }
 .m-coast { fill: none; stroke: var(--paper-dim); stroke-width: 1.5; }
 .m-pier { fill: none; stroke: var(--paper-dim); stroke-width: 3; }
 .m-road { fill: none; stroke: var(--rule); stroke-width: 5; stroke-linejoin: round; }
-.m-spore { fill: var(--paper-faint); }
-.m-zone { fill: none; stroke: var(--paper-faint); stroke-width: 1; stroke-dasharray: 3 4; }
+.m-spore { fill: var(--rust); }
+.m-zone { fill: none; stroke: var(--rust); stroke-width: 1.2; stroke-dasharray: 3 4; }
 .m-scrap { stroke: var(--paper-faint); stroke-width: 1; fill: none; }
 .m-block { fill: none; stroke: var(--paper-faint); stroke-width: 1; }
 .m-grid { fill: none; stroke: var(--rule); stroke-width: 1; }
@@ -476,7 +495,7 @@ body::before {
 }
 .pin::before { content: ""; position: absolute; inset: -0.5rem; }
 .pin:hover { background: var(--rule); }
-.pin[aria-pressed="true"] { background: var(--paper); color: var(--ink); width: 2.4rem; height: 2.4rem; font-size: 1.15rem; z-index: 2; }
+.pin[aria-pressed="true"] { background: var(--boundary); color: var(--ink); box-shadow: none; width: 2.4rem; height: 2.4rem; font-size: 1.15rem; z-index: 2; }
 .pin.off { box-shadow: inset 0 0 0 1.5px var(--paper-faint); }
 .place { display: grid; gap: 0.7rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--rule); min-height: 9rem; align-content: start; }
 .place > h2 { font-family: var(--f-display); font-weight: 900; font-size: 1.9rem; line-height: 1.2; letter-spacing: -0.03em; }
@@ -487,7 +506,7 @@ body::before {
 .place-list i { font-style: normal; font-family: var(--f-display); font-weight: 900; line-height: 1.9rem; text-align: center; height: 1.9rem; box-shadow: inset 0 0 0 1.5px var(--paper-faint); color: var(--paper-dim); }
 .place-list b { display: block; font-weight: 600; line-height: 1.4; }
 .place-list span span { display: block; font-size: 0.8rem; color: var(--paper-dim); line-height: 1.4; }
-.place-list button[aria-pressed="true"] i { background: var(--paper); color: var(--ink); box-shadow: none; }
+.place-list button[aria-pressed="true"] i { background: var(--boundary); color: var(--ink); box-shadow: none; }
 .place-list button:hover b { box-shadow: 0 1px 0 var(--paper); display: inline; }
 
 /* ═════════ 웹툰 ═════════ */
@@ -535,3 +554,52 @@ body::before {
   .ev > div > * { grid-column: 1; }
   .ev > div > .more-bars { grid-column: 2; grid-row: 1 / span 5; align-content: start; }
 }
+
+/* ═════════ 로고, 인장, 기호 ═════════ */
+.lockup { align-items: center; gap: 0.7rem; }
+.lockup img { display: block; height: 0.95rem; width: auto; }
+.lockup span { padding-left: 0.7rem; border-left: 1px solid var(--rule); }
+
+/* 게이트의 로고 공개 */
+.gate-logo { display: grid; gap: 1.1rem; justify-items: start; width: 100%; }
+.gate-logo img { display: block; width: min(100%, 34rem); height: auto; }
+.gate-logo p { display: flex; align-items: center; gap: 1rem; width: min(100%, 34rem); font-family: var(--f-display); font-weight: 500; font-size: clamp(0.95rem, 3.4vw, 1.25rem); letter-spacing: 0.28em; white-space: nowrap; }
+.gate-logo p::before, .gate-logo p::after { content: ""; flex: 1; height: 1px; background: var(--paper-faint); }
+.gate-dark .gate-logo { opacity: 0; transition: opacity 0.9s; }
+.gate[data-phase="title"] .gate-dark .gate-logo { opacity: 1; }
+
+/* 공식 기록에 찍는 인장 */
+.sealed-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.25rem; align-items: center; }
+.seal { display: block; width: 5.5rem; height: 5.5rem; flex: none; }
+.foot { align-items: center; }
+.foot .seal { width: 3rem; height: 3rem; margin-right: 0.25rem; }
+.foot img.word { height: 0.8rem; width: auto; display: block; }
+
+/* 칠좌 기호. 선이 가늘어 6rem 아래로는 쓰지 않는다 */
+.sym { display: block; width: 6rem; height: 6rem; flex: none; }
+.thrones li { gap: 0.4rem; }
+.thrones .seat-no, .seats .seat-no { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em; color: var(--brass); }
+.thrones li.king .rings i { box-shadow: inset 0 0 0 1.5px var(--distortion); }
+.seats li { grid-template-columns: 6rem minmax(0, 1fr); gap: 0.4rem 1.1rem; }
+.seats .sym { grid-row: span 3; align-self: start; }
+.plate.has-sym img { position: absolute; inset: 14% 0; width: 100%; height: 72%; object-fit: contain; }
+.plate.has-sym .mono { color: var(--paper-faint); }
+.id .sym { width: 6.5rem; height: 6.5rem; margin-bottom: -0.4rem; }
+.id.with-sym { grid-template-columns: auto auto minmax(0, 1fr); }
+
+/* 세계관 문서 머리의 세력 기호와 균사 */
+.doc-head.marked { grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.5rem; align-items: start; }
+.doc-head.marked > * { grid-column: 1; }
+.doc-head.marked > .mark { grid-column: 2; grid-row: 1 / span 3; width: 7rem; height: 7rem; }
+.doc-head.myc { position: relative; isolation: isolate; }
+.doc-head.myc::before { content: ""; position: absolute; z-index: -1; inset: -2rem -1rem -2rem 30%; background: url("../img/texture/mycelium-field.svg") right center / cover no-repeat; opacity: 0.9; -webkit-mask-image: linear-gradient(to right, transparent, #000 45%); mask-image: linear-gradient(to right, transparent, #000 45%); pointer-events: none; }
+
+@media (min-width: 900px) {
+  .lockup img { height: 1.05rem; }
+  .sym { width: 7rem; height: 7rem; }
+  .seats li { grid-template-columns: 7rem 11rem minmax(0, 0.8fr) minmax(0, 1.6fr); }
+  .seats .sym { grid-row: auto; }
+  .doc-head.marked > .mark { width: 9rem; height: 9rem; }
+  .seal { width: 6.5rem; height: 6.5rem; }
+}
+@media (max-width: 479.98px) { .lockup span { display: none; } }

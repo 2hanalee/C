@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="48 48 416 416" role="img" aria-label="칠좌 / 이계 왕국">
+<title>칠좌 / 이계 왕국</title>
+<desc>일곱 직위·왕명·열린 문·이계의 법</desc>
+
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M232 85 A91 91 0 0 1 280 85" stroke="#E8E6DC" stroke-width="7"/>
+  <path d="M350 137 A91 91 0 0 1 376 184" stroke="#7D8794" stroke-width="7"/>
+  <path d="M390 251 A91 91 0 0 1 359 302" stroke="#E8E6DC" stroke-width="7"/>
+  <path d="M313 375 A91 91 0 0 1 258 392" stroke="#AFCBD1" stroke-width="7"/>
+  <path d="M180 361 A91 91 0 0 1 144 321" stroke="#E8E6DC" stroke-width="7"/>
+  <path d="M121 249 A91 91 0 0 1 144 198" stroke="#7D8794" stroke-width="7"/>
+  <path d="M166 128 A91 91 0 0 1 209 93" stroke="#E8E6DC" stroke-width="7"/>
+  <path d="M238 174 A27 27 0 0 1 275 174 M306 204 A27 27 0 0 1 319 239 M306 304 A27 27 0 0 1 273 319 M205 306 A27 27 0 0 1 192 273 M205 204 A27 27 0 0 1 238 192" stroke="#89969B" stroke-width="3" opacity=".8"/>
+  <circle cx="256" cy="256" r="13" stroke="#AFCBD1" stroke-width="3" stroke-dasharray="10 9"/>
+  <path d="M256 65 V105 M256 407 V447 M65 256 H105 M407 256 H447" stroke="#B69D70" stroke-width="3"/>
+</g>
+</svg>
