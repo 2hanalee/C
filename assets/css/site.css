@@ -603,3 +603,88 @@ body::before {
   .seal { width: 6.5rem; height: 6.5rem; }
 }
 @media (max-width: 479.98px) { .lockup span { display: none; } }
+
+/* ═════════ 깊이: 표지 그림, 입자, 빛, 겹친 글자 ═════════ */
+/* 화면 전체에 깔리는 고운 입자. 평평한 색면이 인쇄물처럼 보이게 한다 */
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 40; pointer-events: none; opacity: 0.05; mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 표지: 인물 그림을 배경으로 깔고 왼쪽과 아래를 먹으로 덮어 제목 자리를 만든다 */
+.cover { position: relative; isolation: isolate; min-height: min(78vh, 46rem); align-content: end; }
+.cover::before {
+  content: ""; position: absolute; z-index: -2; top: 0; bottom: 18%;
+  left: calc(var(--gutter-l) * -1); right: calc(var(--gutter-r) * -1);
+  background: url("../img/hero/reina-cover.webp") 62% 18% / cover no-repeat;
+}
+.cover::after {
+  content: ""; position: absolute; z-index: -1; top: 0; bottom: 0;
+  left: calc(var(--gutter-l) * -1); right: calc(var(--gutter-r) * -1);
+  background:
+    linear-gradient(to top, var(--ink) 18%, rgba(10, 17, 24, 0.86) 40%, rgba(10, 17, 24, 0.25) 72%, rgba(10, 17, 24, 0.5) 100%);
+}
+.cover .title strong { text-shadow: 0 0.04em 0.5em rgba(10, 17, 24, 0.55); }
+.cover-credit { position: absolute; top: 1rem; right: 0; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--paper); text-decoration: none; background: rgba(10, 17, 24, 0.6); padding: 0.3rem 0.55rem; box-shadow: inset 2px 0 0 #e2334f; }
+.cover-credit:hover { background: var(--ink); }
+.cover-meta { text-shadow: 0 0 0.6em var(--ink); }
+
+/* 구획 제목 뒤에 겹쳐 놓는 큰 영문. 선으로만 그린다 */
+.block, .page-head, .enter { position: relative; isolation: isolate; }
+.block, .enter { overflow-x: clip; }
+[data-ghost]::before {
+  content: attr(data-ghost); position: absolute; z-index: -1; left: -0.04em; top: -0.42em; white-space: nowrap; pointer-events: none;
+  font-family: var(--f-display); font-weight: 900; font-size: clamp(3.6rem, 15vw, 9.5rem); line-height: 1; letter-spacing: -0.03em;
+  color: transparent; -webkit-text-stroke: 1px var(--rule);
+}
+@media (max-width: 899.98px) { [data-ghost]::before { top: -0.95em; font-size: 13vw; } .page-head[data-ghost]::before { top: 0.4rem; } }
+.block-head[data-ghost] { position: relative; }
+.page-head[data-ghost]::before { top: 0.9rem; }
+.page-head { overflow-x: clip; }
+
+/* 구획마다 위쪽에 깔리는 옅은 빛 */
+.block::after { content: ""; position: absolute; z-index: -2; left: -10%; right: 30%; top: 0; height: 22rem; pointer-events: none;
+  background: radial-gradient(ellipse 55% 50% at 28% 50%, var(--glow, rgba(175, 203, 209, 0.07)), transparent 72%); }
+#ranking { --glow: rgba(182, 157, 112, 0.10); }
+#thrones { --glow: rgba(125, 135, 148, 0.16); }
+#figures { --glow: rgba(226, 51, 79, 0.09); }
+.enter::after { content: ""; position: absolute; z-index: -1; inset: 0 -5% 0 -5%; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 120%, rgba(175, 203, 209, 0.14), transparent 62%); }
+
+/* 기호판: 가는 선 기호를 어두운 판 위에 올리고 빛을 준다 */
+.plaque { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 1; max-width: 100%;
+  background: radial-gradient(circle at 50% 42%, rgba(175, 203, 209, 0.13), transparent 62%), linear-gradient(160deg, var(--slate), var(--ink-2));
+  box-shadow: inset 0 0 0 1px var(--rule); transition: box-shadow 0.2s, background 0.2s; }
+.plaque::before, .plaque::after { content: ""; position: absolute; width: 0.7rem; height: 0.7rem; pointer-events: none; }
+.plaque::before { left: 0.45rem; top: 0.45rem; border-left: 1.5px solid var(--brass); border-top: 1.5px solid var(--brass); }
+.plaque::after { right: 0.45rem; bottom: 0.45rem; border-right: 1.5px solid var(--brass); border-bottom: 1.5px solid var(--brass); }
+.plaque .sym, .plaque img { width: 72%; height: 72%; filter: drop-shadow(0 0 0.5rem rgba(175, 203, 209, 0.38)); }
+a.plaque:hover { box-shadow: inset 0 0 0 1px var(--boundary); }
+a.plaque:hover img { filter: drop-shadow(0 0 0.9rem rgba(175, 203, 209, 0.7)); }
+.thrones li { gap: 0.35rem; align-content: start; }
+.thrones .plaque { margin-bottom: 0.5rem; }
+.seats .plaque { width: 6rem; grid-row: span 3; align-self: start; }
+.plate { background: linear-gradient(150deg, var(--slate), var(--ink-2) 70%); }
+.plate.has-sym { background: radial-gradient(circle at 50% 45%, rgba(175, 203, 209, 0.14), transparent 60%), linear-gradient(150deg, var(--slate), var(--ink-2) 70%); }
+.plate.has-sym img { filter: drop-shadow(0 0 0.6rem rgba(175, 203, 209, 0.4)); }
+.plate img { transition: transform 0.4s ease; }
+.cards a:hover .plate img:not([src$=".svg"]) { transform: scale(1.04); }
+.figure .art { box-shadow: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, 0.8); }
+.seal { filter: drop-shadow(0 0 0.5rem rgba(182, 157, 112, 0.25)); }
+
+/* 본문의 핵심어 */
+.kw { font-style: normal; color: var(--boundary); }
+.kw.r { color: var(--rust-text); }
+.kw.b { color: var(--brass); }
+
+@media (min-width: 900px) {
+  .cover { min-height: min(80vh, 50rem); }
+  /* 넓은 화면: 얼굴이 제목 위 오른쪽에 오도록 그림을 위로 당겨 놓는다 */
+  .cover::before { left: auto; width: 62rem; max-width: 86%; bottom: 0; background-size: 100% auto; background-position: right -7rem;
+    -webkit-mask-image: linear-gradient(to bottom, #000 34%, transparent 58%); mask-image: linear-gradient(to bottom, #000 34%, transparent 58%); }
+  .cover::after { background:
+    linear-gradient(to right, var(--ink) 30%, rgba(10, 17, 24, 0.7) 48%, rgba(10, 17, 24, 0.05) 78%, rgba(10, 17, 24, 0.35) 100%),
+    linear-gradient(to top, var(--ink) 0, var(--ink) 34%, rgba(10, 17, 24, 0.72) 50%, transparent 78%); }
+  .seats .plaque { width: 7rem; grid-row: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .plate img, .plaque { transition: none; } }

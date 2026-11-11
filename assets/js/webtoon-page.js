@@ -20,12 +20,12 @@
   var renderList = function () {
     document.title = "웹툰 · 블랙아웃";
     if (!eps.length) {
-      app.innerHTML = '<header class="page-head"><h1>웹툰</h1><p>연재를 준비하고 있습니다.</p></header>';
+      app.innerHTML = '<header class="page-head" data-ghost="SERIES"><h1>웹툰</h1><p>연재를 준비하고 있습니다.</p></header>';
       return;
     }
     var first = eps[0];
     app.innerHTML =
-      '<header class="page-head"><h1>웹툰</h1></header>' + sampleNote +
+      '<header class="page-head" data-ghost="SERIES"><h1>웹툰</h1></header>' + sampleNote +
       '<div class="series">' +
         plate(W.cover, "표지", W.title + " 표지") +
         '<div class="series-info"><h2>' + esc(W.title) + '</h2><p class="mono">' + esc(W.genre) + " · " + esc(W.schedule) + "</p>" +

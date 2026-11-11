@@ -18,6 +18,22 @@
   // 문서 머리에 놓는 세력 기호
   var MARKS = { academy: "faction-academy", thrones: "faction-seven-seats", consortium: "faction-consortium", "grey-zone": "faction-grey-zone" };
 
+  // 본문의 핵심어에 색을 준다. 한 문단에서 같은 말은 처음 한 번만.
+  var TERMS = [
+    ["칠월의 밤", ""], ["하란항 대균열", ""], ["침식", "r"], ["마모", "r"], ["회색 구역", "r"], ["이계 균류", "r"],
+    ["왕명", ""], ["칠좌", ""], ["경계인", ""], ["임시 봉합", ""], ["랭킹제", "b"], ["휴전", "b"], ["종전", "b"],
+    ["4,172명", "r"], ["340미터의 흉터", ""], ["안전파", "b"], ["이윤파", "b"], ["진화파", "b"],
+  ];
+  var mark = function (html) {
+    TERMS.forEach(function (t) {
+      var i = html.indexOf(t[0]);
+      // 이미 표시한 말 안쪽은 건드리지 않는다
+      if (i === -1 || html.lastIndexOf("<em", i) > html.lastIndexOf("</em>", i)) return;
+      html = html.slice(0, i) + '<em class="kw' + (t[1] ? " " + t[1] : "") + '">' + t[0] + "</em>" + html.slice(i + t[0].length);
+    });
+    return html;
+  };
+
   var hiddenCount = function (d) {
     var parts = [];
     if (d.internal.length) parts.push("내부용 " + d.internal.length);
@@ -28,7 +44,7 @@
   var renderList = function () {
     document.title = "세계관 · 블랙아웃";
     app.innerHTML =
-      '<header class="page-head"><h1>세계관</h1><p>문서 여덟 건. 번호 순서대로 읽으면 20년의 흐름이 이어집니다.</p></header>' +
+      '<header class="page-head" data-ghost="ARCHIVE"><h1>세계관</h1><p>문서 여덟 건. 번호 순서대로 읽으면 20년의 흐름이 이어집니다.</p></header>' +
       '<ol class="docs">' + DOCS.map(function (d) {
         return '<li><a href="#' + d.id + '"><span class="no">' + d.no + "</span>" +
           "<span><b>" + esc(d.title) + "</b><span>" + esc(d.lead) + "</span></span>" +
@@ -41,7 +57,7 @@
   var seatsHtml = function () {
     return '<ol class="seats">' + SEATS.map(function (s) {
       var c = B.charById[s.id];
-      return '<li><img class="sym" src="assets/img/symbols/seat-' + s.id + '.svg" alt="">' +
+      return '<li><a class="plaque" href="characters.html#' + s.id + '"><img src="assets/img/symbols/seat-' + s.id + '.svg" alt=""></a>' +
         '<div class="who"><span class="seat-no">제' + s.seat + '좌</span><a href="characters.html#' + s.id + '">' + esc(c ? c.name : s.id) + "</a>" +
         "<span>" + esc(s.sin) + " · " + esc(s.law) + "의 법</span></div>" +
         '<p><span class="mono">흔드는 것</span>' + esc(s.pillar) + "</p>" +
@@ -56,7 +72,7 @@
     var next = DOCS[(i + 1) % DOCS.length];
     var body = d.body.map(function (b) {
       if (b.seats) return seatsHtml();
-      return "<section><h2>" + esc(b.h) + "</h2>" + b.p.map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") + "</section>";
+      return "<section><h2>" + esc(b.h) + "</h2>" + b.p.map(function (t) { return "<p>" + mark(esc(t)) + "</p>"; }).join("") + "</section>";
     }).join("");
     var places = (d.places || []).filter(function (id) { return placeById[id]; }).map(function (id) {
       return '<li><a href="timeline.html#' + id + '">' + esc(placeById[id].name) + "</a></li>";

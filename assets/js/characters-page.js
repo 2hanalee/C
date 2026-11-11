@@ -134,7 +134,7 @@
   var renderList = function () {
     document.title = "인물 48인 · 블랙아웃";
     app.innerHTML =
-      '<header class="page-head"><h1>인물 48인</h1><p>전원과 대화할 수 있습니다. 이름을 누르면 기록을 엽니다.</p></header>' +
+      '<header class="page-head" data-ghost="DOSSIER"><h1>인물 48인</h1><p>전원과 대화할 수 있습니다. 이름을 누르면 기록을 엽니다.</p></header>' +
       '<div class="tools">' +
         '<label class="search"><span class="mono">검색</span><input id="q" type="search" autocomplete="off" placeholder="이름, 활동명, 능력명" value="' + esc(state.q) + '"></label>' +
         '<div class="tools-row"><span class="mono" id="tally"></span>' +

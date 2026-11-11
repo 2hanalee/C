@@ -42,7 +42,7 @@
   var renderTimeline = function () {
     document.title = "연표 · 블랙아웃";
     app.innerHTML =
-      '<header class="page-head"><h1>연표</h1><p>첫 균열부터 지금까지. 가려진 사건은 날짜만 보입니다.</p></header>' +
+      '<header class="page-head" data-ghost="CHRONICLE"><h1>연표</h1><p>첫 균열부터 지금까지. 가려진 사건은 날짜만 보입니다.</p></header>' +
       tabs("timeline") +
       ERAS.map(function (era) {
         return '<section class="era" id="era-' + era.id + '"><h2>' + esc(era.title) + "</h2>" +
@@ -116,7 +116,7 @@
     document.title = "지도 · 블랙아웃";
     if (id && placeById[id]) selected = id;
     app.innerHTML =
-      '<header class="page-head"><h1>지도</h1><p>무대 도시 하란. 번호를 누르면 그곳의 기록이 열립니다.</p></header>' +
+      '<header class="page-head" data-ghost="HARAN"><h1>지도</h1><p>무대 도시 하란. 번호를 누르면 그곳의 기록이 열립니다.</p></header>' +
       tabs("map") +
       '<div class="mapwrap">' +
         '<div class="map">' + mapSvg() +
