@@ -4,6 +4,7 @@
 - 방법: [마스터 프롬프트](01-master-prompt.md)의 6단계를 그대로 수행. 코드 전체 정독 → 웹 조사 → 헤드리스 Chromium 실측(`tools/verify-frame-studio.js`) → 평가 → 개선안
 - 줄 번호는 원본 HTML 기준입니다.
 - **적용 현황:** 5-1 "지금" 단계 10건은 `frame-studio/Frame_Studio_13.html`에 반영했습니다. 내역과 검증 결과는 [03-changes-v13.md](03-changes-v13.md)에 있습니다.
+- **적용 현황:** 5-2 "다음" 단계 8건은 `frame-studio/Frame_Studio_14.html`에 반영했습니다(Safari 항목은 완화책만). 내역은 [04-changes-v14.md](04-changes-v14.md)에 있습니다.
 
 ## 1. 총평
 
