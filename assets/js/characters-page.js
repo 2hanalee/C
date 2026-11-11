@@ -60,13 +60,13 @@
     // 칠좌와 왕은 그림이 준비될 때까지 기호로 자리를 채운다
     var sym = SEAT_SYMBOL[c.id];
     if (sym) {
-      return '<div class="plate has-sym f-' + c.faction + '"><span class="mono">그림 준비 중</span><img src="assets/img/symbols/' + sym + '.svg" alt="' + esc(c.name) + '의 기호"' + (big ? "" : ' loading="lazy"') + "></div>";
+      return '<div class="plate blank has-sym f-' + c.faction + '"><img src="assets/img/symbols/' + sym + '.svg" alt="' + esc(c.name) + '의 기호"' + (big ? "" : ' loading="lazy"') + "></div>";
     }
     // 활동명이 길면 글자를 줄여 판 안에 들어오게 한다
     var label = c.alias || c.name;
     var width = label.replace(/ /g, "").length + (label.split(" ").length - 1) * 0.3;
     var fit = Math.min(20, Math.floor(880 / width) / 10);
-    return '<div class="plate f-' + c.faction + '" aria-hidden="true" style="--fit:' + fit + '"><span class="mono">그림 준비 중</span>' +
+    return '<div class="plate blank f-' + c.faction + '" aria-hidden="true" style="--fit:' + fit + '">' +
       (c.rank != null ? '<i class="plate-rank">' + c.rank + "</i>" : "") + "<b>" + esc(label) + "</b></div>";
   };
   var colorStyle = function (c) { return c.color ? ' style="--char:' + esc(c.color) + '"' : ""; };

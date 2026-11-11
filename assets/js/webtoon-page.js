@@ -14,7 +14,7 @@
   // 그림이 없으면 자리 표시 판을 그린다
   var plate = function (src, label, alt) {
     if (src) return '<div class="plate"><img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy"></div>';
-    return '<div class="plate" aria-hidden="true" style="--fit:14"><span class="mono">그림 준비 중</span><b>' + esc(label) + "</b></div>";
+    return '<div class="plate" aria-hidden="true" style="--fit:14"><b>' + esc(label) + "</b></div>";
   };
 
   var renderList = function () {
