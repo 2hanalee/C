@@ -11,18 +11,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
-<body>
+<body data-page="characters">
 
 <header class="top">
   <div class="top-in">
     <a class="lockup" href="index.html"><b>블랙아웃</b><span>마법소녀 아카데미</span></a>
-    <nav class="top-nav" aria-label="주 메뉴">
-      <a href="index.html">메인</a>
-      <a href="index.html#scenes">세계관</a>
-      <a href="characters.html" aria-current="page">인물</a>
-      <a href="#list">웹툰</a>
-      <a href="#list">연표·지도</a>
-    </nav>
+    <nav class="top-nav" aria-label="주 메뉴" data-nav></nav>
     <div class="clearance" id="clearance" role="group" aria-label="열람 등급">
       <button type="button" data-level="0" aria-pressed="true">공개</button>
       <button type="button" data-level="1" aria-pressed="false">내부용</button>
@@ -40,13 +34,7 @@
   </main>
 </div>
 
-<nav class="tabbar" aria-label="주 메뉴">
-  <a href="index.html">메인</a>
-  <a href="index.html#scenes">세계관</a>
-  <a href="characters.html" aria-current="page">인물</a>
-  <a href="#list">웹툰</a>
-  <a href="#list">연표·지도</a>
-</nav>
+<nav class="tabbar" aria-label="주 메뉴" data-nav></nav>
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/characters.js"></script>

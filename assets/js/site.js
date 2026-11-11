@@ -143,9 +143,56 @@
     });
   }
 
+  /* ── 주 메뉴: 모든 페이지가 같은 목록을 쓴다 ── */
+  var NAV = [
+    ["index.html", "메인", "main"],
+    ["world.html", "세계관", "world"],
+    ["characters.html", "인물", "characters"],
+    ["webtoon.html", "웹툰", "webtoon"],
+    ["timeline.html", "연표·지도", "timeline"],
+  ];
+  var page = document.body.getAttribute("data-page");
+  Array.prototype.forEach.call(document.querySelectorAll("[data-nav]"), function (el) {
+    el.innerHTML = NAV.map(function (n) {
+      return '<a href="' + n[0] + '"' + (n[2] === page ? ' aria-current="page"' : "") + ">" + n[1] + "</a>";
+    }).join("");
+  });
+
+  /* ── 페이지 공통 도우미 ── */
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (ch) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+    });
+  };
+  var charById = {};
+  (window.CHARACTERS || []).forEach(function (c) { charById[c.id] = c; });
+  // 가려진 기록 묶음. level 1 내부용, 2 기밀
+  var notes = function (items, lv, label) {
+    items = items || [];
+    var head = "<h2><span>" + label + "</span><span>" + items.length + "건</span></h2>";
+    if (!items.length) return '<div class="group">' + head + '<p class="none">등록된 기록이 없습니다.</p></div>';
+    return '<div class="group">' + head + items.map(function (it) {
+      return '<div class="secret"><p class="warn">' + esc(it.topic) + "</p>" + bar(it.text, lv, it.topic) + "</div>";
+    }).join("") + "</div>";
+  };
+  var bar = function (text, lv, about) {
+    var label = lv === 2 ? "기밀" : "내부용";
+    return '<button class="bar" data-level="' + lv + '" type="button" aria-expanded="false" aria-label="' + label + " 열람" +
+      (about ? ": " + esc(about) : "") + '">' + esc(text) + "</button>";
+  };
+  // 인물 이름 목록. 누르면 인물 기록으로 간다
+  var people = function (ids) {
+    var list = (ids || []).filter(function (id) { return charById[id]; });
+    if (!list.length) return "";
+    return '<ul class="people">' + list.map(function (id) {
+      return '<li><a href="characters.html#' + id + '">' + esc(charById[id].name) + "</a></li>";
+    }).join("") + "</ul>";
+  };
+
   window.BLACKOUT = {
     local: local,
     refresh: function () { applyLevel(level); },
     fillChat: fillChat,
+    esc: esc, notes: notes, bar: bar, people: people, charById: charById,
   };
 })();

@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
-<body>
+<body data-page="main">
 
 <!-- 게이트 -->
 <div class="gate" id="gate" data-phase="quote" role="dialog" aria-label="입장">
@@ -39,13 +39,7 @@
 <header class="top">
   <div class="top-in">
     <a class="lockup" href="#cover"><b>블랙아웃</b><span>마법소녀 아카데미</span></a>
-    <nav class="top-nav" aria-label="주 메뉴">
-      <a href="#cover" aria-current="page">메인</a>
-      <a href="#scenes">세계관</a>
-      <a href="characters.html">인물</a>
-      <a href="#">웹툰</a>
-      <a href="#">연표·지도</a>
-    </nav>
+    <nav class="top-nav" aria-label="주 메뉴" data-nav></nav>
     <div class="clearance" id="clearance" role="group" aria-label="열람 등급">
       <button type="button" data-level="0" aria-pressed="true">공개</button>
       <button type="button" data-level="1" aria-pressed="false">내부용</button>
@@ -73,7 +67,7 @@
       <h1 class="title"><small>마법소녀 아카데미</small><strong>블랙아웃</strong></h1>
       <p class="tagline">칠월의 밤으로부터 20년, 휴전 6년째.</p>
       <div class="actions">
-        <a class="btn solid" href="#scenes">세계관 읽기</a>
+        <a class="btn solid" href="world.html">세계관 읽기</a>
         <a class="btn" href="characters.html">인물 48인</a>
       </div>
     </section>
@@ -102,7 +96,7 @@
           <div><h3>휴전 6년째</h3><p>정면 충돌은 없다. 그 대신 잠입과 계약과 여론이 움직인다. 이 평화에는 만기가 있다.</p></div>
         </li>
       </ol>
-      <a class="more" href="#">세계관 전체 보기</a>
+      <a class="more" href="world.html">세계관 전체 보기</a>
     </section>
 
     <!-- 랭킹 -->
@@ -186,6 +180,7 @@
         <li><span class="ring">6</span><b>라그바르</b><span>분노 · 분쟁의 법</span></li>
         <li><span class="ring">7</span><b>네무리</b><span>나태 · 휴면의 법</span></li>
       </ol>
+      <a class="more" href="world.html#thrones">왕과 칠좌 문서 보기</a>
     </section>
 
     <!-- 입장 -->
@@ -195,20 +190,15 @@
       <div class="platforms" data-chat><button class="btn" type="button" disabled>대화 링크 준비 중</button></div>
     </section>
 
-    <footer class="foot mono"><span>마법소녀 아카데미: 블랙아웃</span><span>시안 v0.3</span></footer>
+    <footer class="foot mono"><span>마법소녀 아카데미: 블랙아웃</span><span>시안 v0.4</span></footer>
   </main>
 </div>
 
-<nav class="tabbar" aria-label="주 메뉴">
-  <a href="#cover" aria-current="page">메인</a>
-  <a href="#scenes">세계관</a>
-  <a href="characters.html">인물</a>
-  <a href="#">웹툰</a>
-  <a href="#">연표·지도</a>
-</nav>
+<nav class="tabbar" aria-label="주 메뉴" data-nav></nav>
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/quotes.js"></script>
+<script src="assets/js/characters.js"></script>
 <script src="assets/js/site.js"></script>
 </body>
 </html>

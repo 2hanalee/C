@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>블랙아웃 웹툰</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="마법소녀 아카데미: 블랙아웃 웹툰.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-page="webtoon">
+
+<header class="top">
+  <div class="top-in">
+    <a class="lockup" href="index.html"><b>블랙아웃</b><span>마법소녀 아카데미</span></a>
+    <nav class="top-nav" aria-label="주 메뉴" data-nav></nav>
+    <div class="clearance" id="clearance" role="group" aria-label="열람 등급">
+      <button type="button" data-level="0" aria-pressed="true">공개</button>
+      <button type="button" data-level="1" aria-pressed="false">내부용</button>
+      <button type="button" data-level="2" aria-pressed="false">기밀</button>
+    </div>
+  </div>
+</header>
+
+<div class="sheet">
+  <nav class="rail" aria-label="웹툰">
+    <ol id="rail-none"></ol>
+  </nav>
+  <main id="app">
+    <noscript><p class="empty">이 화면을 보려면 자바스크립트가 필요합니다.</p></noscript>
+  </main>
+</div>
+
+<nav class="tabbar" aria-label="주 메뉴" data-nav></nav>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/webtoon.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/webtoon-page.js"></script>
+</body>
+</html>
