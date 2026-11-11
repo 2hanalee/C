@@ -52,13 +52,13 @@ N+: smile, gun pointed at viewer, multiple girls
 ## 41. 레인 스타폴 (경계인 · 유랑자)
 
 ```
-1girl, solo, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, traveler, blonde hair, long hair, wavy hair, windblown hair, blue eyes, azure eyes, detailed iris, sparkling eyes, starlight reflected in eyes, glossy eyes, long eyelashes, calm, observant, gentle, navy travel cloak, cream shirt, leather satchel strap, (star-shaped light marker floating beside her:1.15), compass pendant, hill at night above a border village, starry sky with dark empty patches, falling meteor, starlight on face, cool blue rim light, warm village lights below, light particles, depth of field, wistful, quiet, wandering
+1girl, solo, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, traveler, petite, small build, blonde hair, twintails, long hair, windblown hair, blue eyes, azure eyes, detailed iris, sparkling eyes, starlight reflected in eyes, glossy eyes, long eyelashes, calm, observant, gentle, navy travel cloak, cream shirt, leather satchel strap, (star-shaped light marker floating beside her:1.15), compass pendant, hill at night above a border village, starry sky with dark empty patches, falling meteor, starlight on face, cool blue rim light, warm village lights below, light particles, depth of field, wistful, quiet, wandering
 ```
-N+: crying, angry, multiple girls
+N+: crying, angry, tall, mature female, multiple girls
 
 ## 42. 유다 이스타로드 (경계인 · 중재자)
 
 ```
-1girl, solo, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, mature female, mediator, black hair, long hair, straight hair, silver eyes, white eyes, (sheer silver veil over one eye:1.1), detailed iris, glossy eyes, eye highlights, long eyelashes, calm, analytical, slight smile, black high collar coat, silver embroidery, white cravat, gold star pin, (glowing gold star seal floating:1.1), lighthouse at night, rotating beam of light, sea behind, wind, warm lighthouse beam on face, silver moonlight rim light, sea spray, depth of field, composed, neutral, sharp
+1girl, solo, (upper body:1.5), (face focus:1.2), three quarter view, straight on, looking at viewer, mature female, adult body, slender, tall female, mediator, white hair, very long hair, straight hair, red eyes, (sheer silver veil over one eye:1.1), detailed iris, glossy eyes, eye highlights, long eyelashes, calm, analytical, slight smile, black high collar coat, silver embroidery, white cravat, silver star pin, (glowing crimson star seal floating:1.1), lighthouse at night, rotating beam of light, sea behind, wind, warm lighthouse beam on face, silver moonlight rim light, sea spray, depth of field, composed, neutral, sharp
 ```
-N+: smirk, young, multiple girls
+N+: smirk, young, petite, black hair, multiple girls
