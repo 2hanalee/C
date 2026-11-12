@@ -7,6 +7,7 @@
 //   소개문이 암시만 하는 내용은 구체적인 사실을 가려진 등급에 둔다.
 // move 는 직전 발표 대비 등수 변동이며 지금 값은 임시다. fixed 가 true 인 인물은 변동을 표시하지 않는다.
 // color 는 인물 고유색(프로필 카드의 서명 색), image 는 글자 없는 16:9 그림 경로.
+// imageFocus 는 [가로 %, 세로 %, 확대] 이며, 세로 사진 칸으로 자를 때 얼굴 쪽으로 맞추는 값이다.
 window.CHARACTERS = [
  {
   "id": "reina-de-rose",
@@ -64,6 +65,7 @@ window.CHARACTERS = [
   ],
   "color": "#e2334f",
   "image": "assets/img/characters/reina-de-rose.webp",
+  "imageFocus": [52, 14, 1.32],
   "quote": "오늘도 평안한 하루가 되시기를♡"
  },
  {

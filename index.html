@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>마법소녀 아카데미: 블랙아웃</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="칠월의 밤으로부터 20년, 휴전 6년째. 하란의 마법소녀 48인과 이계의 기록.">
+<meta name="description" content="칠월의 밤으로부터 20년이 지나고 휴전이 6년째 이어지는 하란. 마법소녀 48인과 이계에 관한 기록을 모았습니다.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="마법소녀 아카데미: 블랙아웃">
 <meta property="og:title" content="마법소녀 아카데미: 블랙아웃">
-<meta property="og:description" content="칠월의 밤으로부터 20년, 휴전 6년째. 하란의 마법소녀 48인과 이계의 기록.">
+<meta property="og:description" content="칠월의 밤으로부터 20년이 지나고 휴전이 6년째 이어지는 하란. 마법소녀 48인과 이계에 관한 기록을 모았습니다.">
 <meta property="og:image" content="assets/img/hero/reina-cover.webp">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/img/brand/favicon-64.png" sizes="64x64" type="image/png">
@@ -24,26 +24,26 @@
 <body data-page="main">
 <a class="skip" href="#cover">본문으로 건너뛰기</a>
 
-<!-- 게이트 -->
-<div class="gate" id="gate" data-phase="quote" role="dialog" aria-label="입장">
-  <div class="gate-head">
-    <span class="mono">방위청 공개 기록</span>
-    <span class="mono">하란 · 0712</span>
+<!-- 입장 연출: 대사가 한 글자씩 켜지고, 정전된 뒤 로고가 떠오른다. 자바스크립트가 없으면 숨은 채로 남는다 -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="입장 연출" tabindex="-1" hidden>
+  <canvas class="gate-fx" id="gate-fx" aria-hidden="true"></canvas>
+  <div class="gate-lamp" id="gate-lamp" aria-hidden="true"></div>
+  <div class="gate-vignette" aria-hidden="true"></div>
+  <div class="gate-stage">
+    <p class="gate-quote" id="gate-quote"></p>
+    <p class="gate-by" id="gate-by"></p>
   </div>
-
-  <div class="gate-body">
-    <p class="gate-quote" id="gate-quote"><span class="gl in"><span class="q">오늘도 평안한 하루가 되시기를♡</span></span></p>
-    <p class="gate-by mono in" id="gate-by">레이나 드 로즈 · 로즈 세라핌</p>
+  <div class="gate-cut" id="gate-cut" aria-hidden="true"></div>
+  <div class="gate-logo" id="gate-logo">
+    <img src="assets/img/brand/wordmark.svg" alt="BLACKOUT" width="1558" height="196">
+    <p>마법소녀 아카데미</p>
   </div>
-
-  <div class="gate-dark">
-    <div class="gate-logo"><img src="assets/img/brand/wordmark.svg" alt="BLACKOUT" width="1558" height="196"><p>마법소녀 아카데미</p></div>
-    <button class="btn solid" id="gate-enter" type="button">기록 열람</button>
-  </div>
-
-  <div class="gate-foot">
-    <span class="mono">열람 등급: 공개</span>
+  <p class="gate-hint" id="gate-hint">화면을 누르면 소리가 켜집니다.</p>
+  <button class="gate-mute" id="gate-mute" type="button" aria-pressed="false">소리 끄기</button>
+  <div class="gate-acts">
     <button class="gate-skip" id="gate-skip" type="button">건너뛰기</button>
+    <button class="btn" id="gate-replay" type="button">다시 보기</button>
+    <button class="btn solid" id="gate-enter" type="button">기록 열람</button>
   </div>
 </div>
 
@@ -51,11 +51,6 @@
   <div class="top-in">
     <a class="lockup" href="#cover" aria-label="블랙아웃 메인으로"><img src="assets/img/brand/wordmark.svg" alt="BLACKOUT" width="1558" height="196"><span>마법소녀 아카데미</span></a>
     <nav class="top-nav" aria-label="주 메뉴" data-nav></nav>
-    <div class="clearance" id="clearance" role="group" aria-label="열람 등급">
-      <button type="button" data-level="0" aria-pressed="true">공개</button>
-      <button type="button" data-level="1" aria-pressed="false">내부용</button>
-      <button type="button" data-level="2" aria-pressed="false">기밀</button>
-    </div>
   </div>
 </header>
 
@@ -74,13 +69,13 @@
   <main>
     <!-- 표지 -->
     <section class="cover" id="cover">
-      <a class="cover-credit" href="characters.html#reina-de-rose">레이나 드 로즈 · 2위</a>
+      <a class="cover-credit" href="characters.html#reina-de-rose">표지 인물: 레이나 드 로즈, 랭킹 2위<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
       <p class="cover-meta mono"><span>방위청 공개 기록</span><span>무대: 하란</span></p>
-      <h1 class="title"><small>마법소녀 아카데미</small><strong>블랙아웃</strong></h1>
-      <p class="tagline">칠월의 밤으로부터 20년, 휴전 6년째.</p>
+      <h1 class="title"><small>마법소녀 아카데미</small><strong class="lit">블랙아웃</strong></h1>
+      <p class="tagline">칠월의 밤으로부터 20년이 지났고, 휴전은 6년째 이어지고 있습니다.</p>
       <div class="actions">
-        <a class="btn solid" href="world.html">세계관 읽기</a>
-        <a class="btn" href="characters.html">인물 48인</a>
+        <a class="btn solid go" href="world.html">세계관 읽기<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
+        <a class="btn go" href="characters.html">인물 48인 보기<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
       </div>
     </section>
 
@@ -88,123 +83,106 @@
     <section class="block" id="scenes">
       <div class="block-head" data-ghost="CHRONICLE">
         <h2>네 장면으로 읽는 20년</h2>
-        <p>이 세계를 처음 만난다면 여기까지만 알아도 대화를 시작할 수 있습니다.</p>
+        <p>이 세계를 처음 만난다면 아래 네 장면만 알아도 대화를 시작할 수 있습니다.</p>
       </div>
-      <ol class="scenes wide">
+      <ol class="scenes">
         <li>
           <span class="when">20년 전</span>
           <div><h3>칠월의 밤</h3><p>하란항 상공이 찢어져 7시간 동안 이계 생물이 쏟아졌다. <em class="kw r">4,172명</em>이 죽거나 사라졌고, 열두 명이 처음으로 마법소녀가 됐다.</p></div>
         </li>
         <li>
           <span class="when">16년 전</span>
-          <div><h3>랭킹제</h3><p>방위청이 예산을 나누는 기준으로 등수를 매기기 시작했다. 등수는 <em class="kw b">장비, 의료, 숙소, 방송 노출</em>을 가른다.</p></div>
+          <div><h3>랭킹제</h3><p>방위청이 예산을 나누는 기준으로 등수를 매기기 시작했다. 등수에 따라 <em class="kw b">장비와 의료, 숙소, 방송 노출</em>이 달라진다.</p></div>
         </li>
         <li>
           <span class="when">6년 전</span>
-          <div><h3>안개고개</h3><p>열여덟의 정하은이 균열을 멈춰 세웠다. 36명 중 11명이 돌아왔고, 하늘에는 <em class="kw">340미터의 흉터</em>가 남았다.</p></div>
+          <div><h3>안개고개</h3><p>열여덟 살의 정하은이 균열을 멈춰 세웠다. 36명 가운데 11명이 돌아왔고, 하늘에는 <em class="kw">340미터의 흉터</em>가 남았다.</p></div>
         </li>
         <li class="now">
           <span class="when">지금</span>
           <div><h3>휴전 6년째</h3><p>정면 충돌은 없다. 그 대신 잠입과 계약과 여론이 움직인다. 이 평화에는 <em class="kw">만기</em>가 있다.</p></div>
         </li>
       </ol>
-      <a class="more" href="world.html">세계관 전체 보기</a>
+      <a class="more go" href="world.html">세계관 문서 여덟 건 보기<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
     </section>
 
     <!-- 랭킹 -->
     <section class="block" id="ranking">
       <div class="block-head sealed-head" data-ghost="RANKING">
         <div><h2>아카데미 공개 랭킹</h2>
-        <p>전투력만으로 정해지지 않는다. 임무 성과와 여론, 윗선의 이해관계가 함께 반영된다.</p></div>
+        <p>랭킹은 전투력만으로 정해지지 않습니다. 임무 성과와 여론, 윗선의 이해관계가 함께 반영됩니다.</p></div>
         <img class="seal" src="assets/img/emblems/academy-insignia.webp" alt="마법소녀 아카데미 인장" width="512" height="512">
       </div>
       <div class="board-wrap">
         <ol class="board">
-          <li><span class="rk">1</span><a class="who" href="characters.html#jeong-haeun"><b>정하은</b><span>제로 나이트</span></a><span class="st"><span>안개고개 참전</span></span></li>
-          <li><span class="rk">2</span><a class="who" href="characters.html#reina-de-rose"><b>레이나 드 로즈</b><span>로즈 세라핌</span></a><span class="st"><span>학생위원장</span></span></li>
-          <li class="void"><span class="rk">3</span><span class="who"><i class="struck" role="img" aria-label="기록 말소"></i></span><span class="st"><span>말소 · 2년 전</span></span></li>
-          <li class="void"><span class="rk">5</span><span class="who"><b>공석</b></span><span class="st"><span>전사 · 1년 전 3월</span></span></li>
-          <li><span class="rk">7</span><a class="who" href="characters.html#lee-seohyeon"><b>이서현</b><span>트윈 시그널</span></a><span class="st"><b class="mv up" aria-label="2계단 상승">▲ 2</b><span>기생체 공동 등록</span></span></li>
-          <li><span class="rk">9</span><a class="who" href="characters.html#park-sion"><b>박시온</b><span>블러드 하운드</span></a><span class="st"><b class="mv down" aria-label="1계단 하락">▼ 1</b><span>특수 전력</span></span></li>
-          <li><span class="rk">12</span><a class="who" href="characters.html#elise-de-armand"><b>엘리제 드 아르망</b><span>세인트 릴리</span></a><span class="st"><b class="mv up" aria-label="3계단 상승">▲ 3</b><span>성검 사용자</span></span></li>
+          <li><a class="row" href="characters.html#jeong-haeun"><span class="rk">1</span><span class="who"><b>정하은</b><span>제로 나이트</span></span><span class="st"><span>안개고개 참전</span></span><svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a></li>
+          <li><a class="row" href="characters.html#reina-de-rose"><span class="rk">2</span><span class="who"><b>레이나 드 로즈</b><span>로즈 세라핌</span></span><span class="st"><span>학생위원장</span></span><svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a></li>
+          <li class="void"><span class="row"><span class="rk">3</span><span class="who"><i class="struck" role="img" aria-label="기록 말소"></i></span><span class="st"><span>2년 전 말소</span></span></span></li>
+          <li class="void"><span class="row"><span class="rk">5</span><span class="who"><b>공석</b></span><span class="st"><span>1년 전 3월 전사</span></span></span></li>
+          <li><a class="row" href="characters.html#lee-seohyeon"><span class="rk">7</span><span class="who"><b>이서현</b><span>트윈 시그널</span></span><span class="st"><b class="mv up" aria-label="2계단 상승">▲ 2</b><span>기생체 공동 등록</span></span><svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a></li>
+          <li><a class="row" href="characters.html#park-sion"><span class="rk">9</span><span class="who"><b>박시온</b><span>블러드 하운드</span></span><span class="st"><b class="mv down" aria-label="1계단 하락">▼ 1</b><span>특수 전력</span></span><svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a></li>
+          <li><a class="row" href="characters.html#elise-de-armand"><span class="rk">12</span><span class="who"><b>엘리제 드 아르망</b><span>세인트 릴리</span></span><span class="st"><b class="mv up" aria-label="3계단 상승">▲ 3</b><span>성검 사용자</span></span><svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a></li>
         </ol>
-        <p class="mono board-key">▲ ▼ 직전 발표 대비 등수 변동</p>
+        <p class="mono board-key">▲ ▼ 표시는 직전 발표와 비교한 등수 변동입니다.</p>
       </div>
-      <div class="notes">
-        <div class="secret">
-          <p class="warn">0위에 관한 내부용 기록입니다.</p>
-          <button class="bar" data-level="1" type="button" aria-expanded="false" aria-label="내부용 열람: 0위">0위는 공개 랭킹이 아닌 비밀 등급이다. 일반 학생은 실재 여부조차 모른다.</button>
-        </div>
-        <div class="secret">
-          <p class="warn">천시온에 관한 기밀입니다. 직접 알아내고 싶다면 열지 마세요.</p>
-          <button class="bar" data-level="2" type="button" aria-expanded="false" aria-label="기밀 열람: 천시온">천시온은 큰 능력을 쓸 때마다 자신의 기록이 지워진다. 가족, 출생지, 사진, 명부가 사라지고 주변 사람들의 기억도 흐려진다.</button>
-        </div>
-      </div>
-      <a class="more" href="characters.html">99위까지 전체 보기</a>
+      <a class="more go" href="characters.html#board">99위까지 순위표 보기<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
     </section>
 
     <!-- 인물 -->
     <section class="block" id="figures" style="--char:#e2334f">
       <div class="block-head" data-ghost="DOSSIER">
         <h2>인물 48인</h2>
-        <p>아카데미 24, 반역자와 외부 4, 이계의 왕과 칠좌 8, 경계인·연예·기업·용병 12.</p>
+        <p>아카데미 소속 24인, 반역자와 외부 인물 4인, 이계의 왕과 칠좌 8인, 그리고 경계인과 연예인, 기업인, 용병 12인이 등록되어 있습니다.</p>
       </div>
       <div class="figure">
-        <img class="art" src="assets/img/characters/reina-de-rose.webp" width="1670" height="941" alt="장미 정원 앞에 선 금발의 레이나 드 로즈. 흰 제복에 붉은 리본과 브로치.">
+        <a class="art-link" href="characters.html#reina-de-rose"><img class="art" src="assets/img/characters/reina-de-rose.webp" width="1670" height="941" alt="장미 정원 앞에 선 금발의 레이나 드 로즈. 흰 제복에 붉은 리본과 브로치를 달았다."></a>
         <div class="dossier">
           <div class="id">
             <span class="rk" aria-label="랭킹 2위">2</span>
-            <div><h3>레이나 드 로즈</h3><p>로즈 세라핌 · 인간(마법소녀) · 학생위원장</p></div>
+            <div><h3>레이나 드 로즈</h3><p>로즈 세라핌, 학생위원장</p></div>
           </div>
           <ul class="traits"><li>우아함</li><li>완벽주의</li><li>계산적</li><li>통제 지향</li></ul>
           <p class="lead">외국 귀족 가문의 실력주의 아래 자라 아카데미 학생위원장이 됐다. 어린 시절 구조 현장에서 살아남은 몫을 갚겠다며 랭킹 1위를 노리고, 타인의 사소한 정보까지 기억한다.</p>
           <dl class="spec">
-            <div><dt>능력</dt><dd><b>왕관 없는 정원</b>장미 표식을 아군과 적의 위치에 심어 전장을 하나의 지휘망으로 엮는다. 표식이 닿지 않는 구역에는 신호를 보낼 수 없고, 타인의 몸을 직접 조종하지는 못한다.</dd></div>
-            <div><dt>관계</dt><dd><a href="characters.html#jeong-haeun">정하은</a> 1위. 관리할 수 없는 변수로 본다. · <a href="characters.html#do-yeonhwa">도연화</a> 43위. 레이나를 대종사라 부르며 따른다.</dd></div>
+            <div class="ability"><dt>능력</dt><dd><b>왕관 없는 정원</b>장미 표식을 아군과 적의 위치에 심어 전장을 하나의 지휘망으로 엮는다. 표식이 닿지 않는 구역에는 신호를 보낼 수 없고, 타인의 몸을 직접 조종하지는 못한다.</dd></div>
           </dl>
+          <div class="actions">
+            <a class="btn solid go" href="characters.html#reina-de-rose">레이나의 인사기록카드 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
+          </div>
+          <p class="fig-note"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"/></svg>이 기록에는 가려진 기록 3건이 붙어 있습니다. 카드를 열면 내부 기록과 기밀을 볼 수 있습니다.</p>
         </div>
       </div>
-      <div class="notes">
-        <div class="secret">
-          <p class="warn">2년 전 지하상가 대피전에 관한 내부용 기록입니다.</p>
-          <button class="bar" data-level="1" type="button" aria-expanded="false" aria-label="내부용 열람: 지하상가 대피전">2년 전 지하상가 대피전은 레이나와 신유안이 얽힌 사건이다. 안쪽 B동에 일곱 명이 남았고 송하연이 죽었다.</button>
-        </div>
-        <div class="secret">
-          <p class="warn">그 사건의 처리에 관한 기밀입니다.</p>
-          <button class="bar" data-level="2" type="button" aria-expanded="false" aria-label="기밀 열람: 사건의 처리">위원회는 지하상가 대피전을 「현장 판단」으로 종결했다.</button>
-        </div>
-      </div>
-      <a class="more" href="characters.html">48인 전체 보기</a>
+      <a class="more go" href="characters.html">인물 48인 전체 보기<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
     </section>
 
     <!-- 칠좌 -->
     <section class="block" id="thrones">
       <div class="block-head sealed-head" data-ghost="SEVEN SEATS">
         <div><h2>이계의 왕과 칠좌</h2>
-        <p>이계는 힘의 세계가 아니라 법의 세계다. 왕은 일곱 개의 자리에 죄악의 이름과 법 하나씩을 맡겼다.</p></div>
+        <p>이계는 힘이 아니라 법으로 움직이는 세계입니다. 왕은 일곱 자리에 죄악의 이름과 법을 하나씩 맡겼습니다.</p></div>
         <img class="seal" src="assets/img/emblems/celestis.webp" alt="이계의 왕 셀레스티스의 문장" width="512" height="512">
       </div>
-      <ol class="thrones wide">
-        <li class="king"><a class="plaque king-plaque" href="characters.html#celestis"><img src="assets/img/emblems/celestis.webp" alt="" width="512" height="512"></a><div><b>셀레스티스</b><br><span>이계의 왕. 머리 위에 빈 고리 일곱 개가 떠 있다.</span></div></li>
-        <li><a class="plaque" href="characters.html#arbel"><img src="assets/img/emblems/seat-arbel.webp" alt="" width="512" height="512"></a><span class="seat-no">제1좌</span><b>아르벨</b><span>교만 · 위계의 법</span></li>
-        <li><a class="plaque" href="characters.html#merkan"><img src="assets/img/emblems/seat-merkan.webp" alt="" width="512" height="512"></a><span class="seat-no">제2좌</span><b>메르칸</b><span>탐욕 · 계약의 법</span></li>
-        <li><a class="plaque" href="characters.html#sitriel"><img src="assets/img/emblems/seat-sitriel.webp" alt="" width="512" height="512"></a><span class="seat-no">제3좌</span><b>시트리엘</b><span>색욕 · 소망의 법</span></li>
-        <li><a class="plaque" href="characters.html#neisa"><img src="assets/img/emblems/seat-neisa.webp" alt="" width="512" height="512"></a><span class="seat-no">제4좌</span><b>네이사</b><span>질투 · 모사의 법</span></li>
-        <li><a class="plaque" href="characters.html#orgam"><img src="assets/img/emblems/seat-orgam.webp" alt="" width="512" height="512"></a><span class="seat-no">제5좌</span><b>오르감</b><span>폭식 · 포식의 법</span></li>
-        <li><a class="plaque" href="characters.html#lagbar"><img src="assets/img/emblems/seat-lagbar.webp" alt="" width="512" height="512"></a><span class="seat-no">제6좌</span><b>라그바르</b><span>분노 · 분쟁의 법</span></li>
-        <li><a class="plaque" href="characters.html#nemuri"><img src="assets/img/emblems/seat-nemuri.webp" alt="" width="512" height="512"></a><span class="seat-no">제7좌</span><b>네무리</b><span>나태 · 휴면의 법</span></li>
+      <ol class="thrones">
+        <li class="king"><a class="seat" href="characters.html#celestis"><span class="plaque king-plaque"><img src="assets/img/emblems/celestis.webp" alt="" width="512" height="512" loading="lazy"></span><span class="king-text"><span class="seat-no">이계의 왕</span><b>셀레스티스</b><span>칠좌에게 직위를 내리는 왕이다. 머리 위에 빈 고리 일곱 개가 떠 있다.</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></span></a></li>
+        <li><a class="seat" href="characters.html#arbel"><span class="plaque"><img src="assets/img/emblems/seat-arbel.webp" alt="" width="512" height="512" loading="lazy"></span><span class="seat-no">제1좌</span><b>아르벨</b><span>교만의 자리, 위계의 법</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></a></li>
+        <li><a class="seat" href="characters.html#merkan"><span class="plaque"><img src="assets/img/emblems/seat-merkan.webp" alt="" width="512" height="512" loading="lazy"></span><span class="seat-no">제2좌</span><b>메르칸</b><span>탐욕의 자리, 계약의 법</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></a></li>
+        <li><a class="seat" href="characters.html#sitriel"><span class="plaque"><img src="assets/img/emblems/seat-sitriel.webp" alt="" width="512" height="512" loading="lazy"></span><span class="seat-no">제3좌</span><b>시트리엘</b><span>색욕의 자리, 소망의 법</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></a></li>
+        <li><a class="seat" href="characters.html#neisa"><span class="plaque"><img src="assets/img/emblems/seat-neisa.webp" alt="" width="512" height="512" loading="lazy"></span><span class="seat-no">제4좌</span><b>네이사</b><span>질투의 자리, 모사의 법</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></a></li>
+        <li><a class="seat" href="characters.html#orgam"><span class="plaque"><img src="assets/img/emblems/seat-orgam.webp" alt="" width="512" height="512" loading="lazy"></span><span class="seat-no">제5좌</span><b>오르감</b><span>폭식의 자리, 포식의 법</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></a></li>
+        <li><a class="seat" href="characters.html#lagbar"><span class="plaque"><img src="assets/img/emblems/seat-lagbar.webp" alt="" width="512" height="512" loading="lazy"></span><span class="seat-no">제6좌</span><b>라그바르</b><span>분노의 자리, 분쟁의 법</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></a></li>
+        <li><a class="seat" href="characters.html#nemuri"><span class="plaque"><img src="assets/img/emblems/seat-nemuri.webp" alt="" width="512" height="512" loading="lazy"></span><span class="seat-no">제7좌</span><b>네무리</b><span>나태의 자리, 휴면의 법</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></a></li>
       </ol>
-      <a class="more" href="world.html#thrones">왕과 칠좌 문서 보기</a>
+      <a class="more go" href="world.html#thrones">문서 「왕과 칠좌」 읽기<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
     </section>
 
     <!-- 입장 -->
     <section class="enter" id="enter">
-      <h2>이 세계로 들어가기</h2>
+      <h2 class="lit">이 세계로 들어가기</h2>
       <p>48인 모두와 대화할 수 있습니다.</p>
       <div class="platforms" data-chat><button class="btn" type="button" disabled>대화 링크 준비 중</button></div>
     </section>
 
-    <footer class="foot mono"><img class="seal" src="assets/img/emblems/academy-insignia.webp" alt="" width="512" height="512"><img class="word" src="assets/img/brand/wordmark.svg" alt="BLACKOUT" width="1558" height="196"><span>마법소녀 아카데미: 블랙아웃</span><span>시안 v0.6</span></footer>
+    <footer class="foot mono"><img class="seal" src="assets/img/emblems/academy-insignia.webp" alt="" width="512" height="512"><img class="word" src="assets/img/brand/wordmark.svg" alt="BLACKOUT" width="1558" height="196"><span>마법소녀 아카데미: 블랙아웃</span><span>시안 v0.7</span><button type="button" class="linkish" data-forget>열람 기록 지우기</button><a class="linkish" href="#gate" data-replay-gate>입장 연출 다시 보기</a></footer>
   </main>
 </div>
 
@@ -214,5 +192,6 @@
 <script src="assets/js/quotes.js"></script>
 <script src="assets/js/characters.js"></script>
 <script src="assets/js/site.js"></script>
+<script src="assets/js/intro.js"></script>
 </body>
 </html>

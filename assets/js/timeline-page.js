@@ -22,16 +22,30 @@
   };
 
   /* ───── 연표 ───── */
-  var eventHtml = function (ev) {
+  var ARROW = '<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg>';
+  var eventHtml = function (ev, key) {
     var when = '<span class="when">' + esc(ev.when) + (ev.day ? "<small>" + esc(ev.day) + "</small>" : "") + "</span>";
     if (ev.level > 0) {
       // 사건 전체가 가려진 경우: 날짜만 보인다
-      return '<li class="ev sealed">' + when + "<div>" + B.bar(ev.title + ". " + ev.text, ev.level, ev.when) + "</div></li>";
+      return '<li class="ev sealed">' + when + "<div>" + B.rec({
+        lv: ev.level, key: key, topic: ev.when + "의 사건", text: ev.title + ". " + ev.text,
+        about: "이 기록은 " + ev.when + "에 있었던 사건 전체를 적은 기밀입니다.",
+      }) + "</div></li>";
     }
-    var more = (ev.more || []).map(function (m) { return B.bar(m.text, m.level, ev.title); }).join("");
+    var tally = { 1: 0, 2: 0 };
+    var many = { 1: 0, 2: 0 };
+    (ev.more || []).forEach(function (m) { many[m.level]++; });
+    var more = (ev.more || []).map(function (m, i) {
+      tally[m.level]++;
+      return B.rec({
+        lv: m.level, key: key + ":m" + i, text: m.text,
+        topic: "숨은 사정" + (many[m.level] > 1 ? " " + tally[m.level] : ""),
+        about: "이 기록은 「" + ev.title + "」 사건의 숨은 사정을 적은 기밀입니다.",
+      });
+    }).join("");
     var links = [];
-    if (ev.place && placeById[ev.place]) links.push('<a href="#' + ev.place + '">지도: ' + esc(placeById[ev.place].name) + "</a>");
-    if (ev.topic && docById[ev.topic]) links.push('<a href="world.html#' + ev.topic + '">문서: ' + esc(docById[ev.topic].title) + "</a>");
+    if (ev.place && placeById[ev.place]) links.push('<a href="#' + ev.place + '">지도에서 ' + esc(placeById[ev.place].name) + " 보기" + ARROW + "</a>");
+    if (ev.topic && docById[ev.topic]) links.push('<a href="world.html#' + ev.topic + '">문서 「' + esc(docById[ev.topic].title) + "」 읽기" + ARROW + "</a>");
     return '<li class="ev">' + when + "<div><h3>" + esc(ev.title) + "</h3><p>" + esc(ev.text) + "</p>" +
       (more ? '<div class="more-bars">' + more + "</div>" : "") +
       B.people(ev.people) +
@@ -42,13 +56,12 @@
   var renderTimeline = function () {
     document.title = "연표 · 블랙아웃";
     app.innerHTML =
-      '<header class="page-head" data-ghost="CHRONICLE"><h1>연표</h1><p>첫 균열부터 지금까지. 가려진 사건은 날짜만 보입니다.</p></header>' +
+      '<header class="page-head" data-ghost="CHRONICLE"><p class="kicker">방위청 사건 일지</p><h1 class="lit">연표</h1><p>약 300년 전의 첫 균열부터 지금까지 일어난 일을 적었습니다. 가려진 사건은 날짜만 보이고, 누르면 내용이 열립니다.</p></header>' +
       tabs("timeline") +
       ERAS.map(function (era) {
         return '<section class="era" id="era-' + era.id + '"><h2>' + esc(era.title) + "</h2>" +
-          '<ol class="events">' + era.events.map(eventHtml).join("") + "</ol></section>";
+          '<ol class="events">' + era.events.map(function (ev, i) { return eventHtml(ev, "t:" + era.id + ":" + i); }).join("") + "</ol></section>";
       }).join("");
-    B.refresh();
   };
 
   /* ───── 지도 ───── */
@@ -93,13 +106,11 @@
   };
 
   var placePanel = function (p) {
-    var topic = p.topic && docById[p.topic] ? '<a class="more" href="world.html#' + p.topic + '">문서: ' + esc(docById[p.topic].title) + "</a>" : "";
-    var hidden = "";
-    if (p.internal && p.internal.length) hidden += B.notes(p.internal, 1, "내부용");
-    if (p.secret && p.secret.length) hidden += B.notes(p.secret, 2, "기밀");
+    var topic = p.topic && docById[p.topic] ? '<a class="more" href="world.html#' + p.topic + '">문서 「' + esc(docById[p.topic].title) + "」 읽기</a>" : "";
+    var list = B.records(p.internal, p.secret, "p:" + p.id, p.name + "의");
     return (p.image ? '<img class="scene" src="' + esc(p.image) + '" alt="' + esc(p.name) + '">' : "") +
-      '<span class="mono">' + esc(p.note) + "</span><h2>" + esc(p.name) + "</h2><p>" + esc(p.text) + "</p>" +
-      B.people(p.people) + topic + (hidden ? '<div class="notes">' + hidden + "</div>" : "");
+      '<span class="mono">' + esc(p.note.replace(/\s*·\s*/g, ", ")) + "</span><h2>" + esc(p.name) + "</h2><p>" + esc(p.text) + "</p>" +
+      B.people(p.people) + topic + (list.length ? '<div class="rec-grid">' + list.map(B.rec).join("") + "</div>" : "");
   };
 
   var selected = PLACES[0] ? PLACES[0].id : null;
@@ -110,14 +121,14 @@
       el.setAttribute("aria-pressed", String(el.dataset.place === id));
     });
     var panel = document.getElementById("place");
-    if (panel) { panel.innerHTML = placePanel(placeById[id]); B.refresh(); }
+    if (panel) panel.innerHTML = placePanel(placeById[id]);
   };
 
   var renderMap = function (id) {
     document.title = "지도 · 블랙아웃";
     if (id && placeById[id]) selected = id;
     app.innerHTML =
-      '<header class="page-head" data-ghost="HARAN"><h1>지도</h1><p>무대 도시 하란. 번호를 누르면 그곳의 기록이 열립니다.</p></header>' +
+      '<header class="page-head" data-ghost="HARAN"><p class="kicker">하란 약도</p><h1 class="lit">지도</h1><p>이야기의 무대인 하란입니다. 지도의 번호나 장소 목록을 누르면 그곳의 기록이 열립니다.</p></header>' +
       tabs("map") +
       '<div class="mapwrap">' +
         '<div class="map">' + mapSvg() +

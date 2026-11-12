@@ -5,115 +5,180 @@
     return {
       get: function (k) { try { return window[area].getItem(k); } catch (e) { return null; } },
       set: function (k, v) { try { window[area].setItem(k, v); } catch (e) {} },
+      del: function (k) { try { window[area].removeItem(k); } catch (e) {} },
     };
   };
   var local = mem("localStorage");
   var session = mem("sessionStorage");
 
-  /* ── 게이트: 인물 대사 → 가림 → 정전 → 제목 ── */
-  var gate = document.getElementById("gate");
-  if (gate) {
-    var timers = [];
-    var later = function (fn, ms) { timers.push(setTimeout(fn, ms)); };
-    var clear = function () { timers.forEach(clearTimeout); timers = []; };
-    var setPhase = function (p) { gate.dataset.phase = p; };
-    var close = function () {
-      clear();
-      gate.hidden = true;
-      root.classList.remove("gate-open");
-      session.set("blackout.gate", "seen");
-    };
-
-    // 방문 중 한 번만 보여 준다. 주소 끝에 #gate 를 붙이면 다시 본다.
-    if (session.get("blackout.gate") === "seen" && location.hash !== "#gate") {
-      gate.hidden = true;
-    } else {
-      root.classList.add("gate-open");
-
-      // 대사 고르기: 직전에 본 대사는 피한다
-      var pool = window.QUOTES || [];
-      var quoteEl = document.getElementById("gate-quote");
-      var byEl = document.getElementById("gate-by");
-      var lineEls = [];
-      if (pool.length && quoteEl && byEl) {
-        var last = parseInt(local.get("blackout.quote"), 10);
-        var idx = Math.floor(Math.random() * pool.length);
-        if (pool.length > 1 && idx === last) idx = (idx + 1) % pool.length;
-        local.set("blackout.quote", String(idx));
-        var pick = pool[idx];
-        quoteEl.textContent = "";
-        pick.lines.forEach(function (text) {
-          var gl = document.createElement("span");
-          gl.className = "gl";
-          var q = document.createElement("span");
-          q.className = "q";
-          q.textContent = text;
-          gl.appendChild(q);
-          quoteEl.appendChild(gl);
-          lineEls.push(gl);
-        });
-        byEl.textContent = pick.name + (pick.alias ? " · " + pick.alias : "");
-        byEl.classList.remove("in");
-      }
-
-      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduce) {
-        setPhase("title");
-      } else {
-        var t = 150;
-        lineEls.forEach(function (el) {
-          later(function () { el.classList.add("in"); }, t);
-          t += 1500;
-        });
-        later(function () { byEl.classList.add("in"); }, t - 500);
-        later(function () { setPhase("struck"); }, t + 1900);
-        later(function () { setPhase("dark"); }, t + 3100);
-        later(function () { setPhase("title"); }, t + 4100);
-      }
-      document.getElementById("gate-skip").addEventListener("click", function () { clear(); setPhase("title"); });
-      document.getElementById("gate-enter").addEventListener("click", close);
-      document.addEventListener("keydown", function (e) {
-        if (!gate.hidden && e.key === "Escape") close();
-      });
-    }
-  }
-
-  /* ── 열람 등급: 0 공개, 1 내부용, 2 기밀 ──
-     막대는 화면이 바뀔 때 새로 그려지므로 그때마다 refresh() 로 현재 등급을 다시 적용한다. */
-  var level = 0;
-  var levelBtns = Array.prototype.slice.call(document.querySelectorAll("#clearance button"));
-  var allBars = function () { return Array.prototype.slice.call(document.querySelectorAll(".bar")); };
-  var applyLevel = function (n) {
-    level = n;
-    levelBtns.forEach(function (btn) {
-      btn.setAttribute("aria-pressed", Number(btn.dataset.level) === n ? "true" : "false");
-    });
-    allBars().forEach(function (b) {
-      b.setAttribute("aria-expanded", Number(b.dataset.level) <= n ? "true" : "false");
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (ch) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
     });
   };
-  document.addEventListener("click", function (e) {
-    var b = e.target.closest ? e.target.closest(".bar") : null;
-    if (b) b.setAttribute("aria-expanded", "true");
-  });
-  if (levelBtns.length) {
-    var saved = parseInt(local.get("blackout.level"), 10);
-    if (saved === 1 || saved === 2) applyLevel(saved);
-    levelBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        applyLevel(Number(btn.dataset.level));
-        local.set("blackout.level", String(level));
-      });
+  // 받침이 있으면 b, 없으면 a. 예: josa("레이나", "와", "과") → "와"
+  var josa = function (word, a, b) {
+    var last = String(word).replace(/[^가-힣0-9]+$/, "").slice(-1);
+    if (!last) return a;
+    if (/[0-9]/.test(last)) return "013678".indexOf(last) !== -1 ? b : a;
+    var code = last.charCodeAt(0) - 0xac00;
+    return code >= 0 && code <= 11171 && code % 28 ? b : a;
+  };
+
+  /* ── 열람 기록: 열어 본 기밀, 펼쳐 둔 기록, 열람한 인물과 문서를 이 기기에 남긴다 ── */
+  var readSet = function (key) {
+    try { var v = JSON.parse(local.get(key) || "[]"); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+  };
+  var opened = readSet("blackout.open");
+  var seenList = readSet("blackout.seen");
+  var confirmed = local.get("blackout.ok") === "1";
+  var saveOpen = function () { local.set("blackout.open", JSON.stringify(opened)); };
+  var isOpen = function (key) { return opened.indexOf(key) !== -1; };
+  var setOpen = function (key, on) {
+    var i = opened.indexOf(key);
+    if (on && i === -1) opened.push(key);
+    if (!on && i !== -1) opened.splice(i, 1);
+    saveOpen();
+  };
+  var seen = {
+    has: function (kind, id) { return seenList.indexOf(kind + ":" + id) !== -1; },
+    add: function (kind, id) {
+      if (seenList.indexOf(kind + ":" + id) !== -1) return;
+      seenList.push(kind + ":" + id);
+      local.set("blackout.seen", JSON.stringify(seenList));
+    },
+  };
+
+  /* ── 가려진 기록 ──
+     내부용(lv 1)은 누르면 바로 펼쳐진다.
+     기밀(lv 2)은 경고를 띄우고, "확인"을 한 번 입력한 뒤로는 바로 열린다. */
+  var uid = 0;
+  var ICON_DOWN = '<svg class="rec-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
+  var ICON_LOCK = '<svg class="rec-ico" width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"/></svg>';
+
+  // it: { lv, key, topic, text, owner, about }  about 은 경고창 첫 문장을 통째로 바꿀 때 쓴다. owner 는 "천시온의", "「칠월의 밤」 문서의" 처럼 '의'까지 붙인 말
+  var rec = function (it) {
+    var open = isOpen(it.key);
+    var id = "rb-" + (++uid);
+    var secret = it.lv === 2;
+    var verb = open ? "접기" : secret ? "눌러서 열람" : "펼치기";
+    return '<div class="rec' + (open ? " open" : "") + '" data-lv="' + it.lv + '" data-key="' + esc(it.key) + '"' +
+      ' data-topic="' + esc(it.topic) + '" data-owner="' + esc(it.owner || "") + '"' + (it.about ? ' data-about="' + esc(it.about) + '"' : "") + ">" +
+      '<button class="rec-tab" type="button" aria-expanded="' + open + '" aria-controls="' + id + '"' + (secret ? ' aria-haspopup="dialog"' : "") + ">" +
+        '<span class="rec-grade">' + (secret ? "기밀" : "내부") + "</span>" +
+        '<span class="rec-topic">' + esc(it.topic) + "</span>" +
+        '<span class="rec-verb">' + verb + "</span>" + (secret && !open ? ICON_LOCK : ICON_DOWN) +
+      "</button>" +
+      '<div class="rec-body" id="' + id + '"' + (open ? "" : " hidden") + "><p>" + esc(it.text) + "</p>" +
+        (secret ? '<span class="rec-stamps" aria-hidden="true"><i class="st-secret">기밀</i><i class="st-ok">열람 승인</i></span>' : "") +
+      "</div></div>";
+  };
+  // 기록 묶음. list 는 [{topic,text}] 두 갈래를 받아 내부용 → 기밀 순서로 놓는다.
+  var records = function (internal, secret, ns, owner) {
+    var all = [];
+    (internal || []).forEach(function (it, i) { all.push({ lv: 1, key: ns + ":i" + i, topic: it.topic, text: it.text, owner: owner }); });
+    (secret || []).forEach(function (it, i) { all.push({ lv: 2, key: ns + ":s" + i, topic: it.topic, text: it.text, owner: owner }); });
+    return all;
+  };
+  var hiddenSection = function (list, opts) {
+    opts = opts || {};
+    if (!list.length) {
+      return opts.quietIfEmpty ? "" : '<section class="hidden-recs empty-recs"><h2>가려진 기록</h2><p>이 기록철에는 가려진 기록이 없습니다.</p></section>';
+    }
+    return '<section class="hidden-recs" aria-label="가려진 기록">' +
+      '<header><h2>가려진 기록 ' + list.length + "건</h2>" +
+      "<p>내부 기록은 누르면 펼쳐집니다. 기밀은 경고를 읽고 확인을 입력해야 열립니다.</p></header>" +
+      '<div class="rec-grid">' + list.map(rec).join("") + "</div></section>";
+  };
+
+  var toggleRec = function (box, on, fresh) {
+    var tab = box.querySelector(".rec-tab");
+    var body = box.querySelector(".rec-body");
+    var secret = box.dataset.lv === "2";
+    box.classList.toggle("open", on);
+    box.classList.toggle("just", !!(on && fresh && secret));
+    tab.setAttribute("aria-expanded", String(on));
+    body.hidden = !on;
+    tab.querySelector(".rec-verb").textContent = on ? "접기" : secret ? "눌러서 열람" : "펼치기";
+    var ico = tab.querySelector(".rec-ico");
+    if (ico) ico.outerHTML = secret && !on ? ICON_LOCK : ICON_DOWN;
+    setOpen(box.dataset.key, on);
+  };
+
+  /* 기밀 경고창. 페이지마다 하나만 만든다. */
+  var sheet = null, pending = null, lastFocus = null;
+  var buildSheet = function () {
+    if (sheet) return sheet;
+    sheet = document.createElement("dialog");
+    sheet.className = "warn-sheet";
+    sheet.setAttribute("aria-labelledby", "warn-title");
+    sheet.innerHTML =
+      '<form method="dialog" class="warn-in" novalidate>' +
+        '<span class="stamp-secret" aria-hidden="true">기밀</span>' +
+        '<h2 id="warn-title">기밀 기록을 엽니다</h2>' +
+        '<p class="warn-about" id="warn-about"></p>' +
+        '<label for="warn-input">열람하려면 아래 칸에 <b>확인</b>이라고 입력하세요.</label>' +
+        '<input id="warn-input" name="ok" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-describedby="warn-about warn-err">' +
+        '<p class="warn-err" id="warn-err" aria-live="polite"></p>' +
+        '<p class="warn-note">한 번 입력하면 이 기기에서는 다른 기밀도 입력 없이 바로 열립니다.</p>' +
+        '<div class="warn-acts"><button type="button" class="btn" data-warn="close">닫기</button>' +
+        '<button type="submit" class="btn solid" value="ok">열람하기</button></div>' +
+      "</form>";
+    document.body.appendChild(sheet);
+    var input = sheet.querySelector("#warn-input");
+    var err = sheet.querySelector("#warn-err");
+    var shut = function () { if (sheet.open) sheet.close(); };
+    sheet.querySelector("[data-warn=close]").addEventListener("click", shut);
+    // 한글은 입력이 조합되므로 글자마다 검사하지 않고 열람 단추를 누를 때 한 번만 비교한다
+    sheet.querySelector("form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (input.value.replace(/\s+/g, "") !== "확인") {
+        err.textContent = "확인 두 글자를 입력해야 열립니다.";
+        input.focus();
+        return;
+      }
+      confirmed = true;
+      local.set("blackout.ok", "1");
+      var box = pending;
+      pending = null;
+      shut();
+      if (box) toggleRec(box, true, true);
     });
-  }
+    // 바깥 어두운 곳을 누르면 닫는다
+    sheet.addEventListener("click", function (e) { if (e.target === sheet) shut(); });
+    sheet.addEventListener("close", function () {
+      input.value = ""; err.textContent = "";
+      if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+    });
+    return sheet;
+  };
+  var askSecret = function (box) {
+    var dlg = buildSheet();
+    pending = box;
+    lastFocus = box.querySelector(".rec-tab");
+    var owner = box.dataset.owner;
+    dlg.querySelector("#warn-about").textContent = (box.dataset.about ||
+      "이 기록은 " + (owner ? owner + " " : "") + "「" + box.dataset.topic + "」에 관한 기밀입니다.") +
+      " 대화에서 직접 알아내고 싶다면 열지 마세요.";
+    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+    dlg.querySelector("#warn-input").focus();
+  };
+
+  document.addEventListener("click", function (e) {
+    var tab = e.target.closest ? e.target.closest(".rec-tab") : null;
+    if (!tab) return;
+    var box = tab.parentNode;
+    var on = !box.classList.contains("open");
+    if (on && box.dataset.lv === "2" && !confirmed) { askSecret(box); return; }
+    toggleRec(box, on, on);
+  });
 
   /* ── 대화 버튼: 설정에 등록된 플랫폼만 보여 준다 ── */
   var fillChat = function (slot) {
     var list = (window.SITE && window.SITE.chat) || [];
+    var who = slot.getAttribute("data-chat-with");
     slot.textContent = "";
     if (!list.length) {
-      // 인물 화면처럼 자리가 작은 곳에서는 빈 단추를 보이지 않는다
-      if (slot.hasAttribute("data-chat-quiet")) { slot.hidden = true; return; }
       var off = document.createElement("button");
       off.className = "btn"; off.type = "button"; off.disabled = true;
       off.textContent = "대화 링크 준비 중";
@@ -122,9 +187,9 @@
     }
     list.forEach(function (p, i) {
       var a = document.createElement("a");
-      a.className = "btn" + (i === 0 ? " solid" : "");
+      a.className = "btn go" + (i === 0 ? " solid" : "");
       a.href = p.url; a.target = "_blank"; a.rel = "noopener";
-      a.textContent = p.name + "에서 대화하기";
+      a.textContent = who ? p.name + "에서 " + who + josa(who, "와", "과") + " 대화하기" : p.name + "에서 대화하기";
       slot.appendChild(a);
     });
   };
@@ -145,43 +210,35 @@
     });
   }
 
-  /* ── 주 메뉴: 모든 페이지가 같은 목록을 쓴다 ── */
+  /* ── 주 메뉴: 모든 페이지가 같은 목록을 쓴다. 세 번째 값은 좁은 하단 탭에 쓰는 짧은 이름 ── */
   var NAV = [
-    ["index.html", "메인", "main"],
-    ["world.html", "세계관", "world"],
-    ["characters.html", "인물", "characters"],
-    ["webtoon.html", "웹툰", "webtoon"],
-    ["timeline.html", "연표·지도", "timeline"],
+    ["index.html", "메인", "메인", "main"],
+    ["world.html", "세계관", "세계관", "world"],
+    ["characters.html", "인물", "인물", "characters"],
+    ["webtoon.html", "웹툰", "웹툰", "webtoon"],
+    ["timeline.html", "연표와 지도", "연표·지도", "timeline"],
   ];
   var page = document.body.getAttribute("data-page");
   Array.prototype.forEach.call(document.querySelectorAll("[data-nav]"), function (el) {
+    var short = el.classList.contains("tabbar");
     el.innerHTML = NAV.map(function (n) {
-      return '<a href="' + n[0] + '"' + (n[2] === page ? ' aria-current="page"' : "") + ">" + n[1] + "</a>";
+      return '<a href="' + n[0] + '"' + (n[3] === page ? ' aria-current="page"' : "") + ">" + (short ? n[2] : n[1]) + "</a>";
     }).join("");
   });
 
-  /* ── 페이지 공통 도우미 ── */
-  var esc = function (s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (ch) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+  /* ── 열람 기록 지우기 ── */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-forget]"), function (btn) {
+    btn.addEventListener("click", function () {
+      if (!window.confirm("열어 본 기밀과 열람 표시를 모두 지웁니다. 다음부터 기밀을 열 때 다시 확인을 입력해야 합니다.")) return;
+      ["blackout.open", "blackout.seen", "blackout.ok"].forEach(local.del);
+      session.del("blackout.gate");
+      location.reload();
     });
-  };
+  });
+
+  /* ── 페이지 공통 도우미 ── */
   var charById = {};
   (window.CHARACTERS || []).forEach(function (c) { charById[c.id] = c; });
-  // 가려진 기록 묶음. level 1 내부용, 2 기밀
-  var notes = function (items, lv, label) {
-    items = items || [];
-    var head = "<h2><span>" + label + "</span><span>" + items.length + "건</span></h2>";
-    if (!items.length) return '<div class="group">' + head + '<p class="none">등록된 기록이 없습니다.</p></div>';
-    return '<div class="group">' + head + items.map(function (it) {
-      return '<div class="secret"><p class="warn">' + esc(it.topic) + "</p>" + bar(it.text, lv, it.topic) + "</div>";
-    }).join("") + "</div>";
-  };
-  var bar = function (text, lv, about) {
-    var label = lv === 2 ? "기밀" : "내부용";
-    return '<button class="bar" data-level="' + lv + '" type="button" aria-expanded="false" aria-label="' + label + " 열람" +
-      (about ? ": " + esc(about) : "") + '">' + esc(text) + "</button>";
-  };
   // 인물 이름 목록. 누르면 인물 기록으로 간다
   var people = function (ids) {
     var list = (ids || []).filter(function (id) { return charById[id]; });
@@ -190,11 +247,26 @@
       return '<li><a href="characters.html#' + id + '">' + esc(charById[id].name) + "</a></li>";
     }).join("") + "</ul>";
   };
+  // 용지 위에 쓸 고유색. 밝은 색은 용지에서 읽히도록 어둡게 내린다
+  var inkOn = function (hex, bg) {
+    var rgb = function (h) { h = h.replace("#", ""); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }); };
+    var lum = function (c) {
+      var v = c.map(function (x) { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); });
+      return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+    };
+    var c = rgb(hex), b = lum(rgb(bg || "#E7E3D6"));
+    for (var k = 0; k < 20; k++) {
+      if ((b + 0.05) / (lum(c) + 0.05) >= 4.6) break;
+      c = c.map(function (x) { return Math.round(x * 0.9); });
+    }
+    return "#" + c.map(function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
+  };
 
   window.BLACKOUT = {
-    local: local,
-    refresh: function () { applyLevel(level); },
-    fillChat: fillChat,
-    esc: esc, notes: notes, bar: bar, people: people, charById: charById,
+    local: local, session: session,
+    esc: esc, josa: josa, people: people, charById: charById,
+    rec: rec, records: records, hiddenSection: hiddenSection,
+    seen: seen, inkOn: inkOn, fillChat: fillChat,
   };
+  root.classList.add("js");
 })();
