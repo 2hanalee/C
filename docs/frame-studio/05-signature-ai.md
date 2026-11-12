@@ -3,6 +3,7 @@
 대상: Frame Studio 14의 서명 기능(서명 탭의 엔진, "말로 조정", "AI 제안 3가지")
 
 - **적용 현황:** 1단계(A 서명 페르소나, B 후보 거르기, D 취향 기록)는 `frame-studio/Frame_Studio_15.html`에 반영했습니다. 내역은 [06-changes-v15.md](06-changes-v15.md)에 있습니다.
+- **적용 현황:** 2단계(C 보고 고치는 AI, F 한글 손글씨 서명체·한국식 서명 방식)는 `frame-studio/Frame_Studio_16.html`에 반영했습니다. 내역은 [07-changes-v16.md](07-changes-v16.md)에 있습니다.
 
 ## 1. 지금 구조와 한계
 
