@@ -768,3 +768,12 @@ a.plaque:hover img { filter: drop-shadow(0 0 0.9rem rgba(175, 203, 209, 0.7)); }
 .gate-logo::before { content: ""; position: absolute; z-index: -1; inset: -60% -20% -40% -12%; pointer-events: none;
   background: radial-gradient(ellipse 50% 45% at 38% 48%, rgba(175, 203, 209, 0.16), transparent 72%); }
 @media (min-width: 900px) { .profile-main > .plate.blank { aspect-ratio: 5 / 2; } }
+
+/* 그림 엠블럼: 그림 자체에 빛과 연기가 있으므로 덧씌운 빛을 뺀다 */
+.plaque img, .plaque .sym { width: 86%; height: 86%; object-fit: contain; filter: none; }
+a.plaque:hover img { filter: brightness(1.12); }
+.plate.has-sym img { filter: none; }
+.seal { filter: none; }
+.thrones li.king { grid-template-columns: 5.5rem 1fr; }
+.king-plaque { width: 5.5rem; }
+.doc-head.marked > .mark { object-fit: contain; }

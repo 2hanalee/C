@@ -16,7 +16,7 @@
   PLACES.forEach(function (p) { placeById[p.id] = p; });
 
   // 문서 머리에 놓는 세력 기호
-  var MARKS = { academy: "faction-academy", thrones: "faction-seven-seats", consortium: "faction-consortium", "grey-zone": "faction-grey-zone" };
+  var MARKS = { academy: "faction-academy", thrones: "celestis", consortium: "faction-consortium", "grey-zone": "faction-grey-zone" };
 
   // 본문의 핵심어에 색을 준다. 한 문단에서 같은 말은 처음 한 번만.
   var TERMS = [
@@ -49,7 +49,7 @@
         return '<li><a href="#' + d.id + '"><span class="no">' + d.no + "</span>" +
           "<span><b>" + esc(d.title) + "</b><span>" + esc(d.lead) + "</span></span>" +
           '<span class="mono">' + hiddenCount(d) + "</span>" +
-          (MARKS[d.id] ? '<img class="doc-mark" src="assets/img/symbols/' + MARKS[d.id] + '.svg" alt="">' : "") + "</a></li>";
+          (MARKS[d.id] ? '<img class="doc-mark" src="assets/img/emblems/' + MARKS[d.id] + '.webp" alt="">' : "") + "</a></li>";
       }).join("") + "</ol>" +
       '<p class="after"><a class="btn" href="characters.html">이 세계의 사람들 48인</a>' +
       '<a class="btn" href="timeline.html">연표와 지도</a></p>';
@@ -58,7 +58,7 @@
   var seatsHtml = function () {
     return '<ol class="seats">' + SEATS.map(function (s) {
       var c = B.charById[s.id];
-      return '<li><a class="plaque" href="characters.html#' + s.id + '"><img src="assets/img/symbols/seat-' + s.id + '.svg" alt=""></a>' +
+      return '<li><a class="plaque" href="characters.html#' + s.id + '"><img src="assets/img/emblems/seat-' + s.id + '.webp" alt=""></a>' +
         '<div class="who"><span class="seat-no">제' + s.seat + '좌</span><a href="characters.html#' + s.id + '">' + esc(c ? c.name : s.id) + "</a>" +
         "<span>" + esc(s.sin) + " · " + esc(s.law) + "의 법</span></div>" +
         '<p><span class="mono">흔드는 것</span>' + esc(s.pillar) + "</p>" +
@@ -86,7 +86,7 @@
       '<article class="profile">' +
         '<div class="profile-main doc">' +
           '<header class="doc-head' + (MARKS[d.id] ? " marked" : "") + (d.id === "grey-zone" ? " myc" : "") + '"><span class="no">' + d.no + "</span><h1>" + esc(d.title) + '</h1><p>' + esc(d.lead) + "</p>" +
-            (MARKS[d.id] ? '<img class="mark" src="assets/img/symbols/' + MARKS[d.id] + '.svg" alt="">' : "") + "</header>" +
+            (MARKS[d.id] ? '<img class="mark" src="assets/img/emblems/' + MARKS[d.id] + '.webp" alt="">' : "") + "</header>" +
           (d.image ? '<img class="scene" src="' + esc(d.image) + '" alt="' + esc(d.title) + '">' : "") +
           body +
           '<dl class="spec">' +

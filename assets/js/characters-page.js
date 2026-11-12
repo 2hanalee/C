@@ -24,7 +24,7 @@
   ];
   var EMOTES = ["평상시", "웃음", "의문", "부끄러움", "슬픔", "분노", "기술"];
   var SEAT_SYMBOL = {
-    celestis: "faction-seven-seats", arbel: "seat-arbel", merkan: "seat-merkan", sitriel: "seat-sitriel",
+    celestis: "celestis", arbel: "seat-arbel", merkan: "seat-merkan", sitriel: "seat-sitriel",
     neisa: "seat-neisa", orgam: "seat-orgam", lagbar: "seat-lagbar", nemuri: "seat-nemuri",
   };
 
@@ -60,7 +60,7 @@
     // 칠좌와 왕은 그림이 준비될 때까지 기호로 자리를 채운다
     var sym = SEAT_SYMBOL[c.id];
     if (sym) {
-      return '<div class="plate blank has-sym f-' + c.faction + '"><img src="assets/img/symbols/' + sym + '.svg" alt="' + esc(c.name) + '의 기호"' + (big ? "" : ' loading="lazy"') + "></div>";
+      return '<div class="plate blank has-sym f-' + c.faction + '"><img src="assets/img/emblems/' + sym + '.webp" alt="' + esc(c.name) + '의 문장"' + (big ? "" : ' loading="lazy"') + "></div>";
     }
     // 활동명이 길면 글자를 줄여 판 안에 들어오게 한다
     var label = c.alias || c.name;
