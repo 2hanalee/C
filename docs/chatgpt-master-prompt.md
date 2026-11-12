@@ -70,6 +70,15 @@ Wide 8:5, transparent background. The attached image shows a framed word. Treat 
 - D1 exact text "기밀" (기, 밀), in Rust ink.
 - D2 exact text "내부용" (내, 부, 용), in Old Brass ink.
 - D3 exact text "말소" (말, 소), in Rust ink, heavier and more worn than D1.
+- D4 exact text "열람 승인" (열, 람, space, 승, 인), in Old Brass ink, crisp and fully inked, rotated 3 degrees clockwise.
+- D5 exact text "사진 미제출" (사, 진, space, 미, 제, 출), in Rust ink, faded as if stamped long ago.
+- D6 exact text "열람함" (열, 람, 함), in Ash gray ink, small and light, as if stamped quickly.
+
+P1–P4. RECORD OBJECTS (for the record-file look of the site)
+- P1 PAPER CLIP: Portrait 2:3, transparent background. One plain steel paper clip seen from directly above, rotated 12 degrees, filling about 85% of the frame height, slightly worn. A faint soft shadow attached to the clip itself is allowed for this asset only.
+- P2 MASKING TAPE: Wide 3:1, transparent background. One strip of off-white masking tape with both ends torn, slight wrinkles, paper fibers visible, the tape itself semi-translucent.
+- P3 DESK SURFACE: Square 1:1, opaque. A very dark blue-black felt desk surface seen straight on, average color near #0A1118, fine low-contrast fibers, even lighting, no objects. Left edge must match right edge and top must match bottom.
+- P4 PHOTO PAPER: Square 1:1, opaque. The white back-of-print border of an old photograph: slightly warm white paper with a faint satin sheen and tiny scuffs, even lighting, filling the frame edge to edge. Left edge must match right edge and top must match bottom.
 
 R1. THE SEVEN RINGS
 Wide 3:1, opaque Ink background. Seven thin plain metal rings floating in a level row in a dark empty space, evenly spaced, each a perfect circle, none touching. They are unlit and empty. A faint cold light from above catches only the top edge of each ring. Nothing else in the frame. No figure, no throne, no fog, no stars.
@@ -96,9 +105,9 @@ Reply now with only: "준비됐습니다. 에셋 코드를 보내 주세요."
 
 | 코드 | 에셋 | 첨부할 참조 그림 | 사이트에서 쓰일 자리 |
 |---|---|---|---|
-| S1–S7 | 칠좌 엠블럼 | `ref-seat-arbel.png` 등 7장 | 메인 칠좌 구획, 세계관 "왕과 칠좌", 칠좌 인물의 그림 자리 |
-| F1–F4 | 세력 엠블럼 | `ref-faction-*.png` 4장 | 세계관 문서 머리 |
-| A1, A2 | 아카데미 인장(메달, 도장) | `ref-insignia.png` | 랭킹 보드, 하단 |
+| S1–S7 (완료) | 칠좌 엠블럼 | `ref-seat-arbel.png` 등 7장 | 메인 칠좌 구획, 세계관 "왕과 칠좌", 칠좌 인물의 그림 자리 |
+| F1–F4 (완료) | 세력 엠블럼 | `ref-faction-*.png` 4장 | 세계관 문서 머리 |
+| A1 (완료), A2 | 아카데미 인장(메달, 도장) | `ref-insignia.png` | 랭킹 보드, 하단 |
 | T1 | 한글 제목 "블랙아웃" 조명 타이포 | `ref-title-ko.png` | 메인 표지 |
 | T2 | 영문 제목 조명 타이포 | `ref-title-en.png` | 게이트의 로고 공개 |
 | D1–D3 | 도장 "기밀", "내부용", "말소" | `ref-stamp-*.png` 3장 | 가려진 기록, 랭킹의 말소된 3위 |
@@ -106,12 +115,16 @@ Reply now with only: "준비됐습니다. 에셋 코드를 보내 주세요."
 | K1 | 키비주얼 | 없음 | 메인 표지 배경 |
 | M1 | 지도 판 | `ref-map-layout.png` | 지도 화면의 바탕 |
 | X1–X3 | 질감 | 없음 | 게이트 용지, 입자, 회색 구역 |
+| D4–D6 | 도장: 열람 승인, 사진 미제출, 열람함 | `ref-stamp-approved.png`, `ref-stamp-no-photo.png`, `ref-stamp-read.png` | 기밀을 열 때, 그림 없는 인물의 사진 칸, 읽은 문서 |
+| P1–P4 | 클립, 테이프, 책상 바탕, 사진 인화지 | 없음 | 인물 카드와 문서철의 실물 질감 |
 
 ## 권하는 순서
 
-1. `S1` 을 먼저 만들어 마음에 들 때까지 고칩니다.
-2. "이 그림을 스타일 기준으로 삼아 줘" 라고 보냅니다.
-3. S2–S7, F1–F4, A1 을 이어서 만듭니다. 엠블럼끼리 질감이 맞아야 하므로 한 대화에서 끝냅니다.
+칠좌와 세력 엠블럼, 아카데미 인장은 받아서 사이트에 넣었습니다. 남은 것은 다음 순서를 권합니다.
+
+1. P1–P4 와 D4–D6 을 먼저 만듭니다. 인물 카드와 문서철 개편에 바로 쓰입니다.
+2. K1 키비주얼을 만듭니다.
+3. 이미 만든 엠블럼 하나를 올리고 "이 그림을 스타일 기준으로 삼아 줘" 라고 보낸 뒤, D1–D3 을 만듭니다.
 4. T1, T2 를 만듭니다. 글자 모양이 참조 그림과 다르면 "글자 모양을 첨부한 그림과 똑같이 되돌려 줘" 한 가지만 요청합니다.
 5. 나머지는 순서에 상관없습니다.
 
