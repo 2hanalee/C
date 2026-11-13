@@ -26,7 +26,7 @@
     }
     var first = eps[0];
     app.innerHTML =
-      '<header class="page-head" data-ghost="SERIES"><p class="kicker">블랙아웃 연재</p><h1 class="lit">웹툰</h1><p>하란의 이야기를 세로 만화로 연재합니다. 회차를 누르면 뷰어가 열립니다.</p></header>' + sampleNote +
+      '<header class="page-head" data-ghost="SERIES"><p class="kicker">블랙아웃 연재</p><h1 class="lit">웹툰</h1><p>인천의 이야기를 세로 만화로 연재합니다. 회차를 누르면 뷰어가 열립니다.</p></header>' + sampleNote +
       '<div class="series">' +
         plate(W.cover, "표지", W.title + " 표지") +
         '<div class="series-info"><h2>' + esc(W.title) + '</h2><p class="mono">' + esc(W.genre) + ", " + esc(W.schedule) + "</p>" +

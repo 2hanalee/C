@@ -15,7 +15,7 @@
   var FACTIONS = [
     ["all", "전체"],
     ["academy", "아카데미와 협력자"],
-    ["outsider", "반역자와 외부 인물"],
+    ["outsider", "반역자와 외부 인물, 판정위원회"],
     ["throne", "이계의 왕과 칠좌"],
     ["border", "경계인과 연예, 기업, 용병"],
   ];
@@ -88,6 +88,8 @@
     if (sym) {
       return '<span class="photo has-sym"><img src="assets/img/emblems/' + sym + '.webp" alt="' + esc(c.name) + '의 문장"' + lazy + "></span>";
     }
+    // 전사자는 사진 자리에 「전사」 도장을 찍는다
+    if (c.fallen) return '<span class="photo none fallen"><i class="stamp-nophoto" style="--tilt:' + tilt(c, 9) + '">전사</i></span>';
     return '<span class="photo none"><i class="stamp-nophoto" style="--tilt:' + tilt(c, 9) + '">사진 미제출</i></span>';
   };
 
@@ -96,7 +98,7 @@
     if (state.faction !== "all" && c.faction !== state.faction) return false;
     var q = state.q.trim().toLowerCase();
     if (!q) return true;
-    var hay = [c.name, c.alias, c.role, c.kind, c.ability.name, c.traits.join(" ")].join(" ").toLowerCase();
+    var hay = [c.name, c.alias, c.role, c.kind, c.ability ? c.ability.name : "", c.traits.join(" ")].join(" ").toLowerCase();
     return hay.indexOf(q) !== -1;
   };
 
@@ -110,7 +112,7 @@
         '<b class="rc-name">' + esc(c.name) + "</b>" +
         '<span class="rc-alias">' + esc(subline(c) || c.kind) + "</span>" +
         '<span class="rc-dl"><span class="k">구분</span><span>' + esc(plain(c.kind)) + "</span>" +
-          '<span class="k">능력</span><span>' + esc(c.ability.name) + "</span></span>" +
+          (c.ability ? '<span class="k">능력</span><span>' + esc(c.ability.name) + "</span>" : "") + "</span>" +
         '<span class="rc-foot"><span class="rc-hidden' + (n ? "" : " zero") + '">' + (n ? LOCK + "가려진 기록 " + n + "건" : "가려진 기록 없음") + "</span>" +
           '<span class="go">기록 열람' + ARROW + "</span></span>" +
       "</span></a>" +
@@ -125,7 +127,7 @@
       return { key: c.rank == null ? 1000 + c.no : c.rank, html:
         '<li class="f-' + c.faction + (B.seen.has("c", c.id) ? " seen" : "") + '"><a class="row" href="#' + c.id + '"><span class="rk' + rankClass(c) + '">' + esc(rankText(c)) + "</span>" +
         '<span class="who"><b>' + esc(c.name) + "</b><span>" + esc(subline(c) || c.kind) + "</span></span>" +
-        '<span class="st">' + moveHtml(c) + "<span>" + esc(c.ability.name) + "</span></span>" + ARROW + "</a></li>" };
+        '<span class="st">' + moveHtml(c) + "<span>" + esc(c.ability ? c.ability.name : plain(c.kind)) + "</span></span>" + ARROW + "</a></li>" };
     });
     // 빈자리는 검색 중이 아닐 때, 아카데미가 보이는 목록에만 넣는다
     if (!state.q.trim() && (state.faction === "all" || state.faction === "academy")) {
@@ -146,7 +148,7 @@
     var box = document.getElementById("results");
     var tally = document.getElementById("tally");
     if (!box) return;
-    tally.textContent = list.length === ALL.length ? "48인 전원을 보고 있습니다." : "48인 가운데 " + list.length + "인을 찾았습니다.";
+    tally.textContent = list.length === ALL.length ? ALL.length + "인 전원을 보고 있습니다." : ALL.length + "인 가운데 " + list.length + "인을 찾았습니다.";
     box.innerHTML = !list.length
       ? '<p class="empty">찾는 인물이 없습니다. 이름이나 활동명, 능력 이름으로 다시 찾아보세요.</p>'
       : state.view === "card" ? cardsHtml(list) : boardHtml(list);
@@ -165,9 +167,9 @@
   };
 
   var renderList = function () {
-    document.title = "인물 48인 · 블랙아웃";
+    document.title = "인물 " + ALL.length + "인 · 블랙아웃";
     app.innerHTML =
-      '<header class="page-head" data-ghost="DOSSIER"><p class="kicker">방위청 인사 기록, 열람용 사본</p><h1 class="lit">인물 48인</h1>' +
+      '<header class="page-head" data-ghost="DOSSIER"><p class="kicker">방위청 인사 기록, 열람용 사본</p><h1 class="lit">인물 ' + ALL.length + "인</h1>" +
         "<p>아카데미에 등록된 인물과 외부 인물의 인사기록카드입니다. 카드를 누르면 전체 기록이 열립니다.</p></header>" +
       '<div class="tools">' +
         '<label class="search"><span>이름이나 능력으로 찾기</span><input id="q" type="search" autocomplete="off" placeholder="예: 레이나, 왕관 없는 정원" value="' + esc(state.q) + '"></label>' +
@@ -202,7 +204,7 @@
         var src = n === 0 ? c.image : (c.emotes && c.emotes[e]);
         return '<button type="button" aria-pressed="' + (n === 0) + '"' + (src ? ' data-src="' + esc(src) + '"' : ' disabled title="이 표정은 아직 준비 중입니다"') + ">" + e + "</button>";
       }).join("") + "</div>";
-    var caption = c.image ? "등록 사진, 평상시 표정" : SEAT_SYMBOL[c.id] ? "사진 대신 문장을 붙여 둔 기록" : "등록 사진이 아직 제출되지 않았습니다";
+    var caption = c.image ? "등록 사진, 평상시 표정" : c.fallen ? "전사자의 기록" : SEAT_SYMBOL[c.id] ? "사진 대신 문장을 붙여 둔 기록" : "등록 사진이 아직 제출되지 않았습니다";
     var list = B.records(c.internal, c.secret, "c:" + c.id, c.name + "의");
 
     app.innerHTML =
@@ -227,8 +229,8 @@
               "<dt>성격</dt><dd>" + esc(c.traits.join(", ")) + "</dd>" +
             "</dl>" +
             '<section class="sc-sec"><h2>개요</h2><p>' + esc(c.summary) + "</p></section>" +
-            '<section class="sc-ability"><h2>능력</h2><p class="ab-name">' + esc(c.ability.name) + "</p><p>" + esc(c.ability.text) + "</p>" +
-              '<p class="ab-limit"><strong>한계</strong> ' + esc(c.ability.limit) + "</p></section>" +
+            (c.ability ? '<section class="sc-ability"><h2>능력</h2><p class="ab-name">' + esc(c.ability.name) + "</p><p>" + esc(c.ability.text) + "</p>" +
+              '<p class="ab-limit"><strong>한계</strong> ' + esc(c.ability.limit) + "</p></section>" : "") +
             (rels ? '<section class="sc-sec"><h2>관계</h2><ul class="rel">' + rels + "</ul></section>" : "") +
             '<div class="platforms" data-chat data-chat-with="' + esc(c.name) + '"></div>' +
           "</div>" +

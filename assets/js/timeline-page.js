@@ -69,10 +69,10 @@
   };
 
   /* ───── 지도 ───── */
-  // 하란 약도. 서쪽이 바다다. 좌표계는 800 x 560.
+  // 인천 약도(임시). 2단계에서 실제 해안선으로 다시 그린다. 서쪽이 바다다. 좌표계는 800 x 560.
   var COAST = "260,0 250,60 225,110 240,170 290,215 300,250 345,262 350,300 300,312 296,352 335,372 330,410 270,440 255,500 270,560";
   var mapSvg = function () {
-    return '<svg viewBox="0 0 800 560" role="img" aria-label="하란 약도. 서쪽은 바다, 항구 주변이 회색 구역이다." preserveAspectRatio="xMidYMid slice">' +
+    return '<svg viewBox="0 0 800 560" role="img" aria-label="인천 약도. 서쪽은 바다, 내항 주변이 회색 구역이다." preserveAspectRatio="xMidYMid slice">' +
       "<defs>" +
         '<pattern id="sea" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 5 H10" class="m-sea-line"/></pattern>' +
         '<pattern id="spore" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" class="m-spore"/><circle cx="6.5" cy="6.5" r="0.8" class="m-spore"/></pattern>' +
@@ -101,7 +101,7 @@
       '<ellipse cx="656" cy="178" rx="70" ry="46" class="m-contour"/><ellipse cx="656" cy="178" rx="46" ry="29" class="m-contour"/><ellipse cx="656" cy="178" rx="22" ry="13" class="m-contour"/>' +
       // 글자
       '<text x="70" y="300" class="m-label big">서해</text>' +
-      '<text x="640" y="480" class="m-label big">하란</text>' +
+      '<text x="640" y="480" class="m-label big">인천</text>' +
       '<text x="568" y="388" class="m-label">제3구</text>' +
       '<text x="612" y="54" class="m-label">안개고개 방면</text>' +
       // 방위
@@ -132,7 +132,7 @@
     document.title = "지도 · 블랙아웃";
     if (id && placeById[id]) selected = id;
     app.innerHTML =
-      '<header class="page-head" data-ghost="HARAN"><p class="kicker">하란 약도</p><h1 class="lit">지도</h1><p>이야기의 무대인 하란입니다. 지도의 번호나 장소 목록을 누르면 그곳의 기록이 열립니다.</p></header>' +
+      '<header class="page-head" data-ghost="INCHEON"><p class="kicker">인천 약도</p><h1 class="lit">지도</h1><p>이야기의 무대인 인천입니다. 지도의 번호나 장소 목록을 누르면 그곳의 기록이 열립니다.</p></header>' +
       tabs("map") +
       '<div class="mapwrap">' +
         '<div class="map">' + mapSvg() +

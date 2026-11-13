@@ -33,5 +33,4 @@ window.QUOTES = [
   { id: "reina-de-rose", name: "레이나 드 로즈", alias: "로즈 세라핌", lines: ["“오늘도 평안한 하루가", "되시기를♡”"], source: "card" },
   { id: "lee-seohyeon", name: "이서현", alias: "트윈 시그널", lines: ["“실례하겠습니다.”"], source: "canon" },
   { id: "oh-yunseo", name: "오윤서", alias: "라스트 라이트", lines: ["“불이 꺼지면 숫자부터 세라.", "돌아온 인원이 맞는지.”"], source: "written" },
-  { id: "maria-orten", name: "마리아 오르텐", alias: "잿빛 성가", lines: ["“노래가 끝난 자리에는", "아무도 불을 켜지 않았어요.”"], source: "written" },
 ];

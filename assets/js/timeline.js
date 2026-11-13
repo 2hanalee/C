@@ -1,4 +1,5 @@
-// 연표와 지도 데이터.
+// 연표와 지도 데이터. 설정집 v3 기준.
+// ◇(새로 정한 설정) 항목은 싣고 줄 끝에 `// ◇` 를 붙인다. 나중에 바뀔 수 있다.
 // level: 0 공개, 1 내부용, 2 기밀. 사건 자체의 level 이 1 이상이면 날짜만 보이고 내용은 통째로 가린다.
 // more 는 공개 사건에 딸린 가려진 덧붙임.
 window.ERAS = [
@@ -12,16 +13,25 @@ window.ERAS = [
   {
     id: "war", title: "전쟁기",
     events: [
-      { when: "20년 전", day: "7월 12일", title: "칠월의 밤", level: 0, text: "하란항 상공이 찢어져 7시간 동안 이계 생물이 쏟아진다. 4,172명이 죽거나 실종된다. 열두 명이 처음으로 마법소녀가 된다. 회색 구역이 생긴다.",
-        people: ["oh-yunseo", "park-sion"], place: "haran-port", topic: "july-night",
-        more: [{ level: 1, text: "천시온이 부두에서 학장 라명숙을 구한다." }] },
+      { when: "20년 전", day: "7월 12일", title: "칠월의 밤", level: 0, text: "인천항 상공이 찢어져 7시간 동안 이계 생물이 쏟아진다. 4,172명이 죽거나 실종된다. 열두 명이 처음으로 마법소녀가 되고, 오윤서와 류서경이 그 가운데 있다. 박시온이 여동생을 잃는다. 회색 구역이 생긴다.",
+        people: ["oh-yunseo", "ryu-seogyeong", "park-sion"], place: "haran-port", topic: "july-night",
+        more: [
+          { level: 1, text: "천시온이 부두에서 학장 라명숙을 구한다." },
+          { level: 2, text: "이날 틈 마을과 맞닿은 이계의 마을이 함께 무너졌고, 그 틈에서 온새별이 태어났다." },
+          { level: 2, text: "그날 오후 인천항 CCTV 여섯 대가 일곱 시간 뒤의 장면을 먼저 녹화했다. 당직자는 녹화 오류로 처리했고, 이 영상은 지금 방위청 봉인 자료다." }, // ◇
+        ] },
+      { when: "17년 전", title: "붉은 계곡과 새벽회", level: 0, text: "서유럽 붉은 계곡 전투에서 이벨린이 성검이 된다. 같은 해 폭주족 새벽회가 대형 사고를 일으키고, 한태건이 갱생을 결심한다.", people: ["evelyn-rose", "han-taegeon"] },
       { when: "16년 전", title: "랭킹제 도입", level: 0, text: "방위청이 예산 배분 기준으로 랭킹제를 들인다.", topic: "academy" },
-      { when: "15년 전", title: "첫 비공식 접촉", level: 0, text: "왕과 아카데미가 처음으로 비공식 접촉을 한다. 열아홉의 유다 이스타로드가 통역을 맡는다.", people: ["yuda-istarod"], topic: "seal" },
-      { when: "12년 전", title: "산업연합 회장 취임", level: 0, text: "강명주가 하란 산업연합 회장이 된다.", people: ["kang-myeongju"], topic: "consortium" },
+      { when: "16년 전", title: "검은 파도", level: 0, text: "강화도 남쪽 어촌이 검은 파도에 휩쓸린다." },
+      { when: "15년 전", title: "첫 비공식 접촉", level: 0, text: "왕과 아카데미가 처음으로 비공식 접촉을 한다. 열아홉 살의 유다 이스타로드가 통역을 맡는다.", people: ["yuda-istarod"], topic: "seal" },
+      { when: "12년 전", title: "기업 연합 회장 취임", level: 0, text: "강명주가 기업 연합 회장이 된다.", people: ["kang-myeongju"], topic: "consortium" },
+      { when: "11년 전", title: "강태오 승진", level: 0, text: "강태오가 「기관 간 평가 체계 표준화」 보고서로 승진한다.", people: ["kang-taeo"] },
+      { when: "8년 전", title: "윤세혁 심장 이식", level: 0, text: "윤세혁이 심장 이식 수술을 받는다.", people: ["yoon-sehyeok"] },
       { when: "8년 전", title: "월곶 하수 터널", level: 1, text: "월곶 해안 하수 터널 소탕 작전에서 강세아가 동료 둘을 잃고 홀로 살아남는다.", people: ["kang-sea"], place: "wolgot" },
-      { when: "7년 전", title: "윤하진 데뷔", level: 0, text: "열일곱의 윤하진이 아이돌 마법소녀로 데뷔한다.", people: ["yoon-hajin"] },
-      { when: "6년 전", day: "9월 4일", title: "안개고개 전투", level: 0, text: "열여덟의 정하은이 균열을 멈춰 세운다. 36명 중 11명이 돌아오고 하늘에 340미터의 흉터가 남는다. 오르텐 마을이 사라진다. 휴전이 시작된다.",
-        people: ["jeong-haeun", "maria-orten", "jin-gaon", "mee"], place: "angae", topic: "truce",
+      { when: "7년 전", title: "윤하진 데뷔", level: 0, text: "열일곱 살의 윤하진이 아이돌 마법소녀로 데뷔한다.", people: ["yoon-hajin"] },
+      { when: "6년 전", day: "9월 4일", title: "안개고개 전투", level: 0,
+        text: "열여덟 살의 정하은이 균열을 멈춰 세운다. 36명 중 11명이 돌아오고 하늘에 340미터의 흉터가 남는다. 협상이 이어지던 사흘 사이 고개 아래 마을이 이계 생물에 휩쓸려 사라진다. 휴전이 시작된다.", // ◇
+        people: ["jeong-haeun", "jin-gaon", "mee"], place: "angae", topic: "truce",
         more: [
           { level: 1, text: "이계의 왕 셀레스티스가 처음으로 직접 모습을 드러낸다." },
           { level: 2, text: "아카데미는 협상 시간을 벌려고 오르텐 마을의 대피령을 사흘 늦췄다." },
@@ -32,26 +42,34 @@ window.ERAS = [
     id: "truce", title: "휴전기",
     events: [
       { when: "5년 전", title: "경계의 울음", level: 1, text: "레인 스타폴이 경계가 무너지는 곳을 쫓기 시작한다.", people: ["rain-starfall"] },
-      { when: "4년 전", title: "칠좌 재편", level: 0, text: "이계의 칠좌가 재편되고 라그바르가 제6좌에 오른다.", people: ["lagbar"], topic: "thrones",
+      { when: "5년 전", title: "예고 장부 성립", level: 2, text: "안개고개의 협상 통로가 굳어져 예고 장부가 된다." }, // ◇
+      { when: "4년 전", title: "라그바르의 승좌", level: 0, text: "이계의 제6좌에 라그바르가 오른다.", people: ["lagbar"], topic: "thrones",
         more: [
           { level: 1, text: "같은 해 강태오가 외부 감독관으로 감독부에 파견된다." },
           { level: 1, text: "늦가을, 이서현이 지하 공동구에서 이계 기생체 쿠오와 한 몸이 된다." },
         ] },
-      { when: "3년 전", title: "폐항 사건", level: 0, text: "폐쇄 부두에서 사건이 일어난다. 상세는 공개되지 않았다.", place: "closed-pier",
-        more: [{ level: 2, text: "이계인 포로가 석 달 동안 구금됐다." }] },
-      { when: "3년 전", day: "겨울", title: "체육관 오염 사고", level: 0, text: "하란시립체육관 지하 창고에서 이계 오염 사고가 난다. 복서 강도윤의 몸이 바뀐다.", people: ["kang-doyun"], place: "gym",
+      { when: "3년 전", title: "폐항 사건", level: 0, text: "인천 북항 폐부두에서 사건이 일어난다. 상세는 공개되지 않았다.", place: "closed-pier",
+        more: [
+          { level: 2, text: "이계인 포로가 석 달 동안 구금됐다." },
+          { level: 2, text: "포로는 6년 전 진가온이 쏘지 않은 이계 협상 사절이자 예고 장부의 연락책이었다. 아카데미 강경파가 붙잡아 가두었고, 판정위원회가 조용히 풀어 주었다." }, // ◇
+        ] },
+      { when: "3년 전", day: "여름", title: "신포동 그림자 사건", level: 0, text: "신포동 골목에서 그림자가 주인보다 반 박자 늦게 따라온다는 신고가 일주일 동안 2천 건 넘게 들어온다. 구청은 폭염에 따른 착시라는 안내문을 붙인다. 안내문의 그림자도 반 박자 늦다.", topic: "law" }, // ◇
+      { when: "3년 전", day: "겨울", title: "체육관 오염 사고", level: 0, text: "구도심 시립체육관 지하 창고에서 이계 오염 사고가 난다. 복서 강도윤의 몸이 바뀐다.", people: ["kang-doyun"], place: "gym",
         more: [{ level: 1, text: "같은 해 인공 마법소녀 노아가 기동하고, 윤마조가 시한부 진단을 받는다." }] },
-      { when: "2년 전", day: "11월 20일", title: "제3구 지하상가 대피전", level: 0, text: "제3구 지하상가에서 대피전이 벌어진다. 이 사건 뒤 3위가 말소된다.", people: ["shin-yuan"], place: "district-3",
+      { when: "2년 전", title: "월미도 계단 사건", level: 0, text: "월미산 전망대 계단이 오를 때는 108개, 내려올 때는 109개가 된다. 관광공사는 이 계단을 포토존으로 홍보한다. 109번째 계단에서 발을 헛디딘 관광객 셋은 아직 찾지 못했다.", topic: "law" }, // ◇
+      { when: "2년 전", day: "11월 20일", title: "지하상가 사건", level: 0, text: "부평 지하상가에서 사건이 벌어진다. 안쪽 B동에 남은 7명이 돌아오지 못한다. 이 사건 뒤 3위가 말소된다.", people: ["shin-yuan"], place: "district-3",
         more: [
           { level: 1, text: "안쪽 B동에 남은 일곱 명이 「자진 이탈자」로 분류되고 송하연이 사망한다. 3위 신유안이 반역한다." },
           { level: 2, text: "위원회는 이 사건을 「현장 판단」으로 종결했다." },
+          { level: 2, text: "예고된 전투였다. 홍보팀이 생중계 구조를 연출하려고 대피를 늦췄고, 현장 지휘를 맡은 레이나의 판단 착오가 겹쳐 B동에 7명이 남았다. 류서경이 7명을 「자진 이탈자」로 분류했고, 신유안은 자기 이름과 기록을 값으로 치러 레이나의 지휘 기록을 지웠다." }, // ◇
         ] },
-      { when: "1년 전", day: "3월", title: "5위 전사", level: 0, text: "5위 권도하가 전사한다. 5위는 공석이 된다.", topic: "academy",
+      { when: "1년 전", day: "3월", title: "5위 전사", level: 0, text: "5위 권도하가 전사한다. 5위는 공석이 된다.", topic: "academy", people: ["kwon-doha"],
         more: [
           { level: 1, text: "칠왕정에 잠입하는 첩보 임무였다. 제6좌 라그바르와의 결투에서 전사했다." },
           { level: 2, text: "감독부가 위협 등급 4를 3으로 공시해 지원이 줄었다." },
         ] },
-      { when: "올봄", title: "휴전 기념식", level: 0, text: "휴전을 기념하는 행사가 열린다.", topic: "truce",
+      { when: "1년 전", day: "겨울", title: "만석동 아파트 사건", level: 0, text: "만석동의 한 아파트 한 동에 사는 주민 61명의 주민등록과 사진과 학적부가 하룻밤 새 전산에서 사라진다. 주민들은 멀쩡히 살아 있지만 행정상으로는 존재하지 않는 사람이 된다. 방위청은 전산 오류라고 발표한다.", place: "gocheol", topic: "law" }, // ◇
+      { when: "올봄", title: "휴전 기념식", level: 0, text: "휴전을 기념하는 행사가 열린다. 홍보팀의 공식 표어는 「평화, 함께 지켜 냈습니다」다.", topic: "truce", // ◇
         more: [{ level: 1, text: "기념식장 뒤편에서 오윤서와 마리아 오르텐이 마주친다." }] },
       { when: "3개월 전", title: "전학생", level: 0, text: "네무리가 전학생으로 아카데미에 들어온다.", people: ["nemuri"],
         more: [{ level: 2, text: "제7좌의 잠입 임무다. 정하은의 전쟁 기록과 봉인된 전쟁 보고서를 조사한다." }] },
@@ -59,20 +77,20 @@ window.ERAS = [
   },
 ];
 
-// 지도. x, y 는 지도 그림 안의 위치(퍼센트)이며 지금 배치는 임시다.
-// 설정집에 방위가 적힌 것은 서해안뿐이라 바다를 서쪽에 두고 나머지는 관계만 맞췄다.
+// 지도. x, y 는 지도 그림 안의 위치(퍼센트)이며 지금 배치는 임시다. 지도는 2단계에서 인천 약도로 다시 그린다.
+// id 는 주소(timeline.html#id)로 쓰이므로 이름이 바뀌어도 그대로 둔다.
 window.PLACES = [
-  { id: "haran-port", name: "하란항", x: 39.5, y: 50.5, note: "칠월의 밤의 진원", text: "20년 전 7월 12일 이곳 상공이 찢어졌다. 사람들이 칠월의 밤이라 부르는 하란항 대균열의 한가운데다.", people: ["oh-yunseo", "park-sion"], topic: "july-night" },
-  { id: "closed-pier", name: "폐항", x: 38, y: 70, note: "폐쇄 부두", text: "지금은 닫혀 있는 부두다. 3년 전 이곳에서 사건이 있었다.", people: [],
+  { id: "haran-port", name: "인천 내항", x: 39.5, y: 50.5, note: "칠월의 밤의 진원", text: "20년 전 7월 12일 이곳 상공이 찢어졌다. 칠월의 밤의 한가운데다.", people: ["oh-yunseo", "park-sion"], topic: "july-night" },
+  { id: "closed-pier", name: "인천 북항 폐부두", x: 38, y: 70, note: "폐쇄 부두", text: "지금은 닫혀 있는 부두다. 3년 전 이곳에서 사건이 있었다.", people: [],
     secret: [{ topic: "폐항 사건", text: "이계인 포로가 석 달 동안 구금됐다." }] },
-  { id: "grey-zone", name: "회색 구역", x: 50, y: 43, note: "이계 균류 오염지", text: "하란항 일대에 이계 균류가 뿌리내린 땅이다. 토양과 수계가 잠식됐고 감염자는 손끝부터 회색으로 굳는다.", people: ["kang-myeongju", "yoon-sehyeok", "mano-akira"], topic: "grey-zone" },
-  { id: "gocheol", name: "고철동 폐공장 지대", x: 59, y: 30, note: "버려진 공장들", text: "최소라가 자란 동네다. 빚쟁이에게 빼앗긴 아버지의 도장을 되찾으며 도둑질을 배운 곳이다.", people: ["choi-sora"] },
-  { id: "district-3", name: "제3구 지하상가", x: 70, y: 59, note: "2년 전 대피전", text: "2년 전 11월 20일 대피전이 벌어진 곳이다.", people: ["shin-yuan"],
+  { id: "grey-zone", name: "회색 구역", x: 50, y: 43, note: "이계 균류 오염지", text: "인천 내항 일대에 이계 균류가 뿌리내린 땅이다. 토양과 수계가 잠식됐고 감염자는 손끝부터 회색으로 굳는다.", people: ["kang-myeongju", "yoon-sehyeok", "mano-akira"], topic: "grey-zone" },
+  { id: "gocheol", name: "고철동", x: 59, y: 30, note: "만석동과 화수동의 공장지대", text: "동구 만석동과 화수동 공장지대를 부르는 이름이다. 녹슨 공장과 고물상이 늘어선 빈민가이며, 칠월의 밤 이후 이계 피해 이주민과 빈민이 모여들었다. 최소라가 자란 동네이고, 빚쟁이에게 빼앗긴 아버지의 도장을 되찾으며 도둑질을 배운 곳이다.", people: ["choi-sora"] },
+  { id: "district-3", name: "부평 지하상가", x: 70, y: 59, note: "2년 전 사건", text: "2년 전 11월 20일 사건이 벌어진 곳이다. 지금은 영업을 재개했고, B동 입구에는 아무 표시도 없다.", people: ["shin-yuan"],
     internal: [{ topic: "B동", text: "안쪽 B동에 남은 일곱 명이 「자진 이탈자」로 분류됐고 송하연이 사망했다." }] },
-  { id: "gym", name: "하란시립체육관", x: 64, y: 80, note: "3년 전 오염 사고", text: "3년 전 겨울 지하 창고에서 이계 오염 사고가 났다. 전국대회 은메달리스트였던 복서 강도윤의 몸이 이곳에서 바뀌었다.", people: ["kang-doyun"],
+  { id: "gym", name: "시립체육관 지하 창고", x: 64, y: 80, note: "3년 전 오염 사고", text: "3년 전 겨울 구도심 시립체육관의 지하 창고에서 이계 오염 사고가 났다. 전국체전 은메달리스트였던 복서 강도윤의 몸이 이곳에서 바뀌었다.", people: ["kang-doyun"],
     secret: [{ topic: "오염체", text: "지하 창고의 오염체는 제5좌 오르감 계통이다." }] },
-  { id: "wolgot", name: "월곶 해안", x: 33.5, y: 20, note: "해수욕장과 하수 터널", text: "하란 서해안의 해수욕장이다. 강세아가 안전요원으로 일하던 곳이다.", people: ["kang-sea"],
+  { id: "wolgot", name: "시흥 월곶 포구", x: 33.5, y: 20, note: "인천 밖, 해수욕장", text: "시흥의 월곶 포구다. 강세아가 안전요원으로 일하던 해수욕장이 있다.", people: ["kang-sea"],
     internal: [{ topic: "하수 터널", text: "8년 전 해안 하수 터널 소탕 작전에서 강세아가 동료 윤새봄과 표나래를 잃었다." }] },
-  { id: "academy", name: "마법소녀 아카데미", x: 82, y: 32, note: "교육기관이자 방위조직", text: "성인 마법소녀를 기르는 전문 기관이다. 학장은 라명숙이다. 학생위원회, 감독부, 위원회, 연구부가 있다.", people: ["reina-de-rose", "jeong-haeun", "oh-yunseo"], topic: "academy" },
-  { id: "angae", name: "안개고개", x: 94, y: 9, note: "하란 바깥, 6년 전 전투지", text: "하란 바깥에 있는 고개다. 오르텐 마을과 송씨 농장이 있던 곳이다. 6년 전 9월 4일 정하은이 이곳에서 균열을 멈춰 세웠다.", people: ["jeong-haeun", "maria-orten", "mee"], topic: "truce", off: true },
+  { id: "academy", name: "아카데미 캠퍼스", x: 82, y: 32, note: "송도 남단 매립지, 교육기관이자 방위조직", text: "송도 남단 매립지에 지은 성인 마법소녀 전문 교육 기관이다. 학장은 라명숙이다. 학생위원회, 감독부, 판정위원회, 연구부, 홍보팀이 있다.", people: ["reina-de-rose", "jeong-haeun", "oh-yunseo"], topic: "academy" }, // ◇
+  { id: "angae", name: "안개고개", x: 94, y: 9, note: "강원 영서 산간, 6년 전 전투지", text: "강원 영서 산간의 고갯길이다. 고개 아래 마을과 송씨 농장이 있던 곳이다. 6년 전 9월 4일 정하은이 이곳에서 균열을 멈춰 세웠다. 마을은 89가구, 약 120명이 살았으나 협상이 이어지던 사흘 사이 균열에서 쏟아진 이계 생물에 휩쓸려 사라졌다.", people: ["jeong-haeun", "mee"], topic: "truce", off: true }, // ◇
 ];
