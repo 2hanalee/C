@@ -1094,3 +1094,24 @@ button.kw.term:hover { text-decoration-style: solid; }
   .term-close { align-self: flex-start; margin-top: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .term-sheet[open] { animation: none; } }
+
+/* ───── 연표 시대 막대 (11월 13일) ─────
+   휴대폰과 태블릿에서 머리띠 아래에 붙는다. 넓은 화면은 왼쪽 목차를 쓴다 */
+.era-bar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--top-h, 4.2rem)); z-index: 10;
+  margin: -0.5rem calc(-1 * var(--gutter-r)) 0 calc(-1 * var(--gutter-l)); padding: 0 var(--gutter-r) 0 var(--gutter-l);
+  background: var(--ink); border-bottom: 1px solid var(--rule); }
+.era-bar ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.era-bar button { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+  font-size: 0.85rem; color: var(--paper-dim); white-space: nowrap; }
+.era-bar button span { font-family: var(--f-mono); font-size: 0.72rem; color: var(--paper-faint); font-variant-numeric: tabular-nums; }
+.era-bar button:hover { color: var(--paper); }
+.era-bar button[aria-current] { color: var(--paper); font-weight: 600; box-shadow: inset 0 -2px 0 var(--boundary); }
+.era-bar button[aria-current] span { color: var(--paper-dim); }
+.era-bar + .era { margin-top: 1rem; }
+.era { scroll-margin-top: calc(var(--top-h, 4.2rem) + 3.5rem); }
+.rail button[aria-current] { color: var(--paper); box-shadow: -0.75rem 0 0 -0.5rem var(--boundary); }
+@media (min-width: 1240px) {
+  .era-bar { display: none; }
+  .era { scroll-margin-top: 5rem; }
+}
+.kw-w { white-space: nowrap; }

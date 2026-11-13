@@ -284,8 +284,16 @@
     KW.forEach(function (k) {
       var i = html.indexOf(k[0]);
       if (i === -1) return;
-      held.push(kwTag(k[0], k[1]));
-      html = html.slice(0, i) + "\u0001" + (held.length - 1) + "\u0002" + html.slice(i + k[0].length);
+      var end = i + k[0].length;
+      var tag = kwTag(k[0], k[1]);
+      // 단추는 줄바꿈이 끊기는 자리라서, 뒤에 붙은 조사가 다음 줄로 혼자 넘어가지 않게 묶는다
+      if (termByName[k[0]]) {
+        var tail = (html.slice(end).match(/^[가-힣]{1,3}/) || [""])[0];
+        tag = '<span class="kw-w">' + tag + tail + "</span>";
+        end += tail.length;
+      }
+      held.push(tag);
+      html = html.slice(0, i) + "\u0001" + (held.length - 1) + "\u0002" + html.slice(end);
     });
     return html.replace(/\u0001(\d+)\u0002/g, function (m, n) { return held[+n]; });
   };
@@ -294,7 +302,13 @@
     var word = em.textContent;
     if (!termByName[word]) return;
     var tone = em.classList.contains("r") ? "r" : em.classList.contains("b") ? "b" : "";
-    em.outerHTML = kwTag(esc(word), tone);
+    var wrap = document.createElement("span");
+    wrap.className = "kw-w";
+    wrap.innerHTML = kwTag(esc(word), tone);
+    var next = em.nextSibling;
+    var tail = next && next.nodeType === 3 ? (next.data.match(/^[가-힣]{1,3}/) || [""])[0] : "";
+    if (tail) { next.data = next.data.slice(tail.length); wrap.appendChild(document.createTextNode(tail)); }
+    em.parentNode.replaceChild(wrap, em);
   });
 
   var termSheet = null, termFrom = null;

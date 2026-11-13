@@ -58,6 +58,10 @@
     app.innerHTML =
       '<header class="page-head" data-ghost="CHRONICLE"><p class="kicker">방위청 사건 일지</p><h1 class="lit">연표</h1><p>약 300년 전의 첫 균열부터 지금까지 일어난 일을 적었습니다. 가려진 사건은 날짜만 보이고, 누르면 내용이 열립니다.</p></header>' +
       tabs("timeline") +
+      // 좁은 화면에서 위에 붙는 시대 막대. 넓은 화면은 왼쪽 목차를 쓰고 이 막대는 숨긴다
+      '<nav class="era-bar" aria-label="시대 바로가기"><ol>' + ERAS.map(function (era) {
+        return '<li><button type="button" data-era="' + era.id + '">' + esc(era.title) + "<span>" + era.events.length + "건</span></button></li>";
+      }).join("") + "</ol></nav>" +
       ERAS.map(function (era) {
         return '<section class="era" id="era-' + era.id + '"><h2>' + esc(era.title) + "</h2>" +
           '<ol class="events">' + era.events.map(function (ev, i) { return eventHtml(ev, "t:" + era.id + ":" + i); }).join("") + "</ol></section>";
@@ -154,11 +158,65 @@
     try { history.replaceState(null, "", "#" + t.dataset.place); } catch (err) {}
   });
 
+  /* ───── 지금 보고 있는 시대 ─────
+     머리띠(와 시대 막대) 바로 아래에 가는 선을 두고, 그 선에 걸린 시대를 표시한다 */
+  var eraIo = null;
+  var markEra = function (id) {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-era]"), function (b) {
+      if (b.dataset.era === id) b.setAttribute("aria-current", "location"); else b.removeAttribute("aria-current");
+    });
+  };
+  var lineY = function () {
+    var top = document.querySelector(".top");
+    var bar = app.querySelector(".era-bar");
+    var y = top ? top.getBoundingClientRect().bottom : 0;
+    if (bar && bar.offsetParent) y += bar.offsetHeight;
+    return Math.round(y + 24);
+  };
+  var watchEras = function () {
+    if (eraIo) { eraIo.disconnect(); eraIo = null; }
+    var top = document.querySelector(".top");
+    if (top) document.documentElement.style.setProperty("--top-h", top.offsetHeight + "px");
+    var secs = Array.prototype.slice.call(app.querySelectorAll(".era"));
+    if (!secs.length) return;
+    markEra(ERAS[0].id);
+    if (!("IntersectionObserver" in window)) return;
+    var y = lineY();
+    eraIo = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) markEra(e.target.id.replace(/^era-/, "")); });
+    }, { rootMargin: -y + "px 0px " + -(window.innerHeight - y - 1) + "px 0px" });
+    secs.forEach(function (s) { eraIo.observe(s); });
+  };
+  // 맨 아래까지 내려 마지막 시대의 머리가 선에 닿지 못할 때와, 첫 시대보다 위에 있을 때
+  var edgeEra = function () {
+    var secs = app.querySelectorAll(".era");
+    if (!secs.length) return;
+    var doc = document.documentElement;
+    if (window.innerHeight + window.scrollY >= doc.scrollHeight - 2) markEra(ERAS[ERAS.length - 1].id);
+    else if (secs[0].getBoundingClientRect().top > lineY()) markEra(ERAS[0].id);
+  };
+  window.addEventListener("scroll", edgeEra, { passive: true });
+  var resizeT = null;
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(function () { if (app.querySelector(".era")) watchEras(); }, 150);
+  });
+  var goEra = function (id) {
+    var el = document.getElementById("era-" + id);
+    if (!el) return;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  };
+  app.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest(".era-bar [data-era]") : null;
+    if (t) goEra(t.dataset.era);
+  });
+
   var showing = null;
   var route = function () {
     var id = location.hash.replace(/^#/, "");
     var isMap = id === "map" || !!placeById[id];
-    if (isMap) renderMap(id); else renderTimeline();
+    if (isMap) { renderMap(id); if (eraIo) { eraIo.disconnect(); eraIo = null; } } else { renderTimeline(); watchEras(); }
     if (rail) rail.hidden = isMap;
     var now = isMap ? "map" : "timeline";
     if (showing !== now || !isMap) window.scrollTo(0, 0);
@@ -176,8 +234,7 @@
     }).join("");
     rail.addEventListener("click", function (e) {
       var t = e.target.closest ? e.target.closest("[data-era]") : null;
-      var el = t && document.getElementById("era-" + t.dataset.era);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (t) goEra(t.dataset.era);
     });
   }
   window.addEventListener("hashchange", route);
