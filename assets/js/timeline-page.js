@@ -107,7 +107,7 @@
       '<rect x="360" y="492" width="64" height="26" class="m-block"/>' +
       // 글자
       '<text x="96" y="420" class="m-label big">서해</text>' +
-      '<text x="640" y="170" class="m-label big">인천</text>' +
+      '<text x="660" y="190" class="m-label big">인천</text>' +
       '<text x="100" y="206" class="m-label">영종도</text>' +
       '<text x="236" y="292" class="m-label">월미도</text>' +
       '<text x="382" y="338" class="m-label">구도심</text>' +
