@@ -1255,3 +1255,13 @@ button.kw.term:hover { text-decoration-style: solid; }
 @supports (view-transition-name: none) {
   @media (prefers-reduced-motion: no-preference) { #app > * { animation: none; } }
 }
+
+/* ───── 최근 열람한 기록, 읽기 진행선 (11월 14일) ───── */
+.recent { display: grid; gap: 0.2rem; padding-bottom: 1.25rem; }
+.recent h2 { font-weight: 400; color: var(--paper-faint); }
+/* 인사기록카드와 문서를 읽는 동안 머리띠 아래 선이 읽은 만큼 채워진다. 스크롤에 맞춰 움직이는 CSS 만 쓴다 */
+@supports (animation-timeline: scroll()) {
+  body:has(#app > .sheetcard) .top::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--brass);
+    transform-origin: 0 50%; transform: scaleX(0); animation: read-line linear both; animation-timeline: scroll(root); }
+}
+@keyframes read-line { to { transform: scaleX(1); } }

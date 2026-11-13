@@ -166,11 +166,18 @@
     });
   };
 
+  // 최근에 열어 본 기록 다섯 개. 열어 본 적이 없으면 보이지 않는다
+  var recentHtml = function () {
+    var ids = B.recent.list("c").filter(function (id) { return byId[id]; }).slice(0, 5);
+    if (!ids.length) return "";
+    return '<nav class="recent" aria-label="최근 열람한 기록"><h2 class="mono">최근 열람한 기록</h2>' + B.people(ids).replace(/href="characters\.html#/g, 'href="#') + "</nav>";
+  };
   var renderList = function () {
     document.title = "인물 " + ALL.length + "인 · 블랙아웃";
     app.innerHTML =
       '<header class="page-head" data-ghost="DOSSIER"><p class="kicker">방위청 인사 기록, 열람용 사본</p><h1 class="lit">인물 ' + ALL.length + "인</h1>" +
         "<p>아카데미에 등록된 인물과 외부 인물의 인사기록카드입니다. 카드를 누르면 전체 기록이 열립니다.</p></header>" +
+      recentHtml() +
       '<div class="tools">' +
         '<label class="search"><span>이름이나 능력으로 찾기</span><input id="q" type="search" autocomplete="off" placeholder="예: 레이나, 왕관 없는 정원" value="' + esc(state.q) + '"></label>' +
         '<div class="tools-row"><span class="mono" id="tally" aria-live="polite"></span>' +
@@ -194,6 +201,7 @@
     // 처음 여는 기록이면 목록으로 돌아갔을 때 도장이 찍히는 모습을 보여 준다
     if (!B.seen.has("c", c.id)) state.justRead = c.id;
     B.seen.add("c", c.id);
+    B.recent.add("c", c.id);
     var i = ALL.indexOf(c);
     var prev = ALL[(i - 1 + ALL.length) % ALL.length];
     var next = ALL[(i + 1) % ALL.length];

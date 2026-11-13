@@ -49,6 +49,19 @@
     },
   };
 
+  // 최근에 열어 본 순서. 가장 최근 것이 맨 앞이고 여섯 개까지만 남긴다
+  var recentList = readSet("blackout.recent");
+  var recent = {
+    add: function (kind, id) {
+      var key = kind + ":" + id;
+      recentList = [key].concat(recentList.filter(function (k) { return k !== key; })).slice(0, 6);
+      local.set("blackout.recent", JSON.stringify(recentList));
+    },
+    list: function (kind) {
+      return recentList.filter(function (k) { return k.indexOf(kind + ":") === 0; }).map(function (k) { return k.slice(kind.length + 1); });
+    },
+  };
+
   /* ── 가려진 기록 ──
      내부용(lv 1)은 누르면 바로 펼쳐진다.
      기밀(lv 2)은 경고를 띄우고, "확인"을 한 번 입력한 뒤로는 바로 열린다. */
@@ -230,7 +243,7 @@
   Array.prototype.forEach.call(document.querySelectorAll("[data-forget]"), function (btn) {
     btn.addEventListener("click", function () {
       if (!window.confirm("열어 본 기밀과 열람 표시를 모두 지웁니다. 다음부터 기밀을 열 때 다시 확인을 입력해야 합니다.")) return;
-      ["blackout.open", "blackout.seen", "blackout.ok"].forEach(local.del);
+      ["blackout.open", "blackout.seen", "blackout.ok", "blackout.recent"].forEach(local.del);
       session.del("blackout.gate");
       location.reload();
     });
@@ -383,8 +396,17 @@
     local: local, session: session,
     esc: esc, josa: josa, people: people, charById: charById,
     rec: rec, records: records, hiddenSection: hiddenSection,
-    seen: seen, inkOn: inkOn, fillChat: fillChat, mark: mark,
+    seen: seen, recent: recent, inkOn: inkOn, fillChat: fillChat, mark: mark,
   };
+  /* ── 미리 불러오기 ──
+     메뉴에 손가락이나 커서를 올리면 그 페이지를 미리 받아 둔다. 지원하는 브라우저에서만 동작하고, 화면은 달라지지 않는다. */
+  if (window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules")) {
+    var rules = document.createElement("script");
+    rules.type = "speculationrules";
+    rules.textContent = JSON.stringify({ prefetch: [{ where: { selector_matches: ".top-nav a, .tabbar a" }, eagerness: "moderate" }] });
+    document.head.appendChild(rules);
+  }
+
   /* ── 페이지 전환 방향 ──
      메뉴의 순서로 방향을 정한다. 오른쪽 메뉴로 가면 새 화면이 오른쪽에서, 왼쪽 메뉴로 가면 왼쪽에서 들어온다.
      전환 자체는 CSS 의 @view-transition 이 맡는다. 지원하지 않는 브라우저에서는 이 코드가 아무 일도 하지 않는다. */
