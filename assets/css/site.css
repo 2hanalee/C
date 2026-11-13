@@ -1214,3 +1214,29 @@ button.kw.term:hover { text-decoration-style: solid; }
 @media (min-width: 1240px) { .rail a, .rail button { padding-block: 0.55rem; } }
 .doc-table-wrap:focus-visible { outline-offset: 2px; }
 @media (min-width: 1240px) { .rail button { min-height: 2.5rem; align-items: center; } }
+
+/* ───── 페이지 전환 (11월 14일) ─────
+   메뉴로 페이지를 옮길 때 본문이 옆으로 밀려 나가고 새 본문이 들어온다. 머리띠와 하단 탭은 제자리에 있고,
+   지금 고른 탭의 밝은 칸만 새 자리로 미끄러진다. 지원하지 않는 브라우저와 움직임 줄이기 설정에서는 지금처럼 바로 바뀐다 */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .top { view-transition-name: site-top; }
+  .tabbar { view-transition-name: site-tabbar; }
+  .tabbar a[aria-current="page"] { view-transition-name: tab-on; }
+  /* 입장 연출이 떠 있을 때는 머리띠와 탭이 그 위로 올라오지 않게 한다 */
+  html.gate-open .top, html.gate-open .tabbar, html.gate-open .tabbar a { view-transition-name: none; }
+  ::view-transition-old(root) { animation: vt-fade-out 0.16s ease-in both; }
+  ::view-transition-new(root) { animation: vt-fade-in 0.26s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+  html:active-view-transition-type(forward)::view-transition-old(root) { animation-name: vt-out-left; }
+  html:active-view-transition-type(forward)::view-transition-new(root) { animation-name: vt-in-right; }
+  html:active-view-transition-type(back)::view-transition-old(root) { animation-name: vt-out-right; }
+  html:active-view-transition-type(back)::view-transition-new(root) { animation-name: vt-in-left; }
+  ::view-transition-group(tab-on) { animation-duration: 0.28s; animation-timing-function: cubic-bezier(0.3, 0.7, 0.2, 1); }
+  ::view-transition-group(site-top), ::view-transition-group(site-tabbar) { animation-duration: 0.2s; }
+}
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-in { from { opacity: 0; transform: translateY(0.5rem); } }
+@keyframes vt-out-left { to { opacity: 0; transform: translateX(-1.75rem); } }
+@keyframes vt-out-right { to { opacity: 0; transform: translateX(1.75rem); } }
+@keyframes vt-in-right { from { opacity: 0; transform: translateX(1.75rem); } }
+@keyframes vt-in-left { from { opacity: 0; transform: translateX(-1.75rem); } }

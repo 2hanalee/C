@@ -385,5 +385,25 @@
     rec: rec, records: records, hiddenSection: hiddenSection,
     seen: seen, inkOn: inkOn, fillChat: fillChat, mark: mark,
   };
+  /* ── 페이지 전환 방향 ──
+     메뉴의 순서로 방향을 정한다. 오른쪽 메뉴로 가면 새 화면이 오른쪽에서, 왼쪽 메뉴로 가면 왼쪽에서 들어온다.
+     전환 자체는 CSS 의 @view-transition 이 맡는다. 지원하지 않는 브라우저에서는 이 코드가 아무 일도 하지 않는다. */
+  var order = NAV.map(function (n) { return n[3]; });
+  var cameFrom = session.get("blackout.page");
+  session.set("blackout.page", page);
+  window.addEventListener("pageshow", function (e) {
+    // 뒤로 가기로 되살아난 화면은 스크립트가 다시 돌지 않으므로 여기서 다시 읽는다
+    if (e.persisted) { cameFrom = session.get("blackout.page"); session.set("blackout.page", page); }
+  });
+  window.addEventListener("pagereveal", function (e) {
+    if (!e.viewTransition) return;
+    // 새 화면이 늦게 준비되면 브라우저가 전환을 건너뛴다. 그때는 그냥 바로 바뀌면 되므로 오류로 남기지 않는다
+    ["ready", "finished"].forEach(function (k) { if (e.viewTransition[k] && e.viewTransition[k].catch) e.viewTransition[k].catch(function () {}); });
+    var a = order.indexOf(cameFrom), b = order.indexOf(page);
+    var type = a === -1 || b === -1 || a === b ? "" : b > a ? "forward" : "back";
+    if (type) { try { e.viewTransition.types.add(type); } catch (err) {} }
+    root.setAttribute("data-vt", type || "fade");
+  });
+
   root.classList.add("js");
 })();
