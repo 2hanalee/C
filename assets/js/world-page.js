@@ -61,7 +61,11 @@
     var next = DOCS[(i + 1) % DOCS.length];
     var body = d.body.map(function (b) {
       if (b.seats) return seatsHtml();
-      return "<section><h2>" + esc(b.h) + "</h2>" + b.p.map(function (t) { return "<p>" + mark(esc(t)) + "</p>"; }).join("") + "</section>";
+      // 구획은 문단(p)과 표(table: { head, rows, note })를 함께 담을 수 있다
+      var table = b.table ? '<div class="doc-table-wrap"><table class="doc-table"><thead><tr>' + b.table.head.map(function (h) { return '<th scope="col">' + esc(h) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+        b.table.rows.map(function (r) { return "<tr>" + r.map(function (c, i) { return i ? "<td>" + mark(esc(c)) + "</td>" : '<th scope="row">' + esc(c) + "</th>"; }).join("") + "</tr>"; }).join("") +
+        "</tbody></table></div>" + (b.table.note ? '<p class="doc-table-note">' + esc(b.table.note) + "</p>" : "") : "";
+      return "<section><h2>" + esc(b.h) + "</h2>" + (b.p || []).map(function (t) { return "<p>" + mark(esc(t)) + "</p>"; }).join("") + table + (b.after || []).map(function (t) { return "<p>" + mark(esc(t)) + "</p>"; }).join("") + "</section>";
     }).join("");
     var places = (d.places || []).filter(function (id) { return placeById[id]; }).map(function (id) {
       return '<li><a href="timeline.html#' + id + '">' + esc(placeById[id].name) + "</a></li>";

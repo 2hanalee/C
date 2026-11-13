@@ -213,6 +213,7 @@
         '<div><a href="#' + prev.id + '">이전 기록: ' + esc(prev.name) + '</a><a href="#' + next.id + '">다음 기록: ' + esc(next.name) + "</a></div></nav>" +
       '<article class="sheetcard"' + styleVars(c) + ">" +
         '<header class="sc-head"><span>방위청 인사기록카드</span><span class="mono">기록 번호 ' + no2(c.no) + ", 열람용 사본</span></header>" +
+        (c.hook ? '<p class="sc-hook">' + esc(c.hook) + "</p>" : "") +
         '<div class="sc-grid">' +
           '<div class="sc-photo">' +
             '<figure class="polaroid' + (c.image ? "" : " small") + '"><span class="tape" aria-hidden="true"></span><span class="clip" aria-hidden="true"></span>' +
@@ -230,7 +231,12 @@
             "</dl>" +
             '<section class="sc-sec"><h2>개요</h2><p>' + esc(c.summary) + "</p></section>" +
             (c.ability ? '<section class="sc-ability"><h2>능력</h2><p class="ab-name">' + esc(c.ability.name) + "</p><p>" + esc(c.ability.text) + "</p>" +
+              (c.subs && c.subs.length ? '<dl class="ab-subs">' + c.subs.map(function (u) { return "<dt>" + esc(u.name) + "</dt><dd>" + esc(u.text) + "</dd>"; }).join("") + "</dl>" : "") +
               '<p class="ab-limit"><strong>한계</strong> ' + esc(c.ability.limit) + "</p></section>" : "") +
+            // 대화를 시작하는 재료: 자주 벌어지는 일과 말투
+            (c.scenes && c.scenes.length ? '<section class="sc-sec sc-scenes"><h2>자주 벌어지는 일</h2><ul>' + c.scenes.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></section>" : "") +
+            (c.voice && c.voice.text ? '<section class="sc-sec sc-voice"><h2>말투</h2><p>' + esc(c.voice.text) + "</p>" +
+              (c.voice.sample ? "<blockquote><p>" + esc(c.voice.sample) + "</p></blockquote>" : "") + "</section>" : "") +
             (rels ? '<section class="sc-sec"><h2>관계</h2><ul class="rel">' + rels + "</ul></section>" : "") +
             '<div class="platforms" data-chat data-chat-with="' + esc(c.name) + '"></div>' +
           "</div>" +
