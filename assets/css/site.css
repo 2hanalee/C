@@ -1024,9 +1024,10 @@ body:has(.site-foot) .sheet { padding-bottom: 2rem; }
 .gate-by { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.12em; color: var(--paper-faint); opacity: 0; transition: opacity 0.9s ease; }
 .gate.spoken .gate-by { opacity: 1; }
 .gate-cut { position: absolute; inset: 0; z-index: 3; background: #000; opacity: 0; pointer-events: none; }
-.gate-cut.cut { animation: gl-cut 1.25s steps(1, end) forwards; }
+/* 정전: 도시는 배경이 구역별로 끄고, 대사는 전기가 튀듯 깜빡이다 잔상으로 남는다 */
+.gate[data-phase="cut"] .gate-quote { animation: gl-flick 0.95s steps(1, end) forwards; }
+@keyframes gl-flick { 0% { opacity: 0.2; } 10% { opacity: 1; } 18% { opacity: 0.1; } 26% { opacity: 0.85; } 40% { opacity: 0.3; } 62% { opacity: 0.7; } 66% { opacity: 0.16; } 100% { opacity: 0.16; } }
 .gate-cut.dark { opacity: 1; }
-@keyframes gl-cut { 0% { opacity: 0.9; } 8% { opacity: 0.15; } 16% { opacity: 0.95; } 22% { opacity: 0.35; } 30% { opacity: 1; } 52% { opacity: 0.55; } 57% { opacity: 1; } 100% { opacity: 1; } }
 /* 정전 뒤: 타 버린 잔상만 남는다 */
 .gate[data-phase="end"] .gate-stage { z-index: 4; }
 .gate[data-phase="end"] .gate-quote { animation: gl-after 7s ease-out forwards; }
@@ -1035,28 +1036,26 @@ body:has(.site-foot) .sheet { padding-bottom: 2rem; }
 @keyframes gl-after { from { opacity: 0.16; filter: blur(0.6px); } to { opacity: 0.06; filter: blur(1.4px); } }
 .gate:focus { outline: none; }
 /* 로고는 잔상 바로 위에 선다. 잔상이 로고 아래에서 꺼져 가는 자막처럼 남는다 */
-.gate-logo { position: absolute; z-index: 5; left: 50%; top: 50%; transform: translate(-50%, calc(-100% - 4.5rem)); width: min(100% - 4rem, 34rem); display: grid; gap: 1.1rem; opacity: 0; pointer-events: none; isolation: isolate; }
+.gate-logo { position: absolute; z-index: 5; left: 50%; top: 50%; transform: translate(-50%, calc(-100% - var(--logo-lift))); width: min(100% - 4rem, 34rem); display: grid; gap: 1.1rem; opacity: 0; pointer-events: none; isolation: isolate; }
 .gate-logo::before { content: ""; position: absolute; z-index: -1; inset: -70% -25%; background: radial-gradient(ellipse 50% 45% at 50% 50%, rgb(var(--glow-rgb) / 0.14), transparent 72%); }
 .gate-logo img { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 14px rgb(var(--glow-rgb) / 0.4)); }
 .gate-logo p { display: flex; align-items: center; gap: 1rem; font-family: var(--f-display); font-weight: 500; font-size: clamp(0.95rem, 3.4vw, 1.2rem); letter-spacing: 0.3em; white-space: nowrap; color: var(--paper); }
 .gate-logo p::before, .gate-logo p::after { content: ""; flex: 1; height: 1px; background: #4A5A63; }
-.gate[data-phase="end"] .gate-logo { animation: gl-logo 1.6s ease 0.5s both; }
-@keyframes gl-logo { from { opacity: 0; transform: translate(-50%, calc(-100% - 3.5rem)) scale(0.985); filter: blur(4px); } to { opacity: 1; transform: translate(-50%, calc(-100% - 4.5rem)); filter: none; } }
-.gate-hint { position: absolute; z-index: 5; left: 0; right: 0; top: calc(20px + env(safe-area-inset-top, 0px)); margin: 0; padding-inline: 5.5rem; text-align: center;
-  font-size: 11px; line-height: 1.6; letter-spacing: 0.14em; color: var(--paper-faint); transition: opacity 0.8s; }
-.gate-hint.off { opacity: 0; }
-.gate-mute { position: absolute; z-index: 6; top: calc(8px + env(safe-area-inset-top, 0px)); right: max(10px, env(safe-area-inset-right, 0px)); min-height: 44px; padding: 0 14px;
-  font-size: 12px; letter-spacing: 0.1em; color: var(--paper-faint); }
-.gate-mute:hover, .gate-skip:hover { color: var(--paper); }
+.gate[data-phase="end"] .gate-logo { animation: gl-logo 1.1s ease 0.3s both; }
+@keyframes gl-logo { from { opacity: 0; transform: translate(-50%, calc(-100% - var(--logo-lift) + 1rem)) scale(0.985); filter: blur(4px); } to { opacity: 1; transform: translate(-50%, calc(-100% - var(--logo-lift))); filter: none; } }
+/* 로고는 두 줄 대사의 잔상 위에 선다. 대사 글자가 커지는 넓은 화면에서는 더 올린다 */
+.gate { --logo-lift: 4.5rem; }
+@media (min-width: 900px) { .gate { --logo-lift: 7.5rem; } }
+.gate-skip:hover { color: var(--paper); }
 .gate-acts { position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem;
   padding: 0 var(--gutter-r) calc(28px + env(safe-area-inset-bottom, 0px)) var(--gutter-l); }
 .gate-skip { min-height: 44px; padding: 0 20px; font-size: 13px; letter-spacing: 0.14em; color: var(--paper-faint); }
 #gate-replay, #gate-enter { display: none; }
 .gate[data-phase="end"] .gate-skip { display: none; }
-.gate[data-phase="end"] #gate-replay, .gate[data-phase="end"] #gate-enter { display: inline-flex; animation: rise 0.8s ease 1.4s both; }
+.gate[data-phase="end"] #gate-replay, .gate[data-phase="end"] #gate-enter { display: inline-flex; animation: rise 0.6s ease 1.1s both; }
 @media (prefers-reduced-motion: reduce) {
   .gate-lamp { display: none; }
-  .gate-cut.cut { animation: none; opacity: 1; }
+  .gate[data-phase="cut"] .gate-quote { animation: none; }
   .gate[data-phase="end"] .gate-logo, .gate[data-phase="end"] #gate-replay, .gate[data-phase="end"] #gate-enter { animation: none; opacity: 1; }
   .rcard, .folder { transition: none; }
   .rec.just .st-ok, .rec.just .rec-body p, .warn-sheet[open] { animation: none; }
@@ -1125,3 +1124,54 @@ button.kw.term:hover { text-decoration-style: solid; }
 .polaroid .photo.has-img img { object-fit: contain; object-position: 50% 50%; transform: none; }
 .polaroid { max-width: 30rem; }
 .sc-photo { flex-basis: 24rem; }
+
+/* ───── 음악 듣기 (11월 13일) ─────
+   머리띠 오른쪽 단추. 재생 중이면 막대 세 개가 움직인다 */
+.music-btn { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; padding: 0 0.75rem; margin-right: -0.75rem;
+  font-size: 0.85rem; color: var(--paper-dim); flex: none; }
+.music-btn:hover, .music-btn.on { color: var(--paper); }
+.mb-eq { display: none; align-items: flex-end; gap: 2px; height: 12px; }
+.music-btn.on .mb-eq { display: inline-flex; }
+.mb-eq i { width: 2px; height: 100%; background: var(--boundary); transform-origin: bottom; animation: mb-eq 0.9s ease-in-out infinite; }
+.mb-eq i:nth-child(2) { animation-delay: -0.3s; }
+.mb-eq i:nth-child(3) { animation-delay: -0.6s; }
+@keyframes mb-eq { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+@media (min-width: 900px) { .top-nav + .music-btn { margin-left: 0.75rem; } }
+/* 플레이어 판: 휴대폰에서는 아래에서 올라오는 판, 넓은 화면에서는 오른쪽 판 */
+.music-sheet { margin: auto auto 0; width: min(100%, 34rem); max-width: 100%; max-height: 88vh; overflow: auto; border: 0; padding: 0;
+  background: var(--ink-2); color: var(--paper); border-radius: 16px 16px 0 0; box-shadow: 0 -1px 0 #2C3B46, 0 -20px 60px rgba(0, 0, 0, 0.6); }
+.music-sheet[open] { animation: sheet-up 0.28s cubic-bezier(0.2, 0.8, 0.3, 1); }
+.music-sheet::backdrop { background: rgba(2, 4, 7, 0.6); }
+.ms-in { display: flex; flex-direction: column; gap: 0.6rem; padding: 1.6rem 1.4rem calc(1.6rem + env(safe-area-inset-bottom, 0px)); }
+.ms-kicker { color: var(--brass); }
+.ms-in h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; line-height: 1.3; letter-spacing: -0.02em; }
+.ms-by { font-size: 0.9rem; color: var(--paper-dim); }
+.ms-note { font-size: 0.9rem; color: #C9CFD1; }
+.ms-by:empty, .ms-note:empty, .ms-status:empty { display: none; }
+.ms-seek { display: grid; gap: 0.2rem; margin-top: 0.4rem; }
+.ms-seek input { width: 100%; height: 44px; margin: 0; accent-color: var(--boundary); background: none; }
+.ms-time { display: flex; justify-content: space-between; color: var(--paper-faint); }
+.ms-ctrl { display: flex; justify-content: center; align-items: center; gap: 1rem; }
+.ms-ctrl button { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; color: var(--paper); }
+.ms-ctrl button:hover { background: rgba(255, 255, 255, 0.06); }
+.ms-ctrl button:disabled { color: var(--paper-faint); cursor: default; background: none; }
+.ms-ctrl .ms-play { width: 60px; height: 60px; background: var(--paper); color: var(--ink); }
+.ms-ctrl .ms-play:hover { background: #fff; }
+.ms-status { font-size: 0.85rem; color: var(--rust-text); text-align: center; }
+.ms-list-head { margin-top: 0.8rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule); color: var(--paper-faint); font-weight: 400; }
+.ms-list button { display: flex; align-items: center; gap: 0.9rem; width: 100%; min-height: 52px; padding: 0.4rem 0.25rem; text-align: left; border-bottom: 1px solid var(--rule); }
+.ms-list button > span:last-child { display: grid; min-width: 0; }
+.ms-list b { font-weight: 600; font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ms-list button span span { font-size: 0.8rem; color: var(--paper-faint); }
+.ms-n { color: var(--paper-faint); flex: none; }
+.ms-list button:hover b { color: #fff; }
+.ms-list button[aria-current] .ms-n, .ms-list button[aria-current] b { color: var(--boundary); }
+.ms-close { align-self: stretch; justify-content: center; margin-top: 0.75rem; }
+@media (min-width: 640px) {
+  .music-sheet { margin: 0 0 0 auto; width: 24rem; height: 100%; max-height: none; border-radius: 0; box-shadow: -1px 0 0 #2C3B46, -30px 0 80px rgba(0, 0, 0, 0.6); }
+  .music-sheet[open] { animation-name: sheet-left; }
+  .ms-in { padding: calc(2rem + env(safe-area-inset-top, 0px)) 1.75rem 2rem; min-height: 100%; }
+  .ms-close { align-self: flex-start; margin-top: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .mb-eq i { animation: none; } .music-sheet[open] { animation: none; } }
+.top-in .top-nav { margin-left: auto; }
