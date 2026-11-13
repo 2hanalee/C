@@ -262,11 +262,99 @@
     return "#" + c.map(function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
   };
 
+  /* ── 핵심어와 용어 설명 창 ──
+     본문의 핵심어에 색을 준다. 한 문단에서 같은 말은 처음 한 번만.
+     world.js 의 TERMS 에 정의가 있는 말은 누르면 설명 창이 열리는 단추가 되고, 없는 말은 색만 칠한다. */
+  var KW = [
+    ["칠월의 밤", ""], ["하란항 대균열", ""], ["침식", "r"], ["마모", "r"], ["회색 구역", "r"], ["이계 균류", "r"],
+    ["왕명", ""], ["칠좌", ""], ["경계인", ""], ["임시 봉합", ""], ["랭킹제", "b"], ["휴전", "b"], ["종전", "b"], ["만기", "b"],
+    ["4,172명", "r"], ["340미터의 흉터", ""], ["안전파", "b"], ["이윤파", "b"], ["진화파", "b"],
+  ];
+  var termByName = {};
+  (window.TERMS || []).forEach(function (t) { termByName[t.term] = t; });
+  var kwTag = function (word, tone) {
+    var cls = "kw" + (tone ? " " + tone : "");
+    return termByName[word]
+      ? '<button type="button" class="' + cls + ' term" data-term="' + esc(word) + '" aria-haspopup="dialog">' + word + "</button>"
+      : '<em class="' + cls + '">' + word + "</em>";
+  };
+  // html 은 esc 를 거친 문단. 표시한 말은 자리표로 바꿔 두었다가 마지막에 되돌려서, 겹쳐 표시하지 않는다
+  var mark = function (html) {
+    var held = [];
+    KW.forEach(function (k) {
+      var i = html.indexOf(k[0]);
+      if (i === -1) return;
+      held.push(kwTag(k[0], k[1]));
+      html = html.slice(0, i) + "\u0001" + (held.length - 1) + "\u0002" + html.slice(i + k[0].length);
+    });
+    return html.replace(/\u0001(\d+)\u0002/g, function (m, n) { return held[+n]; });
+  };
+  // 정적인 화면(메인의 네 장면)에 박아 둔 핵심어도 정의가 있으면 단추로 바꾼다
+  Array.prototype.forEach.call(document.querySelectorAll("em.kw"), function (em) {
+    var word = em.textContent;
+    if (!termByName[word]) return;
+    var tone = em.classList.contains("r") ? "r" : em.classList.contains("b") ? "b" : "";
+    em.outerHTML = kwTag(esc(word), tone);
+  });
+
+  var termSheet = null, termFrom = null;
+  var docTitle = function (id) {
+    var d = (window.WORLD || []).filter(function (x) { return x.id === id; })[0];
+    return d ? d.title : "";
+  };
+  var buildTermSheet = function () {
+    if (termSheet) return termSheet;
+    termSheet = document.createElement("dialog");
+    termSheet.className = "term-sheet";
+    termSheet.setAttribute("aria-labelledby", "term-title");
+    termSheet.innerHTML =
+      '<div class="term-in">' +
+        '<p class="term-kicker mono">용어 설명</p>' +
+        '<h2 id="term-title"></h2>' +
+        '<p class="term-def" id="term-def"></p>' +
+        '<p class="term-doc"></p>' +
+        '<button type="button" class="btn term-close">닫기</button>' +
+      "</div>";
+    termSheet.setAttribute("aria-describedby", "term-def");
+    document.body.appendChild(termSheet);
+    var shut = function () { if (termSheet.open) termSheet.close(); };
+    termSheet.querySelector(".term-close").addEventListener("click", shut);
+    termSheet.addEventListener("click", function (e) {
+      if (e.target === termSheet) shut();
+      // 같은 페이지 안의 문서로 가는 링크는 창을 닫고 이동한다
+      if (e.target.closest && e.target.closest(".term-doc a")) shut();
+    });
+    termSheet.addEventListener("close", function () {
+      if (termFrom && document.contains(termFrom)) termFrom.focus();
+    });
+    return termSheet;
+  };
+  var openTerm = function (btn) {
+    var t = termByName[btn.getAttribute("data-term")];
+    if (!t) return;
+    var dlg = buildTermSheet();
+    termFrom = btn;
+    dlg.querySelector("#term-title").textContent = t.term;
+    dlg.querySelector("#term-def").textContent = t.def;
+    var title = docTitle(t.doc);
+    var here = page === "world" && location.hash === "#" + t.doc;
+    var ARROW = '<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg>';
+    dlg.querySelector(".term-doc").innerHTML = !title ? "" : here
+      ? "지금 읽고 있는 문서에서 설명하는 말입니다."
+      : '<a class="go" href="world.html#' + esc(t.doc) + '">문서 「' + esc(title) + "」 읽기" + ARROW + "</a>";
+    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+    dlg.querySelector(".term-close").focus();
+  };
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest("button.term") : null;
+    if (btn) openTerm(btn);
+  });
+
   window.BLACKOUT = {
     local: local, session: session,
     esc: esc, josa: josa, people: people, charById: charById,
     rec: rec, records: records, hiddenSection: hiddenSection,
-    seen: seen, inkOn: inkOn, fillChat: fillChat,
+    seen: seen, inkOn: inkOn, fillChat: fillChat, mark: mark,
   };
   root.classList.add("js");
 })();

@@ -46,7 +46,7 @@
     var links = [];
     if (ev.place && placeById[ev.place]) links.push('<a href="#' + ev.place + '">지도에서 ' + esc(placeById[ev.place].name) + " 보기" + ARROW + "</a>");
     if (ev.topic && docById[ev.topic]) links.push('<a href="world.html#' + ev.topic + '">문서 「' + esc(docById[ev.topic].title) + "」 읽기" + ARROW + "</a>");
-    return '<li class="ev">' + when + "<div><h3>" + esc(ev.title) + "</h3><p>" + esc(ev.text) + "</p>" +
+    return '<li class="ev">' + when + "<div><h3>" + esc(ev.title) + "</h3><p>" + B.mark(esc(ev.text)) + "</p>" +
       (more ? '<div class="more-bars">' + more + "</div>" : "") +
       B.people(ev.people) +
       (links.length ? '<p class="ev-links">' + links.join("") + "</p>" : "") +

@@ -21,21 +21,7 @@
   var ARROW = '<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg>';
   var LOCK = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"/></svg>';
 
-  // 본문의 핵심어에 색을 준다. 한 문단에서 같은 말은 처음 한 번만.
-  var TERMS = [
-    ["칠월의 밤", ""], ["하란항 대균열", ""], ["침식", "r"], ["마모", "r"], ["회색 구역", "r"], ["이계 균류", "r"],
-    ["왕명", ""], ["칠좌", ""], ["경계인", ""], ["임시 봉합", ""], ["랭킹제", "b"], ["휴전", "b"], ["종전", "b"],
-    ["4,172명", "r"], ["340미터의 흉터", ""], ["안전파", "b"], ["이윤파", "b"], ["진화파", "b"],
-  ];
-  var mark = function (html) {
-    TERMS.forEach(function (t) {
-      var i = html.indexOf(t[0]);
-      // 이미 표시한 말 안쪽은 건드리지 않는다
-      if (i === -1 || html.lastIndexOf("<em", i) > html.lastIndexOf("</em>", i)) return;
-      html = html.slice(0, i) + '<em class="kw' + (t[1] ? " " + t[1] : "") + '">' + t[0] + "</em>" + html.slice(i + t[0].length);
-    });
-    return html;
-  };
+  var mark = B.mark;
   var hiddenCount = function (d) { return d.internal.length + d.secret.length; };
 
   var renderList = function () {
