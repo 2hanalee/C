@@ -1196,3 +1196,6 @@ button.kw.term:hover { text-decoration-style: solid; }
 .doc-table thead th { font-family: var(--f-mono); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--sheet-ink-3); border-bottom: 2px solid var(--sheet-ink); }
 .doc-table tbody th { font-weight: 600; white-space: nowrap; color: var(--sheet-ink); }
 .doc-table-note { font-size: 0.82rem; color: var(--sheet-faint); }
+/* 음악 표지 그림 */
+.ms-cover { width: min(100%, 13rem); aspect-ratio: 1; object-fit: cover; border-radius: 4px; background: var(--ink); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); margin-bottom: 0.4rem; }
+.ms-thumb { flex: none; width: 40px; height: 40px; object-fit: cover; border-radius: 2px; background: var(--ink); }

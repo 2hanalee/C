@@ -35,6 +35,7 @@
   sheet.innerHTML =
     '<div class="ms-in">' +
       '<p class="ms-kicker mono">음악</p>' +
+      '<img class="ms-cover" alt="" hidden>' +
       '<h2 id="ms-title"></h2>' +
       '<p class="ms-by"></p>' +
       '<p class="ms-note"></p>' +
@@ -49,6 +50,7 @@
       '<h3 class="ms-list-head mono">곡 목록 ' + LIST.length + "곡</h3>" +
       '<ol class="ms-list">' + LIST.map(function (t, i) {
         return '<li><button type="button" data-track="' + i + '"><span class="ms-n mono">' + (i + 1 < 10 ? "0" : "") + (i + 1) + "</span>" +
+          (t.cover ? '<img class="ms-thumb" src="' + esc(t.cover) + '" alt="" loading="lazy">' : "") +
           "<span><b>" + esc(t.title) + "</b>" + (t.by ? "<span>" + esc(t.by) + "</span>" : "") + "</span></button></li>";
       }).join("") + "</ol>" +
       '<button type="button" class="btn ms-close">닫기</button>' +
@@ -56,6 +58,7 @@
   document.body.appendChild(sheet);
   var $ = function (sel) { return sheet.querySelector(sel); };
   var pos = $("#ms-pos"), playBtn = $(".ms-play"), status = $(".ms-status");
+  $(".ms-cover").addEventListener("error", function () { this.hidden = true; });
 
   var clock = function (s) {
     if (!isFinite(s) || s < 0) s = 0;
@@ -69,6 +72,8 @@
     $("#ms-title").textContent = t.title;
     $(".ms-by").textContent = t.by || "";
     $(".ms-note").textContent = t.note || "";
+    var cover = $(".ms-cover");
+    if (t.cover) { if (cover.getAttribute("src") !== t.cover) cover.src = t.cover; cover.hidden = false; } else { cover.hidden = true; cover.removeAttribute("src"); }
     var on = playing();
     playBtn.innerHTML = on ? ICON_PAUSE : ICON_PLAY;
     playBtn.setAttribute("aria-label", on ? "일시정지" : "재생");
@@ -99,7 +104,8 @@
     pos.value = 0;
     paint(); paintTime();
     if ("mediaSession" in navigator && window.MediaMetadata) {
-      navigator.mediaSession.metadata = new MediaMetadata({ title: LIST[idx].title, artist: LIST[idx].by || "", album: "마법소녀 아카데미: 블랙아웃" });
+      navigator.mediaSession.metadata = new MediaMetadata({ title: LIST[idx].title, artist: LIST[idx].by || "", album: "마법소녀 아카데미: 블랙아웃",
+        artwork: LIST[idx].cover ? [{ src: LIST[idx].cover }] : [] });
     }
   };
   var play = function () {
