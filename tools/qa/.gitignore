@@ -1,0 +1,6 @@
+node_modules/
+test3x2/
+testaudio/
+*.png
+audit.json
+package*.json
