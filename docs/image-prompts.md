@@ -6,7 +6,7 @@ ChatGPT 이미지 생성용입니다. 프롬프트는 영어, 설명은 한국�
 
 16:9. API를 쓴다면 1536x864 또는 2560x1440.
 
-### KV1 · 정전의 하란 (메인 표지)
+### KV1 · 정전의 인천 (메인 표지)
 
 Blackout over Haran
 
@@ -32,7 +32,7 @@ Constraints:
 - Original city. Do not reproduce a real skyline or any existing film, game, or artwork.
 ```
 
-### KV1-R · 정전의 하란, 캐릭터 지정판
+### KV1-R · 정전의 인천, 캐릭터 지정판
 
 Blackout over Haran with a reference character
 
@@ -87,7 +87,7 @@ Constraints:
 
 16:9. P1을 먼저 만들어 기준으로 삼고, P2부터는 P1을 첨부한 뒤 아래 '화풍 고정 문구'를 프롬프트 맨 앞에 붙입니다.
 
-### P1 · 하란항
+### P1 · 인천 내항
 
 Haran Port
 
@@ -207,7 +207,7 @@ Constraints:
 - Original location. Do not reproduce a real landmark or any existing film, game, or artwork.
 ```
 
-### P6 · 하란시립체육관 지하 창고
+### P6 · 시립체육관 지하 창고
 
 Municipal gym basement storage
 

@@ -71,7 +71,7 @@
   };
   var styleVars = function (c) {
     var v = [];
-    if (c.color) { v.push("--char:" + c.color); v.push("--char-ink:" + B.inkOn(c.color)); }
+    if (c.color) { v.push("--char:" + c.color); v.push("--char-ink:" + B.inkOn(c.color, "#DCD6C5")); }
     return v.length ? ' style="' + esc(v.join(";")) + '"' : "";
   };
 
@@ -86,7 +86,7 @@
     }
     var sym = SEAT_SYMBOL[c.id];
     if (sym) {
-      return '<span class="photo has-sym"><img src="assets/img/emblems/' + sym + '.webp" alt="' + esc(c.name) + '의 문장"' + lazy + "></span>";
+      return '<span class="photo has-sym"><img src="assets/img/emblems/' + (big ? "" : "sm/") + sym + '.webp" alt="' + esc(c.name) + '의 문장"' + lazy + "></span>";
     }
     // 전사자는 사진 자리에 「전사」 도장을 찍는다
     if (c.fallen) return '<span class="photo none fallen"><i class="stamp-nophoto" style="--tilt:' + tilt(c, 9) + '">전사</i></span>';

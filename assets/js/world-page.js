@@ -35,7 +35,7 @@
           '<a class="folder" href="#' + d.id + '"><span class="fd-text"><b>' + esc(d.title) + "</b><span>" + esc(d.lead) + "</span>" +
             '<span class="rc-foot"><span class="rc-hidden' + (n ? "" : " zero") + '">' + (n ? LOCK + "가려진 기록 " + n + "건" : "가려진 기록 없음") + "</span>" +
             '<span class="go">문서 열람' + ARROW + "</span></span></span>" +
-            (MARKS[d.id] ? '<span class="fd-mark"><img src="assets/img/emblems/' + MARKS[d.id] + '.webp" alt="" loading="lazy"></span>' : "") +
+            (MARKS[d.id] ? '<span class="fd-mark"><img src="assets/img/emblems/sm/' + MARKS[d.id] + '.webp" alt="" loading="lazy"></span>' : "") +
           "</a>" + (B.seen.has("w", d.id) ? '<i class="stamp-read" aria-label="열람한 문서">열람함</i>' : "") + "</li>";
       }).join("") + "</ol>" +
       '<p class="after"><a class="btn go" href="characters.html">이 세계의 인물 ' + (window.CHARACTERS || []).length + '인 보기' + ARROW + "</a>" +
@@ -45,7 +45,7 @@
   var seatsHtml = function () {
     return '<ol class="seats">' + SEATS.map(function (s) {
       var c = B.charById[s.id];
-      return '<li><a class="plaque" href="characters.html#' + s.id + '" aria-label="' + esc(c ? c.name : s.id) + ' 기록 보기"><img src="assets/img/emblems/seat-' + s.id + '.webp" alt=""></a>' +
+      return '<li><a class="plaque" href="characters.html#' + s.id + '" aria-label="' + esc(c ? c.name : s.id) + ' 기록 보기"><img src="assets/img/emblems/sm/seat-' + s.id + '.webp" alt="" loading="lazy"></a>' +
         '<div class="who"><span class="seat-no">제' + s.seat + '좌</span><a href="characters.html#' + s.id + '">' + esc(c ? c.name : s.id) + ARROW + "</a>" +
         "<span>" + esc(s.sin) + "의 자리, " + esc(s.law) + "의 법</span></div>" +
         '<p><span class="mono">흔드는 것</span>' + esc(s.pillar) + "</p>" +
@@ -62,7 +62,7 @@
     var body = d.body.map(function (b) {
       if (b.seats) return seatsHtml();
       // 구획은 문단(p)과 표(table: { head, rows, note })를 함께 담을 수 있다
-      var table = b.table ? '<div class="doc-table-wrap"><table class="doc-table"><thead><tr>' + b.table.head.map(function (h) { return '<th scope="col">' + esc(h) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+      var table = b.table ? '<div class="doc-table-wrap" tabindex="0" role="region" aria-label="' + esc(b.h) + ' 표"><table class="doc-table"><thead><tr>' + b.table.head.map(function (h) { return '<th scope="col">' + esc(h) + "</th>"; }).join("") + "</tr></thead><tbody>" +
         b.table.rows.map(function (r) { return "<tr>" + r.map(function (c, i) { return i ? "<td>" + mark(esc(c)) + "</td>" : '<th scope="row">' + esc(c) + "</th>"; }).join("") + "</tr>"; }).join("") +
         "</tbody></table></div>" + (b.table.note ? '<p class="doc-table-note">' + esc(b.table.note) + "</p>" : "") : "";
       return "<section><h2>" + esc(b.h) + "</h2>" + (b.p || []).map(function (t) { return "<p>" + mark(esc(t)) + "</p>"; }).join("") + table + (b.after || []).map(function (t) { return "<p>" + mark(esc(t)) + "</p>"; }).join("") + "</section>";

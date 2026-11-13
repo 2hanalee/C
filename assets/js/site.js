@@ -247,6 +247,21 @@
       return '<li><a href="characters.html#' + id + '">' + esc(charById[id].name) + "</a></li>";
     }).join("") + "</ul>";
   };
+  // 메인의 대표 인물: 인물 기록에서 읽어 채운다. 기록이 바뀌어도 메인의 글이 어긋나지 않는다
+  Array.prototype.forEach.call(document.querySelectorAll("[data-figure]"), function (box) {
+    var c = charById[box.getAttribute("data-figure")];
+    if (!c) return;
+    var set = function (key, text) { var el = box.querySelector('[data-f="' + key + '"]'); if (el && text) el.textContent = text; return el; };
+    set("name", c.name);
+    set("sub", [c.alias, c.role].filter(Boolean).join(", "));
+    set("lead", c.hook || c.summary);
+    if (c.rank != null) { var rk = set("rk", String(c.rank)); if (rk) rk.setAttribute("aria-label", "랭킹 " + c.rank + "위"); }
+    var traits = box.querySelector('[data-f="traits"]');
+    if (traits) traits.innerHTML = c.traits.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
+    if (c.ability) { set("ab-name", c.ability.name); set("ab-text", c.ability.text + " " + c.ability.limit); }
+    var n = (c.internal || []).length + (c.secret || []).length;
+    set("note", n ? "이 기록에는 가려진 기록 " + n + "건이 붙어 있습니다. 카드를 열면 내부 기록과 기밀을 볼 수 있습니다." : "이 기록에는 가려진 기록이 없습니다.");
+  });
   // 용지 위에 쓸 고유색. 밝은 색은 용지에서 읽히도록 어둡게 내린다
   var inkOn = function (hex, bg) {
     var rgb = function (h) { h = h.replace("#", ""); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }); };

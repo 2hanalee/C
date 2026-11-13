@@ -108,7 +108,7 @@
       <div class="block-head sealed-head" data-ghost="RANKING">
         <div><h2>아카데미 공개 랭킹</h2>
         <p>랭킹은 전투력만으로 정해지지 않습니다. 임무 성과와 여론, 윗선의 이해관계가 함께 반영됩니다.</p></div>
-        <img class="seal" src="assets/img/emblems/academy-insignia.webp" alt="마법소녀 아카데미 인장" width="512" height="512">
+        <img class="seal" src="assets/img/emblems/sm/academy-insignia.webp" alt="마법소녀 아카데미 인장" width="256" height="256">
       </div>
       <div class="board-wrap">
         <ol class="board">
@@ -131,22 +131,23 @@
         <h2>인물 49인</h2>
         <p>아카데미 소속 23인, 반역자와 외부 인물과 판정위원회 5인, 이계의 왕과 칠좌 8인, 그리고 경계인과 연예인, 기업인, 용병 13인이 등록되어 있습니다.</p>
       </div>
-      <div class="figure">
+      <!-- 대표 인물. 글자는 인물 기록(characters.js)에서 읽어 채운다. 아래 글은 스크립트가 없을 때 보이는 사본이다 -->
+      <div class="figure" data-figure="reina-de-rose">
         <a class="art-link" href="characters.html#reina-de-rose"><img class="art" src="assets/img/characters/reina-de-rose.webp" width="1670" height="941" alt="장미 정원 앞에 선 금발의 레이나 드 로즈. 흰 제복에 붉은 리본과 브로치를 달았다."></a>
         <div class="dossier">
           <div class="id">
-            <span class="rk" aria-label="랭킹 2위">2</span>
-            <div><h3>레이나 드 로즈</h3><p>로즈 세라핌, 학생위원장</p></div>
+            <span class="rk" data-f="rk" aria-label="랭킹 2위">2</span>
+            <div><h3 data-f="name">레이나 드 로즈</h3><p data-f="sub">로즈 세라핌, 학생위원장</p></div>
           </div>
-          <ul class="traits"><li>우아함</li><li>완벽주의</li><li>계산적</li><li>통제 지향</li></ul>
-          <p class="lead">외국 귀족 가문의 실력주의 아래 자라 아카데미 학생위원장이 됐다. 어린 시절 구조 현장에서 살아남은 몫을 갚겠다며 랭킹 1위를 노리고, 타인의 사소한 정보까지 기억한다.</p>
+          <ul class="traits" data-f="traits"><li>우아함</li><li>완벽주의</li><li>계산적</li><li>통제 지향</li></ul>
+          <p class="lead" data-f="lead">모든 학생의 생일과 약점과 상처를 외우는 완벽한 학생위원장 — 그녀는 2년째, 자신이 버린 선배의 사물함을 비우지 못하고 있다.</p>
           <dl class="spec">
-            <div class="ability"><dt>능력</dt><dd><b>왕관 없는 정원</b>장미 표식을 아군과 적의 위치에 심어 전장을 하나의 지휘망으로 엮는다. 표식이 닿지 않는 구역에는 신호를 보낼 수 없고, 타인의 몸을 직접 조종하지는 못한다.</dd></div>
+            <div class="ability"><dt>능력</dt><dd><b data-f="ab-name">왕관 없는 정원</b><span data-f="ab-text">장미 문양의 표식을 아군과 적의 위치에 심어 전장 정보를 하나의 지휘망으로 엮고, 표식을 공유한 아군은 말이나 통신 없이도 레이나가 지정한 공격 순서·합류 시점·후퇴 경로를 알아차린다. 표식이 닿지 않은 구역이나 표식이 끊긴 아군에게는 신호를 보낼 수 없으며, 타인의 몸과 마력을 직접 조종하지는 못한다.</span></dd></div>
           </dl>
           <div class="actions">
             <a class="btn solid go" href="characters.html#reina-de-rose">레이나의 인사기록카드 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
           </div>
-          <p class="fig-note"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"/></svg>이 기록에는 가려진 기록 3건이 붙어 있습니다. 카드를 열면 내부 기록과 기밀을 볼 수 있습니다.</p>
+          <p class="fig-note"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"/></svg><span data-f="note">이 기록에는 가려진 기록 5건이 붙어 있습니다. 카드를 열면 내부 기록과 기밀을 볼 수 있습니다.</span></p>
         </div>
       </div>
       <a class="more go" href="characters.html">인물 49인 전체 보기<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></a>
@@ -157,7 +158,7 @@
       <div class="block-head sealed-head" data-ghost="SEVEN SEATS">
         <div><h2>이계의 왕과 칠좌</h2>
         <p>이계는 힘이 아니라 법으로 움직이는 세계입니다. 왕은 일곱 자리에 죄악의 이름과 법을 하나씩 맡겼습니다.</p></div>
-        <img class="seal" src="assets/img/emblems/celestis.webp" alt="이계의 왕 셀레스티스의 문장" width="512" height="512">
+        <img class="seal" src="assets/img/emblems/sm/celestis.webp" alt="이계의 왕 셀레스티스의 문장" width="256" height="256">
       </div>
       <ol class="thrones">
         <li class="king"><a class="seat" href="characters.html#celestis"><span class="plaque king-plaque"><img src="assets/img/emblems/celestis.webp" alt="" width="512" height="512" loading="lazy"></span><span class="king-text"><span class="seat-no">이계의 왕</span><b>셀레스티스</b><span>칠좌에게 직위를 내리는 왕이다. 머리 위에 빈 고리 일곱 개가 떠 있다.</span><span class="go">기록 열람<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg></span></span></a></li>
@@ -179,7 +180,7 @@
       <div class="platforms" data-chat><button class="btn" type="button" disabled>대화 링크 준비 중</button></div>
     </section>
 
-    <footer class="foot mono"><img class="seal" src="assets/img/emblems/academy-insignia.webp" alt="" width="512" height="512"><img class="word" src="assets/img/brand/wordmark.svg" alt="BLACKOUT" width="1558" height="196"><span>마법소녀 아카데미: 블랙아웃</span><span>시안 v0.7</span><button type="button" class="linkish" data-forget>열람 기록 지우기</button><a class="linkish" href="#gate" data-replay-gate>입장 연출 다시 보기</a></footer>
+    <footer class="foot mono"><img class="seal" src="assets/img/emblems/sm/academy-insignia.webp" alt="" width="256" height="256"><img class="word" src="assets/img/brand/wordmark.svg" alt="BLACKOUT" width="1558" height="196"><span>마법소녀 아카데미: 블랙아웃</span><span>시안 v0.7</span><button type="button" class="linkish" data-forget>열람 기록 지우기</button><a class="linkish" href="#gate" data-replay-gate>입장 연출 다시 보기</a></footer>
   </main>
 </div>
 

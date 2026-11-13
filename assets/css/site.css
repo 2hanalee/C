@@ -1199,3 +1199,18 @@ button.kw.term:hover { text-decoration-style: solid; }
 /* 음악 표지 그림 */
 .ms-cover { width: min(100%, 13rem); aspect-ratio: 1; object-fit: cover; border-radius: 4px; background: var(--ink); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); margin-bottom: 0.4rem; }
 .ms-thumb { flex: none; width: 40px; height: 40px; object-fit: cover; border-radius: 2px; background: var(--ink); }
+
+/* ───── 전체 점검 손질 (11월 13일) ─────
+   누르는 곳은 높이 40px 이상. 밑줄 위치가 바뀌지 않도록 위쪽 여백을 늘리거나, 보이지 않는 면을 덧댄다 */
+.cover-credit { min-height: 2.75rem; }
+.more { padding-top: 0.65rem; }
+.ev-links a { padding-block: 0.55rem; }
+.crumbs .back { min-height: 2.75rem; }
+.tabs a { padding-block: 0.85rem; }
+.docsheet .seats .who a { min-height: 2.5rem; }
+.doc-table button.kw.term { padding: 10px 0; margin: -10px 0; }
+.top-nav a { position: relative; }
+.top-nav a::after { content: ""; position: absolute; inset: -0.45rem -0.5rem; }
+@media (min-width: 1240px) { .rail a, .rail button { padding-block: 0.55rem; } }
+.doc-table-wrap:focus-visible { outline-offset: 2px; }
+@media (min-width: 1240px) { .rail button { min-height: 2.5rem; align-items: center; } }

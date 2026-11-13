@@ -69,10 +69,10 @@
   };
 
   /* ───── 지도 ───── */
-  // 인천 약도. 실제 지형을 단순하게 줄였다. 서쪽은 서해, 남쪽은 바다를 메운 송도다. 좌표계는 800 x 560.
-  var COAST = "430,0 400,58 352,94 322,120 306,160 330,190 318,226 300,246 312,274 338,302 362,330 392,350 432,360 472,372 522,402 562,432 602,462 640,502 662,560";
-  var SONGDO = "300,396 470,392 502,430 506,522 334,532 290,470";
-  var YEONGJONG = "40,118 196,98 238,168 220,258 122,292 30,242";
+  // 인천 약도. 실제 지형을 단순하게 줄이고, 장소가 몰린 내항과 구도심을 크게 그렸다. 서쪽은 서해, 남쪽은 바다를 메운 송도다. 좌표계는 800 x 560.
+  var COAST = "400,0 330,50 262,74 232,128 214,180 200,240 214,300 260,345 330,372 420,392 500,410 575,440 640,470 700,520 740,560";
+  var SONGDO = "250,420 440,415 470,450 475,535 290,545 245,490";
+  var YEONGJONG = "0,36 118,18 168,78 150,168 62,198 0,178";
   var mapSvg = function () {
     return '<svg viewBox="0 0 800 560" role="img" aria-label="인천 약도. 서쪽은 서해, 내항 일대가 회색 구역이고 남쪽 매립지에 송도가 있다." preserveAspectRatio="xMidYMid slice">' +
       "<defs>" +
@@ -86,37 +86,37 @@
       '<polyline points="' + COAST + '" class="m-coast"/>' +
       '<polygon points="' + SONGDO + '" class="m-land"/><polygon points="' + SONGDO + '" class="m-coast"/>' +
       '<polygon points="' + YEONGJONG + '" class="m-land"/><polygon points="' + YEONGJONG + '" class="m-coast"/>' +
-      '<ellipse cx="270" cy="262" rx="22" ry="13" class="m-land"/><ellipse cx="270" cy="262" rx="22" ry="13" class="m-coast"/>' +
-      // 부두: 북항과 내항
-      '<path d="M306 132 H286 M308 146 H284 M312 266 H290 M314 280 H292 M320 294 H300" class="m-pier"/>' +
-      // 큰길과 다리: 송도와 구도심, 부평을 잇는다
-      '<path d="M360 330 L420 300 L520 280 L620 268 L800 262 M420 300 L430 200 L470 60 M462 392 L480 368 M440 393 L452 366 M520 280 L560 420" class="m-road"/>' +
+      '<ellipse cx="96" cy="291" rx="36" ry="21" class="m-land"/><ellipse cx="96" cy="291" rx="36" ry="21" class="m-coast"/>' +
+      // 부두(북항, 내항)와 월미도로 가는 둑길
+      '<path d="M262 70 H238 M256 88 H230 M204 236 H180 M202 252 H176 M206 268 H182 M132 286 L200 262" class="m-pier"/>' +
+      // 큰길과 다리: 내항에서 부평으로, 송도로
+      '<path d="M215 262 L480 272 L650 246 L800 236 M480 272 L470 120 L440 0 M480 272 L520 404 M350 378 L346 418 M402 390 L399 416" class="m-road"/>' +
       // 회색 구역: 내항 일대
-      '<clipPath id="zone"><ellipse cx="338" cy="250" rx="70" ry="54"/></clipPath>' +
-      '<image class="m-myc" href="assets/img/texture/mycelium-pattern.svg" x="248" y="176" width="180" height="150" clip-path="url(#zone)"/>' +
-      '<ellipse cx="338" cy="250" rx="70" ry="54" fill="url(#spore)" opacity="0.55"/>' +
-      '<ellipse cx="338" cy="250" rx="70" ry="54" class="m-zone"/>' +
+      '<clipPath id="zone"><ellipse cx="300" cy="235" rx="105" ry="75"/></clipPath>' +
+      '<image class="m-myc" href="assets/img/texture/mycelium-pattern.svg" x="180" y="130" width="250" height="210" clip-path="url(#zone)"/>' +
+      '<ellipse cx="300" cy="235" rx="105" ry="75" fill="url(#spore)" opacity="0.55"/>' +
+      '<ellipse cx="300" cy="235" rx="105" ry="75" class="m-zone"/>' +
       // 고철동(만석동, 화수동 공장지대)
-      '<polygon points="344,190 398,184 404,222 350,230" fill="url(#scrap)"/><polygon points="344,190 398,184 404,222 350,230" class="m-block"/>' +
+      '<polygon points="335,112 405,106 412,160 342,168" fill="url(#scrap)"/><polygon points="335,112 405,106 412,160 342,168" class="m-block"/>' +
       // 구도심
-      '<rect x="372" y="276" width="62" height="40" class="m-block"/><path d="M393 276 V316 M414 276 V316 M372 296 H434" class="m-grid"/>' +
+      '<rect x="322" y="298" width="84" height="44" class="m-block"/><path d="M350 298 V342 M378 298 V342 M322 320 H406" class="m-grid"/>' +
       // 부평
-      '<rect x="584" y="246" width="64" height="44" class="m-block"/><path d="M605 246 V290 M626 246 V290 M584 268 H648" class="m-grid"/>' +
+      '<rect x="612" y="200" width="72" height="48" class="m-block"/><path d="M636 200 V248 M660 200 V248 M612 224 H684" class="m-grid"/>' +
       // 송도: 기업 타워 지구와 남단 캠퍼스
-      '<path d="M392 452 V430 M402 452 V420 M412 452 V426 M422 452 V414 M432 452 V428" class="m-grid"/>' +
-      '<rect x="360" y="492" width="64" height="26" class="m-block"/>' +
+      '<path d="M296 468 V446 M306 468 V436 M316 468 V442 M326 468 V430 M336 468 V444" class="m-grid"/>' +
+      '<rect x="318" y="490" width="68" height="28" class="m-block"/>' +
       // 글자
-      '<text x="96" y="420" class="m-label big">서해</text>' +
-      '<text x="660" y="190" class="m-label big">인천</text>' +
-      '<text x="100" y="206" class="m-label">영종도</text>' +
-      '<text x="236" y="292" class="m-label">월미도</text>' +
-      '<text x="382" y="338" class="m-label">구도심</text>' +
-      '<text x="596" y="310" class="m-label">부평</text>' +
-      '<text x="446" y="478" class="m-label">송도</text>' +
-      '<text x="608" y="40" class="m-label">서울, 강원 방면</text>' +
-      '<path d="M760 34 l18 0 M772 28 l6 6 l-6 6" class="m-arrow"/>' +
+      '<text x="70" y="440" class="m-label big">서해</text>' +
+      '<text x="590" y="130" class="m-label big">인천</text>' +
+      '<text x="50" y="112" class="m-label">영종도</text>' +
+      '<text x="72" y="332" class="m-label">월미도</text>' +
+      '<text x="340" y="360" class="m-label">구도심</text>' +
+      '<text x="630" y="268" class="m-label">부평</text>' +
+      '<text x="404" y="476" class="m-label">송도</text>' +
+      '<text x="560" y="40" class="m-label">서울, 강원 방면</text>' +
+      '<path d="M700 34 l18 0 M712 28 l6 6 l-6 6" class="m-arrow"/>' +
       // 방위
-      '<path d="M40 70 V30 M40 30 l-6 10 M40 30 l6 10" class="m-arrow"/><text x="34" y="88" class="m-label">N</text>' +
+      '<path d="M40 534 V494 M40 494 l-6 10 M40 494 l6 10" class="m-arrow"/><text x="52" y="532" class="m-label">N</text>' +
       "</svg>";
   };
 
