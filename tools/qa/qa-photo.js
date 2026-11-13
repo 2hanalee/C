@@ -9,7 +9,7 @@ global.EXT_MORE = async (ctx) => {
     await p.route('**/test3x2/*', (r) => r.fulfill({ path: S + '/test3x2/' + r.request().url().split('/').pop() }));
     await p.goto(BASE + 'characters.html#list'); await p.waitForTimeout(200);
     await p.evaluate(() => { const c = window.CHARACTERS[0]; c.image = 'test3x2/e0.webp'; c.emotes = { 웃음: 'test3x2/e1.webp', 의문: 'test3x2/e2.webp', 부끄러움: 'test3x2/e3.webp', 슬픔: 'test3x2/e4.webp', 분노: 'test3x2/e5.webp', 기술: 'test3x2/e6.webp' }; location.hash = '#reina-de-rose'; });
-    await p.waitForTimeout(400);
+    await p.waitForTimeout(900);
     const rect = () => p.evaluate(() => { const e = document.querySelector('.polaroid .photo'); const r = e.getBoundingClientRect(); const i = document.getElementById('portrait'); return [e.offsetWidth, e.offsetHeight, r.top, i.naturalWidth / i.naturalHeight, i.complete, i.getAttribute('src')]; });
     const first = await rect();
     if (Math.abs(first[0] / first[1] - 1.5) > 0.01) fail(`사진 칸 비율 ${v} ${first[0] / first[1]}`);

@@ -405,5 +405,32 @@
     root.setAttribute("data-vt", type || "fade");
   });
 
+  /* ── 같은 페이지 안에서 화면을 바꿀 때의 전환 ──
+     type 은 "forward", "back", 빈 문자열(떠오르기). 지원하지 않거나 움직임 줄이기 설정이면 바로 바꾼다. */
+  var swap = function (type, update) {
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!document.startViewTransition || still) { update(); return; }
+    var t = null;
+    try { t = document.startViewTransition({ update: update, types: type ? [type] : [] }); }
+    catch (e) {
+      // 옛 방식(함수만 받는 브라우저)
+      try { t = document.startViewTransition(update); } catch (e2) { update(); return; }
+    }
+    ["ready", "finished", "updateCallbackDone"].forEach(function (k) { if (t && t[k] && t[k].catch) t[k].catch(function () {}); });
+  };
+  // 상세 화면에서 ←, → 로 이전과 다음 기록을 넘긴다. 글자를 입력하는 중이거나 창이 떠 있으면 하지 않는다
+  var arrows = function (handler) {
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      var el = document.activeElement;
+      if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      if (document.querySelector("dialog[open]") || root.classList.contains("gate-open")) return;
+      handler(e.key === "ArrowRight" ? 1 : -1);
+    });
+  };
+  window.BLACKOUT.swap = swap;
+  window.BLACKOUT.arrows = arrows;
+
   root.classList.add("js");
 })();

@@ -36,7 +36,7 @@
             '<span class="rc-foot"><span class="rc-hidden' + (n ? "" : " zero") + '">' + (n ? LOCK + "가려진 기록 " + n + "건" : "가려진 기록 없음") + "</span>" +
             '<span class="go">문서 열람' + ARROW + "</span></span></span>" +
             (MARKS[d.id] ? '<span class="fd-mark"><img src="assets/img/emblems/sm/' + MARKS[d.id] + '.webp" alt="" loading="lazy"></span>' : "") +
-          "</a>" + (B.seen.has("w", d.id) ? '<i class="stamp-read" aria-label="열람한 문서">열람함</i>' : "") + "</li>";
+          "</a>" + (B.seen.has("w", d.id) ? '<i class="stamp-read' + (justRead === d.id ? " just" : "") + '" aria-label="열람한 문서">열람함</i>' : "") + "</li>";
       }).join("") + "</ol>" +
       '<p class="after"><a class="btn go" href="characters.html">이 세계의 인물 ' + (window.CHARACTERS || []).length + '인 보기' + ARROW + "</a>" +
       '<a class="btn go" href="timeline.html">연표와 지도 보기' + ARROW + "</a></p>";
@@ -55,6 +55,7 @@
 
   var renderDoc = function (d) {
     document.title = d.title + " · 블랙아웃";
+    if (!B.seen.has("w", d.id)) justRead = d.id;
     B.seen.add("w", d.id);
     var i = DOCS.indexOf(d);
     var prev = DOCS[(i - 1 + DOCS.length) % DOCS.length];
@@ -76,7 +77,7 @@
     app.innerHTML =
       '<nav class="crumbs" aria-label="문서 이동"><a class="back" href="#list">' +
         '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg>세계관 목록으로</a>' +
-        '<div><a href="#' + prev.id + '">이전 문서: ' + esc(prev.title) + '</a><a href="#' + next.id + '">다음 문서: ' + esc(next.title) + "</a></div></nav>" +
+        '<div><a href="#' + prev.id + '" aria-keyshortcuts="ArrowLeft">이전 문서: ' + esc(prev.title) + '</a><a href="#' + next.id + '" aria-keyshortcuts="ArrowRight">다음 문서: ' + esc(next.title) + "</a></div></nav>" +
       '<article class="sheetcard docsheet">' +
         '<header class="sc-head"><span>방위청 공개 기록철</span><span class="mono">문서 ' + d.no + ", 열람용 사본</span></header>" +
         '<div class="doc">' +
@@ -99,20 +100,37 @@
   var route = function () {
     var id = location.hash.replace(/^#/, "");
     var d = byId[id];
-    if (d) renderDoc(d); else renderList();
+    if (d) renderDoc(d); else { renderList(); justRead = null; }
+    current = d || null;
     if (rail) {
       Array.prototype.forEach.call(rail.querySelectorAll("a"), function (a) {
         a.classList.toggle("on", a.getAttribute("href") === "#" + id);
       });
     }
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
+  // 주소가 바뀌면 전환과 함께 화면을 바꾼다. 이전과 다음 문서는 넘기는 방향으로 민다
+  var current = null, justRead = null;
+  var onHash = function () {
+    var d = byId[location.hash.replace(/^#/, "")];
+    var type = "";
+    if (d && current) {
+      var a = DOCS.indexOf(current), b = DOCS.indexOf(d), n = DOCS.length;
+      type = b === (a + 1) % n ? "forward" : b === (a - 1 + n) % n ? "back" : b > a ? "forward" : "back";
+    }
+    B.swap(type, route);
+  };
+  B.arrows(function (step) {
+    if (!current) return;
+    var n = DOCS.length;
+    location.hash = "#" + DOCS[(DOCS.indexOf(current) + step + n) % n].id;
+  });
 
   if (rail) {
     rail.innerHTML = DOCS.map(function (d) {
       return '<li><a href="#' + d.id + '"><span>' + d.no + "</span>" + esc(d.title) + "</a></li>";
     }).join("");
   }
-  window.addEventListener("hashchange", route);
+  window.addEventListener("hashchange", onHash);
   route();
 })();

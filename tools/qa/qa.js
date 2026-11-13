@@ -36,7 +36,9 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   const cards = await p.locator('.rcard').count(); if (cards !== 49) fail('카드 수 ' + cards);
   for (const id of ids) {
     await p.goto(BASE + 'characters.html#' + id);
-    const ok = await p.locator('.sheetcard h1').count(); if (!ok) fail('인물 화면 없음 ' + id);
+    // 화면 전환이 끝나 그 인물의 카드가 뜰 때까지 기다린다
+    const ok = await p.waitForFunction((i) => { const h = document.querySelector('.sheetcard h1'); return h && h.textContent === window.CHARACTERS.find((c) => c.id === i).name; }, id, { timeout: 4000 }).then(() => 1, () => 0);
+    if (!ok) fail('인물 화면 없음 ' + id);
     const o = await overflow(p); if (o > 0) fail('넘침 인물 ' + id + ' ' + o);
   }
   await p.goto(BASE + 'world.html');
@@ -44,7 +46,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   if (docs.length !== 10) fail('문서 수 ' + docs.length);
   for (const id of docs) {
     await p.goto(BASE + 'world.html#' + id);
-    if (!(await p.locator('.docsheet h1').count())) fail('문서 화면 없음 ' + id);
+    const shown = await p.waitForFunction((i) => { const h = document.querySelector('.docsheet h1'); return h && h.textContent === window.WORLD.find((d) => d.id === i).title; }, id, { timeout: 4000 }).then(() => 1, () => 0);
+    if (!shown) fail('문서 화면 없음 ' + id);
     const o = await overflow(p); if (o > 0) fail('넘침 문서 ' + id + ' ' + o);
   }
   await p.goto(BASE + 'timeline.html#map');
@@ -60,7 +63,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     await p.goto(BASE + f); await p.waitForTimeout(100);
     (await p.$$eval('a[href]', (as) => as.map((a) => a.getAttribute('href')))).forEach((h) => hrefs.add(f + '|' + h));
   }
-  for (const id of docs) { await p.goto(BASE + 'world.html#' + id); (await p.$$eval('a[href]', (as) => as.map((a) => a.getAttribute('href')))).forEach((h) => hrefs.add('world.html|' + h)); }
+  for (const id of docs) { await p.goto(BASE + 'world.html#' + id); await p.waitForFunction((i) => { const h = document.querySelector('.docsheet h1'); return h && h.textContent === window.WORLD.find((d) => d.id === i).title; }, id, { timeout: 4000 }).catch(() => {}); (await p.$$eval('a[href]', (as) => as.map((a) => a.getAttribute('href')))).forEach((h) => hrefs.add('world.html|' + h)); }
   let linkCount = 0;
   for (const item of hrefs) {
     const [from, h] = item.split('|');

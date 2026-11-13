@@ -116,7 +116,7 @@
         '<span class="rc-foot"><span class="rc-hidden' + (n ? "" : " zero") + '">' + (n ? LOCK + "가려진 기록 " + n + "건" : "가려진 기록 없음") + "</span>" +
           '<span class="go">기록 열람' + ARROW + "</span></span>" +
       "</span></a>" +
-      (visited ? '<i class="stamp-read" aria-label="열람한 기록">열람함</i>' : "") + "</li>";
+      (visited ? '<i class="stamp-read' + (state.justRead === c.id ? " just" : "") + '" aria-label="열람한 기록">열람함</i>' : "") + "</li>";
   };
   var cardsHtml = function (list) {
     return '<ul class="rcards">' + list.map(cardHtml).join("") + "</ul>";
@@ -191,6 +191,8 @@
   /* ───── 상세 ───── */
   var renderDetail = function (c) {
     document.title = c.name + " · 블랙아웃";
+    // 처음 여는 기록이면 목록으로 돌아갔을 때 도장이 찍히는 모습을 보여 준다
+    if (!B.seen.has("c", c.id)) state.justRead = c.id;
     B.seen.add("c", c.id);
     var i = ALL.indexOf(c);
     var prev = ALL[(i - 1 + ALL.length) % ALL.length];
@@ -210,7 +212,7 @@
     app.innerHTML =
       '<nav class="crumbs" aria-label="기록 이동"><a class="back" href="#list">' +
         '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg>인물 목록으로</a>' +
-        '<div><a href="#' + prev.id + '">이전 기록: ' + esc(prev.name) + '</a><a href="#' + next.id + '">다음 기록: ' + esc(next.name) + "</a></div></nav>" +
+        '<div><a href="#' + prev.id + '" aria-keyshortcuts="ArrowLeft">이전 기록: ' + esc(prev.name) + '</a><a href="#' + next.id + '" aria-keyshortcuts="ArrowRight">다음 기록: ' + esc(next.name) + "</a></div></nav>" +
       '<article class="sheetcard"' + styleVars(c) + ">" +
         '<header class="sc-head"><span>방위청 인사기록카드</span><span class="mono">기록 번호 ' + no2(c.no) + ", 열람용 사본</span></header>" +
         (c.hook ? '<p class="sc-hook">' + esc(c.hook) + "</p>" : "") +
@@ -260,15 +262,43 @@
       if (showing === "list") state.listY = window.scrollY;
       renderDetail(c);
       showing = "detail";
-      window.scrollTo(0, 0);
+      current = c;
+      window.scrollTo({ top: 0, behavior: "instant" });
     } else {
       renderList();
       syncFactions();
       var back = showing === "detail";
       showing = "list";
-      window.scrollTo(0, back ? state.listY : 0);
+      window.scrollTo({ top: back ? state.listY : 0, behavior: "instant" });
+      // 방금 보던 기록의 사진이 목록의 제자리로 돌아가게 이름을 붙인다
+      if (back && current) markPhoto(current.id);
+      current = null;
+      state.justRead = null;
     }
   };
+  // 목록의 카드 사진 하나에만 전환 이름을 붙인다. 상세의 사진과 이어져 움직인다
+  var current = null;
+  var markPhoto = function (id) {
+    Array.prototype.forEach.call(app.querySelectorAll(".rcard .photo"), function (p) { p.style.viewTransitionName = ""; });
+    var ph = id && app.querySelector('.rcard[href="#' + id + '"] .photo');
+    if (ph) ph.style.viewTransitionName = "record-photo";
+  };
+  // 주소가 바뀌면 전환과 함께 화면을 바꾼다. 이전과 다음 기록은 넘기는 방향으로 민다
+  var onHash = function () {
+    var c = byId[location.hash.replace(/^#/, "")];
+    var type = "";
+    if (c && current) {
+      var a = ALL.indexOf(current), b = ALL.indexOf(c), n = ALL.length;
+      type = b === (a + 1) % n ? "forward" : b === (a - 1 + n) % n ? "back" : b > a ? "forward" : "back";
+    }
+    if (c && showing === "list") markPhoto(c.id);
+    B.swap(type, route);
+  };
+  B.arrows(function (step) {
+    if (showing !== "detail" || !current) return;
+    var n = ALL.length;
+    location.hash = "#" + ALL[(ALL.indexOf(current) + step + n) % n].id;
+  });
 
   // 표정 단추: 그림을 바꾼다
   document.addEventListener("click", function (e) {
@@ -302,6 +332,6 @@
   });
 
   if (rail) rail.innerHTML = factionButtons().replace(/<button /g, "<li><button ").replace(/<\/button>/g, "</button></li>");
-  window.addEventListener("hashchange", route);
+  window.addEventListener("hashchange", onHash);
   route();
 })();
