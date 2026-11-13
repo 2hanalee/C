@@ -28,7 +28,7 @@
     document.title = "세계관 · 블랙아웃";
     app.innerHTML =
       '<header class="page-head" data-ghost="ARCHIVE"><p class="kicker">방위청 공개 기록철</p><h1 class="lit">세계관</h1>' +
-        "<p>인천과 이계에 관한 공개 문서 여덟 건입니다. 번호 순서대로 읽으면 20년의 흐름이 이어집니다. 문서를 누르면 본문이 열립니다.</p></header>" +
+        "<p>인천과 이계에 관한 공개 문서 " + DOCS.length + "건입니다. 번호 순서대로 읽으면 20년의 흐름이 이어집니다. 문서를 누르면 본문이 열립니다.</p></header>" +
       '<ol class="folders">' + DOCS.map(function (d) {
         var n = hiddenCount(d);
         return '<li><span class="tab" aria-hidden="true">문서 ' + d.no + "</span>" +
