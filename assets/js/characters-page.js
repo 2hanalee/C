@@ -268,6 +268,9 @@
     var img = t && document.getElementById("portrait");
     if (!img) return;
     img.src = t.dataset.src;
+    var cap = document.querySelector(".polaroid figcaption");
+    var e2 = t.textContent;
+    if (cap) cap.textContent = "등록 사진, " + (e2 === "기술" ? "기술을 쓰는 모습" : e2 + " 표정");
     Array.prototype.forEach.call(t.parentNode.children, function (b) { b.setAttribute("aria-pressed", String(b === t)); });
   });
 
