@@ -87,10 +87,10 @@ output/                       렌더링 결과 (git 제외)
 |---|---|---|---|
 | 0 범위 확정 | CLAUDE.md, docs/spec.md, 폴더 구조 | 사용자 승인 | **완료** |
 | 1 지식 구축 | directing-rules.md, reference-analysis.md, sources.md | 규칙마다 출처와 신뢰도 표기 | **완료** (학술 원문 대조는 PDF 제공 시 보강) |
-| 2 스타일·캐릭터 | style-sheet.md, world-bible.md, 캐릭터 시트 등록 | 사용자가 세계관 자료와 에셋 제공 | 대기 |
-| 3 콘티 스키마 | storyboard.schema.json, 예제 콘티 1개 | 예제가 스키마 검증 통과 | 대기 |
+| 2 스타일·캐릭터 | world-bible(비공개), 캐릭터 시트 등록 | 사용자가 세계관 자료와 에셋 제공 | 세계관 완료 · 에셋 대기 |
+| 3 콘티 | 디자인 캔버스에 콘티 3종(11장) 실제 크기 배치 → `episodes/<작품>/canvas/` | 사용자 승인 | **완료** (JSON 스키마 대신 캔버스 HTML을 원본으로 채택) |
 | 4 컴포넌트 | 말풍선·박스·컷·전환 CSS 컴포넌트, 견본 페이지 | 견본 PNG를 사용자가 확인 | 대기 |
-| 5 렌더러 | render.mjs(JSON → HTML → PNG 분할), 자동 검사 | 예제 콘티가 1000×≤8000 PNG로 출력 | 대기 |
+| 5 렌더러 | `renderer/render.mjs`(캔버스 HTML → PNG, 에셋 합성), 자동 검사 | 11장 모두 1000×8000 출력·검사 통과 | **완료** |
 | 6 스킬 | `/webtoon-scene` SKILL.md | 새 장면 1개를 처음부터 끝까지 처리 | 대기 |
 | 7 실전 | 첫 도입부 웹툰 | 사용자 승인 | 대기 |
 
