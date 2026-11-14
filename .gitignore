@@ -1,0 +1,13 @@
+# 제3자 웹툰 레퍼런스 원본: 저작권 보호를 위해 저장소에 올리지 않는다(로컬 분석 전용)
+references/raw/
+
+# 사용자 에셋 원본(용량·권리 문제로 기본 제외, 필요 시 개별 해제)
+assets/characters/**/*.png
+assets/backgrounds/**/*.png
+assets/backgrounds/**/*.jpg
+
+# 렌더링 결과물
+output/
+
+node_modules/
+.DS_Store
