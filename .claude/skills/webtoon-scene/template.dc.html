@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>콘티 X 1/N</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&amp;family=Noto+Sans+KR:wght@400;700;900&amp;family=Black+Han+Sans&amp;family=Nanum+Pen+Script&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+/* 한 장 = 1000×8000. 배경색은 장면 톤에 맞춰 .pg의 background만 바꾼다 */
+.pg{width:1000px;height:8000px;overflow:hidden;display:flex;flex-direction:column;align-items:center;background:#fff;font-family:'Noto Serif KR',serif;color:#111}
+.sec{width:1000px;display:flex;flex-direction:column;align-items:center}
+/* 나레이션·캡션 박스 (W-01, W-02) */
+.nar{box-sizing:border-box;border:2px solid #111;background:#fff;color:#111;padding:26px 36px;font-size:34px;line-height:1.35;font-weight:700;text-align:center;max-width:600px}
+.nar.dk{background:#000;color:#fff;border-color:#fff}
+/* 말풍선 (B-01~B-11). tl/tr = 꼬리 방향(화자 위치). 어두운 배경이면 .dk */
+.bal{position:relative;box-sizing:border-box;background:#fff;color:#111;border:4px solid #111;border-radius:50%;padding:38px 56px;font-size:34px;line-height:1.35;font-weight:700;text-align:center;max-width:540px}
+.bal.dk{background:#0b0b0c;color:#fff;border-color:#fff}
+.bal.weak{font-size:28px;font-weight:500;padding:30px 46px}
+.bal.dot{background:transparent;border:3px dashed currentColor;font-size:28px;font-weight:500;padding:30px 46px}
+.bal.tl::after,.bal.tr::after{content:"";position:absolute;bottom:-28px;width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:32px solid #111}
+.bal.dk.tl::after,.bal.dk.tr::after{border-top-color:#fff}
+.bal.tl::after{left:26%;transform:rotate(20deg)}
+.bal.tr::after{right:26%;transform:rotate(-20deg)}
+/* 시스템·통신 박스 (B-06) */
+.sys{box-sizing:border-box;background:#0d1b26;color:#9fe3ff;font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:30px;line-height:1.35;padding:18px 52px;text-align:center;clip-path:polygon(20px 0,calc(100% - 20px) 0,100% 50%,calc(100% - 20px) 100%,20px 100%,0 50%);max-width:860px}
+.sys.red{background:#2a0508;color:#ff9aa3}
+/* 네임플레이트 (P-06) */
+.np{box-sizing:border-box;background:#fff;color:#111;border:2px solid #111;padding:12px 28px;font-size:28px;line-height:1.3;font-weight:700;text-align:center}
+/* 보도자료·세력 캡션 */
+.pr{box-sizing:border-box;background:#fff;color:#111;border:2px solid #d9467a;padding:18px 30px;font-family:'Noto Sans KR',sans-serif;font-size:28px;line-height:1.4;font-weight:700;text-align:center}
+.cap{box-sizing:border-box;border:3px solid #111;background:#fff;color:#111;padding:20px 40px;font-family:'Noto Sans KR',sans-serif;font-size:40px;line-height:1.3;font-weight:900;text-align:center}
+/* 컷 자리 (placeholder). 렌더러가 .lab의 "에셋:" 이름으로 이미지를 채운다 */
+.ph{position:relative;box-sizing:border-box;width:1000px;display:flex;align-items:center;justify-content:center;border-top:2px solid #111;border-bottom:2px solid #111}
+.lab{font-family:'Noto Sans KR',sans-serif;font-size:22px;line-height:1.45;color:#1a1a1a;background:rgba(255,255,255,.86);padding:10px 16px;max-width:72%;font-weight:400}
+/* 타이포 */
+.big{font-family:'Noto Serif KR',serif;font-weight:900;font-size:60px;line-height:1.45;text-align:center}
+.mt{font-family:'Noto Sans KR',sans-serif;font-weight:900;font-size:56px;line-height:1.35;text-align:center}
+.red{font-family:'Noto Sans KR',sans-serif;font-weight:900;font-size:48px;line-height:1.35;text-align:center;color:#e0213f}
+.sfx{font-family:'Black Han Sans',sans-serif;line-height:1}
+.pen{font-family:'Nanum Pen Script',cursive;line-height:1}
+.ov{position:absolute}
+</style>
+</helmet>
+<div class="pg">
+  <div style="height: 600px"></div>
+  <div style="font-size: 44px; font-weight: 700; line-height: 1.4; text-align: center">당신은 …</div>
+  <div style="height: 400px"></div>
+  <!-- 컷 예시: 사선 컷은 clip-path로 위·아래 변을 서로 다른 각도(2~4°)로 (V-07) -->
+  <div class="ph" style="height: 800px; background: linear-gradient(180deg, #b9bcc2, #7d8086)">
+    <div class="bal tr ov" style="right: 60px; bottom: 80px">대사</div>
+    <div class="lab" style="display: {{ld}}"><b>X-01</b> · 숏 크기 · 내용 · 근거 규칙<br>에셋: 인물_포즈_숏, 배경_장소</div>
+  </div>
+  <div style="height: 240px"></div>
+  <div class="bal tl" style="align-self: flex-start; margin-left: 80px">대사</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showNotes":{"editor":"boolean","default":true,"section":"콘티"},"$preview":{"width":1000,"height":8000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { ld: this.props.showNotes === false ? 'none' : 'block' };
+  }
+}
+</script>
+</body>
+</html>

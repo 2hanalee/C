@@ -91,7 +91,7 @@ output/                       렌더링 결과 (git 제외)
 | 3 콘티 | 디자인 캔버스에 콘티 3종(11장) 실제 크기 배치 → `episodes/<작품>/canvas/` | 사용자 승인 | **완료** (JSON 스키마 대신 캔버스 HTML을 원본으로 채택) |
 | 4 컴포넌트 | 말풍선·박스·컷·전환 CSS 컴포넌트, 견본 페이지 | 견본 PNG를 사용자가 확인 | 대기 |
 | 5 렌더러 | `renderer/render.mjs`(캔버스 HTML → PNG, 에셋 합성), 자동 검사 | 11장 모두 1000×8000 출력·검사 통과 | **완료** |
-| 6 스킬 | `/webtoon-scene` SKILL.md | 새 장면 1개를 처음부터 끝까지 처리 | 대기 |
+| 6 스킬 | `.claude/skills/webtoon-scene/` (SKILL.md, template.dc.html, extract_assets.py) | 새 장면 1개를 처음부터 끝까지 처리 | **완료** (다음 장면에서 실사용 검증) |
 | 7 실전 | 첫 도입부 웹툰 | 사용자 승인 | 대기 |
 
 **로컬 실행 요구사항(5단계부터)**: Node.js 18 이상, `npm i playwright`, `npx playwright install chromium`
