@@ -11,3 +11,6 @@ output/
 
 node_modules/
 .DS_Store
+
+# 사용자 세계관 설정과 시나리오(미공개 창작물): 저장소가 public이므로 커밋하지 않는다
+knowledge/private/
