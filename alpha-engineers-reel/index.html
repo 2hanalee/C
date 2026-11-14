@@ -1,0 +1,782 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Alpha Engineers — One line builds everything</title>
+<style>
+@font-face{font-family:'ID';src:url('fonts/InterDisplay-Black.otf');font-weight:900}
+@font-face{font-family:'ID';src:url('fonts/InterDisplay-Bold.otf');font-weight:700}
+@font-face{font-family:'ID';src:url('fonts/InterDisplay-Medium.otf');font-weight:500}
+html,body{margin:0;background:#0B0B0D;overflow:hidden}
+canvas{display:block}
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+/* =====================================================================
+   ALPHA ENGINEERS — "One line builds everything"
+   15 s, 120 BPM (beat = 0.5 s, bar = 2 s), 1920x1080.
+   Every pixel is a pure function of time inside window.seek(t).
+   No CSS animation, no timers, no state carried between frames.
+   ===================================================================== */
+const W = 1920, H = 1080, DUR = 15;
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+const low = document.createElement('canvas'); low.width = 384; low.height = 216; // pixel layer, 5px pixels
+const lx = low.getContext('2d', { willReadFrequently: true });
+
+const C = { bg:'#0B0B0D', ink:'#0B0B0D', white:'#F4F2EE', or:'#FF5A1F', bl:'#2E64FF', li:'#C6FF3A', grey:'#E4E2DD', dark:'#26262B' };
+
+/* ---------- math & easing (all functions of time) ---------- */
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const D2R = Math.PI / 180;
+const expo = t => { t = clamp(t); return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); };
+const expoIn = t => { t = clamp(t); return t <= 0 ? 0 : Math.pow(2, 10 * (t - 1)) * (t >= 1 ? 1 : 1) ; };
+const expoIO = t => { t = clamp(t); if (t === 0 || t === 1) return t; return t < .5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2; };
+// stiff damped spring (z=0.9: <0.2% overshoot, no visible bounce)
+function spring(dt, w = 20, z = 0.9) {
+  if (dt <= 0) return 0;
+  const s = Math.sqrt(1 - z * z), wd = w * s;
+  return 1 - Math.exp(-z * w * dt) * (Math.cos(wd * dt) + (z / s) * Math.sin(wd * dt));
+}
+const RGB = {};
+function rgb(h) { return RGB[h] || (RGB[h] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16))); }
+function mixc(a, b, t) { const A = rgb(a), B = rgb(b); t = clamp(t); return `rgb(${A.map((v, i) => Math.round(lerp(v, B[i], t))).join(',')})`; }
+const font = (w, s) => `${w} ${s}px ID`;
+
+/* ---------- polyline morphing: the "one line" ---------- */
+const NR = 480;
+function resample(pts, N = NR) {
+  const seg = []; let L = 0;
+  for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); seg.push(d); L += d; }
+  const out = []; let si = 0, acc = 0;
+  for (let k = 0; k < N; k++) {
+    const target = L * k / (N - 1);
+    while (si < seg.length - 1 && acc + seg[si] < target) { acc += seg[si]; si++; }
+    const f = seg[si] > 1e-9 ? clamp((target - acc) / seg[si]) : 0;
+    const a = pts[si], b = pts[si + 1];
+    out.push([lerp(a[0], b[0], f), lerp(a[1], b[1], f)]);
+  }
+  return out;
+}
+const morph = (A, B, p) => A.map((a, i) => [lerp(a[0], B[i][0], p), lerp(a[1], B[i][1], p)]);
+function strokePoly(pts, w, col) {
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.lineWidth = w; ctx.strokeStyle = col; ctx.lineJoin = 'miter'; ctx.miterLimit = 10; ctx.lineCap = 'butt'; ctx.stroke();
+}
+
+/* ---------- directional motion smear: ghosts along the path of travel ---------- */
+function smear(t, draw, n = 4, span = 1 / 40) {
+  const ga = ctx.globalAlpha;
+  for (let k = n; k >= 1; k--) { ctx.globalAlpha = ga * 0.32 * (1 - k / (n + 1)); draw(t - span * k / n); }
+  ctx.globalAlpha = ga; draw(t);
+}
+
+/* ---------- the Alpha mark ---------- */
+function Ashape(cx, base, h, hw, w) {
+  const al = Math.atan(hw / h);
+  const fx = hw - (w / 2) / Math.cos(al);
+  const ay = base - h + (w / 2) / Math.sin(al);
+  const dl = Math.hypot(fx, base - ay), ux = fx / dl, uy = (base - ay) / dl, ext = w * 0.8;
+  const yc = base - 0.3 * h, fr = (yc - ay) / (base - ay), cbx = fx * fr;
+  return [[cx - fx - ux * ext, base + uy * ext], [cx, ay], [cx + fx + ux * ext, base + uy * ext], [cx + cbx, yc], [cx - cbx, yc]];
+}
+
+/* ---------- layout (computed once fonts are ready) ---------- */
+let LK1, LKE, LAB = {}, R = {};
+function lockup(cy) {
+  const S = 250; ctx.font = font(900, S);
+  const capH = ctx.measureText('H').actualBoundingBoxAscent;
+  const hw = capH * 0.52, gap = S * 0.04, stem = S * 0.17;
+  const wL = ctx.measureText('LPHA').width;
+  const TW = 2 * hw + gap + wL, x0 = 960 - TW / 2;
+  const lxs = []; for (let i = 0; i < 4; i++) lxs.push(x0 + 2 * hw + gap + ctx.measureText('LPHA'.slice(0, i)).width);
+  ctx.font = font(700, 92); const capH2 = ctx.measureText('H').actualBoundingBoxAscent;
+  const E = 'ENGINEERS', ws = [...E].map(c => ctx.measureText(c).width), sum = ws.reduce((a, b) => a + b, 0);
+  const tr = (TW - sum) / (E.length - 1); const exs = []; let x = x0; for (let i = 0; i < E.length; i++) { exs.push(x); x += ws[i] + tr; }
+  const lg = 48, gh = capH + lg + capH2, base1 = cy - gh / 2 + capH, base2 = base1 + lg + capH2;
+  return { S, capH, capH2, hw, gap, stem, x0, TW, base1, base2, lxs, exs, cy };
+}
+const LINE0 = [[660, 540], [1260, 540]];
+const ABIG = { cx: 960, base: 780, h: 470, hw: 470 * 0.52 };
+function initLayout() {
+  LK1 = lockup(540); LKE = lockup(468);
+  ctx.font = font(900, 64); LAB.cap = ctx.measureText('H').actualBoundingBoxAscent;
+  ABIG.w = LK1.stem * ABIG.h / LK1.capH;
+  R.line0 = resample(LINE0);
+  R.abig = resample(Ashape(ABIG.cx, ABIG.base, ABIG.h, ABIG.hw, ABIG.w));
+  R.a1 = resample(Ashape(LK1.x0 + LK1.hw, LK1.base1, LK1.capH, LK1.hw, LK1.stem));
+  R.ae = resample(Ashape(LKE.x0 + LKE.hw, LKE.base1, LKE.capH, LKE.hw, LKE.stem));
+}
+
+/* ---------- lockup typography (hook + end title) ---------- */
+function drawLockup(t, L, o) {
+  // o: {lIn, eIn, tagIn, out}
+  if (t < o.lIn - 0.05 || t > o.out + 0.6) return;
+  ctx.save();
+  // L P H A — unroll from behind the A's right leg
+  ctx.font = font(900, L.S); ctx.fillStyle = C.white;
+  const clipX = L.x0 + 2 * L.hw + L.gap * 0.2;
+  ctx.save(); ctx.beginPath(); ctx.rect(clipX, 0, W, L.base1 + 3); ctx.clip();
+  'LPHA'.split('').forEach((ch, i) => {
+    const pos = tt => {
+      const a = expo((tt - o.lIn - i * 0.045) / 0.32);
+      const travel = (L.lxs[i] - clipX) + 200;
+      const outp = expoIn((tt - o.out - i * 0.025) / 0.2);
+      return [L.lxs[i] - (1 - a) * travel, L.base1 + outp * (L.capH + 40)];
+    };
+    smear(t, tt => { const p = pos(tt); ctx.fillText(ch, p[0], p[1]); });
+  });
+  ctx.restore();
+  // E N G I N E E R S — rise out of a mask, tracked to the width of ALPHA
+  ctx.font = font(700, 92);
+  ctx.save(); ctx.beginPath(); ctx.rect(0, L.base1 + 14, W, L.base2 - L.base1 - 10); ctx.clip();
+  'ENGINEERS'.split('').forEach((ch, i) => {
+    const dy = tt => (1 - expo((tt - o.eIn - i * 0.022) / 0.3)) * (L.capH2 + 40) + expoIn((tt - o.out - 0.02 - i * 0.012) / 0.2) * (L.capH2 + 40);
+    smear(t, tt => ctx.fillText(ch, L.exs[i], L.base2 + dy(tt)));
+  });
+  ctx.restore();
+  // Build. Code. Play.
+  if (o.tagIn) {
+    ctx.font = font(700, 66);
+    const words = [['Build.', C.or], ['Code.', C.bl], ['Play.', C.li]];
+    const ws = words.map(w => ctx.measureText(w[0]).width), sp = 26;
+    const tot = ws.reduce((a, b) => a + b, 0) + sp * 2;
+    let x = 960 - tot / 2; const by = L.base2 + 122;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, L.base2 + 30, W, 110); ctx.clip();
+    words.forEach((w, j) => {
+      const dy = tt => (1 - expo((tt - o.tagIn - j * 0.09) / 0.28)) * 70 + expoIn((tt - o.out - 0.03 - j * 0.02) / 0.18) * 70;
+      ctx.fillStyle = w[1]; const xx = x;
+      smear(t, tt => ctx.fillText(w[0], xx, by + dy(tt)));
+      x += ws[j] + sp;
+    });
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+/* ---------- scene labels ---------- */
+function drawLabel(t, parts, tIn, tOut, col) {
+  if (t < tIn - 0.02 || t > tOut + 0.4) return;
+  ctx.save(); ctx.font = font(900, 64);
+  ctx.beginPath(); ctx.rect(0, 990 - LAB.cap - 20, W, LAB.cap + 34); ctx.clip();
+  let x = 120;
+  parts.forEach((p, j) => {
+    const w = ctx.measureText(p[0]).width;
+    const dy = tt => (1 - expo((tt - tIn - j * 0.07) / 0.32)) * 90 + expoIn((tt - tOut - j * 0.04) / 0.22) * 90;
+    ctx.fillStyle = p[1]; const xx = x;
+    smear(t, tt => ctx.fillText(p[0], xx, 990 + dy(tt)));
+    x += w;
+  });
+  ctx.restore();
+}
+
+/* =====================================================================
+   HARDWARE — robot arm, flat blueprint -> 3D
+   ===================================================================== */
+const PIV = [85, 190, 0], AX = 960, AY = 500, SC = 1.55;
+function armState(t) {
+  const s = {};
+  const cIn = expoIO((t - 3.0) / 0.8), cOut = expoIO((t - 5.55) / 0.42), c = cIn * (1 - cOut);
+  s.camYaw = -34 * c * D2R; s.camPitch = -14 * c * D2R; s.persp = c;
+  s.depth = expo((t - 3.0) / 0.5) * (1 - expoIO((t - 5.6) / 0.28));
+  const st = expoIO((t - 5.6) / 0.36); // straighten into a single line
+  s.yaw = lerp(26 * spring(t - 4.0, 16), 0, st) * D2R;
+  s.phi1 = lerp(70 + 14 * spring(t - 4.5, 16), 90, st);
+  s.a2 = lerp(-110 + 22 * spring(t - 5.0, 16), 0, st);
+  s.a3 = lerp(-40 - 18 * spring(t - 5.0, 16), 0, st);
+  s.grip = clamp(spring(t - 5.0, 18) - 0.72 * spring(t - 5.5, 26)) * (1 - st);
+  const thin = 1 - expoIO((t - 5.62) / 0.26);
+  s.wF = i => expo((t - 2.5 - i * 0.035) / 0.3) * thin;
+  s.fill = i => expo((t - 3.5 - i * 0.045) / 0.24);
+  return s;
+}
+const dir2 = a => [Math.cos(a * D2R), Math.sin(a * D2R)];
+function armFK(s) {
+  const S = [0, 95], d1 = dir2(s.phi1), E = [S[0] + 260 * d1[0], S[1] + 260 * d1[1]];
+  const p2 = s.phi1 + s.a2, d2 = dir2(p2), Wr = [E[0] + 220 * d2[0], E[1] + 220 * d2[1]];
+  const p3 = p2 + s.a3, d3 = dir2(p3), T = [Wr[0] + 75 * d3[0], Wr[1] + 75 * d3[1]];
+  return { S, E, W: Wr, T, d1, d2, d3, p3 };
+}
+const toW = (u, v, s) => [u * Math.cos(s.yaw), v, -u * Math.sin(s.yaw)];
+const dirW = (d, s) => [d[0] * Math.cos(s.yaw), d[1], -d[0] * Math.sin(s.yaw)];
+const add = (a, b, k = 1) => [a[0] + b[0] * k, a[1] + b[1] * k, a[2] + b[2] * k];
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const nrm = a => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+function rot(P, s) {
+  const cy = Math.cos(s.camYaw), sy = Math.sin(s.camYaw), cp = Math.cos(s.camPitch), sp = Math.sin(s.camPitch);
+  const x1 = P[0] * cy + P[2] * sy, z1 = -P[0] * sy + P[2] * cy;
+  return [x1, P[1] * cp - z1 * sp, P[1] * sp + z1 * cp];
+}
+const camF = s => lerp(80000, 1500, s.persp);
+function cam(P, s) { return rot([P[0] - PIV[0], P[1] - PIV[1], P[2] - PIV[2]], s); }
+function proj(c, s) { const F = camF(s), k = F / (F + c[2] * SC); return [AX + c[0] * SC * k, AY - c[1] * SC * k, k]; }
+const P2 = (P, s) => proj(cam(P, s), s);
+
+function skel2D(s) {
+  const k = armFK(s);
+  return [[0, 0], k.S, k.E, k.W, k.T, [k.T[0] + k.d3[0] * 50, k.T[1] + k.d3[1] * 50]].map(p => { const q = P2(toW(p[0], p[1], s), s); return [q[0], q[1]]; });
+}
+const FACES = [[[0, 2, 3, 1], 0, -1], [[4, 6, 7, 5], 0, 1], [[0, 4, 5, 1], 1, -1], [[2, 6, 7, 3], 1, 1], [[0, 4, 6, 2], 2, -1], [[1, 5, 7, 3], 2, 1]];
+function box(o, a, len, q, bw, r, bd, id) {
+  const c = [];
+  for (let ia = 0; ia < 2; ia++) for (let iq = 0; iq < 2; iq++) for (let ir = 0; ir < 2; ir++)
+    c.push([0, 1, 2].map(j => o[j] + a[j] * len * ia + q[j] * bw * (iq - .5) + r[j] * bd * (ir - .5)));
+  return { c, ax: [a, q, r], id };
+}
+const LIGHT = nrm([-0.45, 0.7, -0.55]); // camera space: from the viewer's upper left
+function armBoxes(s) {
+  const k = armFK(s), n = [Math.sin(s.yaw), 0, Math.cos(s.yaw)], up = [0, 1, 0], u = [Math.cos(s.yaw), 0, -Math.sin(s.yaw)];
+  const dep = Math.max(s.depth, 0.0001), B = [];
+  const Sw = toW(...k.S, s), Ew = toW(...k.E, s), Ww = toW(...k.W, s), Tw = toW(...k.T, s);
+  const d1 = dirW(k.d1, s), d2 = dirW(k.d2, s), d3 = dirW(k.d3, s), p3 = nrm(cross(n, d3));
+  const link = (o, d, len, w, id) => B.push(box(o, d, len, nrm(cross(n, d)), w * s.wF(id), n, w * dep * s.wF(id), id));
+  const hub = (J, d, sz, id) => { const L = sz * 1.15 * dep; B.push(box(add(J, n, -L / 2), n, L, d, sz * s.wF(id), nrm(cross(n, d)), sz * s.wF(id), id)); };
+  B.push(box([0, 0, 0], up, 36, [1, 0, 0], 260 * s.wF(0), [0, 0, 1], 260 * dep * s.wF(0), 0));
+  B.push(box([0, 36, 0], up, 59, u, 150 * s.wF(1), n, 150 * dep * s.wF(1), 1));
+  hub(Sw, d1, 100, 2); link(Sw, d1, 260, 72, 3);
+  hub(Ew, d2, 84, 4); link(Ew, d2, 220, 58, 5);
+  hub(Ww, d3, 66, 6); link(Ww, d3, 75, 46, 7);
+  const go = 12 + s.grip * 26;
+  [-1, 1].forEach((sg, j) => B.push(box(add(Tw, p3, sg * go), d3, 58, p3, 13 * s.wF(8 + j), n, 34 * dep * s.wF(8 + j), 8 + j)));
+  return { B, k, Tw, d3 };
+}
+function shade(nc) {
+  const l = 0.3 + 0.7 * Math.max(0, dot(nc, LIGHT));
+  return l < 0.86 ? mixc(C.ink, C.or, l / 0.86) : mixc(C.or, C.white, (l - 0.86) / 0.14 * 0.45);
+}
+function drawGrid(t, s) {
+  const pin = i => expo((t - 2.0 - i * 0.011) / 0.38) * (1 - expoIn((t - 5.5 - i * 0.004) / 0.3));
+  const lines = []; const Z = -170;
+  for (let x = -720; x <= 960; x += 80) lines.push([[x, 0, Z], [x, 720, Z]]);
+  for (let y = 0; y <= 720; y += 80) lines.push([[-720, y, Z], [960, y, Z]]);
+  for (let x = -720; x <= 960; x += 80) lines.push([[x, 0, Z], [x, 0, 620]]);
+  for (let z = Z + 80; z <= 620; z += 80) lines.push([[-720, 0, z], [960, 0, z]]);
+  ctx.save(); ctx.strokeStyle = C.or; ctx.globalAlpha = 0.24; ctx.lineWidth = 1.5;
+  lines.forEach((L, i) => {
+    const p = pin(i); if (p <= 0.001) return;
+    const b = [lerp(L[0][0], L[1][0], p), lerp(L[0][1], L[1][1], p), lerp(L[0][2], L[1][2], p)];
+    const A = P2(L[0], s), Bp = P2(b, s);
+    ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(Bp[0], Bp[1]); ctx.stroke();
+  });
+  ctx.restore();
+}
+function drawHardware(t) {
+  if (t < 1.95 || t > 6.3) return;
+  const s = armState(t);
+  drawGrid(t, s);
+  if (t < 5.95) {
+    const { B } = armBoxes(s);
+    const F = camF(s) / SC, faces = [];
+    B.forEach(b => {
+      const cc = b.c.map(p => cam(p, s));
+      FACES.forEach(([idx, ax, sg]) => {
+        const nw = b.ax[ax].map(v => v * sg), nc = rot(nw, s);
+        const ctr = [0, 1, 2].map(j => idx.reduce((a, i) => a + cc[i][j], 0) / 4);
+        if (dot(nc, [ctr[0], ctr[1], ctr[2] + F]) > 1e-6) return;
+        faces.push({ pts: idx.map(i => proj(cc[i], s)), z: ctr[2], nc, id: b.id });
+      });
+    });
+    faces.sort((a, b) => b.z - a.z);
+    faces.forEach(f => {
+      const fp = s.fill(f.id);
+      ctx.beginPath(); f.pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
+      ctx.fillStyle = fp > 0 ? blendFill(shade(f.nc), fp) : C.bg; ctx.fill();
+      ctx.lineJoin = 'round'; ctx.lineWidth = 2.5; ctx.strokeStyle = mixc(C.or, '#120C0A', fp); ctx.stroke();
+    });
+    // blueprint annotations: joint rings + dimension lines (flat phase only)
+    const k = armFK(s), J = [k.S, k.E, k.W].map(p => P2(toW(p[0], p[1], s), s));
+    ctx.save(); ctx.strokeStyle = C.or; ctx.lineWidth = 2.5;
+    J.forEach((p, i) => {
+      const a = spring(t - 2.55 - i * 0.06, 22) * (1 - expoIn((t - 3.0 - i * 0.03) / 0.2));
+      if (a < 0.01) return;
+      const r = 22 * a;
+      ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p[0] - r * 1.7, p[1]); ctx.lineTo(p[0] + r * 1.7, p[1]); ctx.moveTo(p[0], p[1] - r * 1.7); ctx.lineTo(p[0], p[1] + r * 1.7); ctx.stroke();
+    });
+    [[J[0], J[1], 1], [J[1], J[2], 1]].forEach(([a, b], i) => {
+      const pi = expo((t - 2.62 - i * 0.08) / 0.3) * (1 - expoIn((t - 3.0) / 0.2)); if (pi < 0.01) return;
+      const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy), nx = -dy / l * 78, ny = dx / l * 78;
+      const A = [a[0] + nx, a[1] + ny], Bq = [lerp(A[0], b[0] + nx, pi), lerp(A[1], b[1] + ny, pi)];
+      ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(Bq[0], Bq[1]);
+      [A, Bq].forEach(p => { ctx.moveTo(p[0] - nx * .14, p[1] - ny * .14); ctx.lineTo(p[0] + nx * .14, p[1] + ny * .14); });
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+  // the blinking cursor the gripper picks up
+  if (t >= 5.0 && t < 6.2) {
+    const sAt = armState(Math.min(Math.max(t, 5.0), 5.5) < 5.5 ? 5.3 : t);
+    const k = armFK(sAt);
+    const cp = [k.T[0] + k.d3[0] * 38, k.T[1] + k.d3[1] * 38];
+    const pr = P2(toW(cp[0], cp[1], sAt), sAt);
+    const ap = spring(t - 5.0, 24);
+    const cr = caretBox(t);
+    const mv = expoIO((t - 5.82) / 0.36);
+    const x = lerp(pr[0], cr.x, mv), yc = lerp(pr[1], (cr.y0 + cr.y1) / 2, mv), hh = lerp(80 * pr[2] * SC, cr.y1 - cr.y0, mv) * ap;
+    const cw = lerp(10, 9 * LBIG, mv); ctx.fillStyle = C.bl; ctx.fillRect(x - cw / 2, yc - hh / 2, cw, hh);
+  }
+  drawLabel(t, [['HARDWARE', C.or], [' — ROBOT ARMS', C.white]], 2.0, 5.55);
+}
+function blendFill(col, p) {
+  // mix bg -> shaded colour; col is rgb(...) string
+  const m = col.match(/\d+/g).map(Number), b = rgb(C.bg);
+  return `rgb(${m.map((v, i) => Math.round(lerp(b[i], v, clamp(p)))).join(',')})`;
+}
+
+/* =====================================================================
+   SOFTWARE — career exploration site builds itself
+   ===================================================================== */
+const SW_LABEL = [['SOFTWARE', C.bl], [' — CAREER EXPLORER', C.white]];
+const SW_TEXT = 'SOFTWARE — CAREER EXPLORER';
+const CARD = { y: 220, w: 534, h: 520, gap: 39 };
+const cardX = i => 120 + i * (CARD.w + CARD.gap);
+const BAR = { dy: 430, pad: 40, h: 16 };
+const VALS = [0.58, 0.42, 0.86];
+function labelW(n) { ctx.font = font(900, 64); return ctx.measureText(SW_TEXT.slice(0, n)).width; }
+function typedN(t) { return t < 6.12 ? 0 : clamp(Math.floor((t - 6.12) / 0.024) + 1, 0, SW_TEXT.length); }
+const LBIG = 1.5;
+function labXf(t) {
+  const full = labelW(SW_TEXT.length), p = expoIO((t - 6.95) / 0.42);
+  return { x: lerp(960 - full * LBIG / 2, 120, p), y: lerp(540 + LAB.cap * LBIG / 2, 990, p), s: lerp(LBIG, 1, p) };
+}
+function caretBox(t) {
+  const n = typedN(t), L = labXf(t);
+  let x = L.x + (labelW(n) + 12) * L.s, y0 = L.y - (LAB.cap + 12) * L.s, y1 = L.y + 14 * L.s;
+  if (t >= 8.7) {
+    const p = expoIO((t - 8.7) / 0.3);
+    const bx = cardX(2) + BAR.pad + (CARD.w - 2 * BAR.pad) * VALS[2] + 14, by = CARD.y + BAR.dy + BAR.h / 2;
+    x = lerp(x, bx, p); y0 = lerp(y0, by - 34, p); y1 = lerp(y1, by + 34, p);
+  }
+  if (t >= 9.5) { const p = expoIn((t - 9.5) / 0.16), m = (y0 + y1) / 2; y0 = lerp(y0, m, p); y1 = lerp(y1, m, p); }
+  return { x, y0, y1 };
+}
+function caretVisible(t) {
+  if (t >= 6.75 && t < 8.7) return Math.floor((t - 6.75) / 0.25) % 2 === 0;
+  if (t >= 9.62) return false;
+  return true;
+}
+function glyph(i, x, y) {
+  ctx.save(); ctx.strokeStyle = C.bl; ctx.fillStyle = C.bl; ctx.lineWidth = 10; ctx.lineJoin = 'miter';
+  ctx.translate(x + 36, y + 36);
+  if (i === 0) { ctx.beginPath(); for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3 + Math.PI / 6; ctx[k ? 'lineTo' : 'moveTo'](Math.cos(a) * 34, Math.sin(a) * 34); } ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 10, 0, 7); ctx.fill(); }
+  if (i === 1) { ctx.beginPath(); ctx.moveTo(0, -34); ctx.lineTo(32, 28); ctx.lineTo(-32, 28); ctx.closePath(); ctx.stroke(); }
+  if (i === 2) { ctx.fillRect(-36, -12, 72, 24); ctx.fillRect(-12, -36, 24, 72); }
+  ctx.restore();
+}
+function drawCard(i, t, x, y, sc, clipRect) {
+  ctx.save();
+  ctx.translate(x + CARD.w / 2, y + CARD.h / 2); ctx.scale(sc, sc); ctx.translate(-CARD.w / 2, -CARD.h / 2);
+  const body = clipRect || [0, 0, CARD.w, CARD.h];
+  ctx.fillStyle = C.white; ctx.fillRect(...body);
+  ctx.beginPath(); ctx.rect(...body); ctx.clip();
+  glyph(i, 40, 40);
+  ctx.fillStyle = C.ink; ctx.font = font(900, 58); ctx.fillText(['Engineer', 'Designer', 'Game Developer'][i], 40, 380);
+  ctx.fillStyle = C.grey; ctx.fillRect(BAR.pad, BAR.dy, CARD.w - 2 * BAR.pad, BAR.h);
+  ctx.restore();
+}
+function barFill(i, t) {
+  const L = 7.5 + 0.5 * i; let v = VALS[i] * expo((t - L - 0.12) / 0.4);
+  if (i === 2) v = lerp(v, 1, expo((t - 9.0) / 0.22));
+  return v;
+}
+function drawSoftware(t) {
+  if (t < 5.95 || t >= 10.0) return;
+  // column grid grows out of the caret
+  const cx0 = 120 + labelW(SW_TEXT.length) + 12;
+  ctx.save(); ctx.strokeStyle = C.bl; ctx.globalAlpha = 0.3; ctx.lineWidth = 1.5;
+  for (let i = 0; i <= 12; i++) {
+    const x = 120 + i * 140;
+    const p = expo((t - 7.0 - Math.abs(x - cx0) / 1680 * 0.3) / 0.35) * (1 - expoIn((t - 9.5 - i * 0.008) / 0.25));
+    if (p <= 0.001) continue;
+    ctx.beginPath(); ctx.moveTo(x, 930); ctx.lineTo(x, lerp(930, 160, p)); ctx.stroke();
+  }
+  ctx.restore();
+  // nav
+  const np = expo((t - 7.15) / 0.4), nout = expoIn((t - 9.5) / 0.25);
+  if (np > 0.001 && nout < 1) {
+    ctx.fillStyle = C.bl;
+    ctx.fillRect(lerp(120, 1800, nout), 128, (1800 - 120) * np * (1 - nout), 3);
+    const pop = (d) => spring(t - d, 24) * (1 - nout);
+    const s0 = pop(7.25); ctx.fillRect(120 + 20 - 20 * s0, 70 + 20 - 20 * s0, 40 * s0, 40 * s0);
+    [1370, 1520, 1670].forEach((x, j) => {
+      const s = pop(7.32 + j * 0.06); if (s < 0.01) return;
+      ctx.save(); ctx.translate(x + 65, 90); ctx.scale(s, s);
+      ctx.beginPath(); ctx.roundRect(-65, -20, 130, 40, 20);
+      if (j === 2) { ctx.fillStyle = C.bl; ctx.fill(); } else { ctx.strokeStyle = C.bl; ctx.lineWidth = 3; ctx.stroke(); }
+      ctx.restore();
+    });
+  }
+  // cards land on the beat
+  for (let i = 0; i < 3; i++) {
+    const L = 7.5 + 0.5 * i; if (t < L) continue;
+    const y = tt => CARD.y - (1 - expo((tt - L) / 0.28)) * 980 + (i < 2 ? -Math.pow(clamp((tt - 9.5 - i * 0.04) / 0.24), 2) * 900 : 0);
+    const press = i === 2 ? 1 - 0.035 * Math.sin(clamp((t - 9.0) / 0.2) * Math.PI) : 1;
+    let clipR = null, x = cardX(i);
+    if (i === 2 && t >= 9.5) {
+      const p = expoIO((t - 9.5) / 0.25);
+      clipR = [lerp(0, BAR.pad, p), lerp(0, BAR.dy, p), lerp(CARD.w, CARD.w - 2 * BAR.pad, p), lerp(CARD.h, BAR.h, p)];
+    }
+    const draw = tt => {
+      const yy = y(tt);
+      if (!(i === 2 && t >= 9.72)) drawCard(i, t, x, yy, press, clipR);
+      // progress bar
+      const v = barFill(i, t), col = i === 2 ? mixc(C.bl, C.li, expo((t - 9.05) / 0.15)) : C.bl;
+      let bx = x + BAR.pad, by = yy + BAR.dy, bw = (CARD.w - 2 * BAR.pad) * v, bh = BAR.h;
+      if (i === 2 && t >= 9.72) {
+        const p = expoIO((t - 9.72) / 0.28);
+        bx = lerp(bx, 120, p); by = lerp(by, 100, p); bw = lerp(CARD.w - 2 * BAR.pad, 1680, p); bh = lerp(BAR.h, 35, p);
+      }
+      ctx.save();
+      ctx.translate(x + CARD.w / 2, yy + CARD.h / 2); ctx.scale(i === 2 && t >= 9.72 ? 1 : press, i === 2 && t >= 9.72 ? 1 : press); ctx.translate(-(x + CARD.w / 2), -(yy + CARD.h / 2));
+      ctx.fillStyle = col; ctx.fillRect(bx, by, bw, bh);
+      ctx.restore();
+    };
+    if (t - L < 0.35 || (i < 2 && t > 9.5)) smear(t, draw, 12, 1 / 60); else draw(t);
+  }
+  drawTypedLabel(t);
+}
+function drawTypedLabel(t) {
+  const n = typedN(t); if (n === 0) return;
+  const L = labXf(t);
+  ctx.save(); ctx.translate(L.x, L.y); ctx.scale(L.s, L.s); ctx.font = font(900, 64);
+  ctx.beginPath(); ctx.rect(-20, -LAB.cap - 20, W, LAB.cap + 34); ctx.clip();
+  const dy = Math.pow(clamp((t - 9.42) / 0.2), 2) * 90;
+  const s = SW_TEXT.slice(0, n);
+  ctx.fillStyle = C.bl; ctx.fillText(s.slice(0, 8), 0, dy);
+  if (n > 8) { ctx.fillStyle = C.white; ctx.fillText(s.slice(8), labelW(8), dy); }
+  ctx.restore();
+}
+
+/* =====================================================================
+   GAME DEV — pixel fighter (drawn on a 384x216 layer, 5px pixels)
+   ===================================================================== */
+const FLOOR = 176;
+const POSE = {
+  stance: { tor: -78, fu: 40, ff: -65, bu: 75, bf: -50, ft: 65, fs: 95, bt: 115, bs: 100 },
+  jab:    { tor: -72, fu: -2, ff: -2, bu: 80, bf: -60, ft: 60, fs: 95, bt: 118, bs: 100 },
+  hurt:   { tor: -104, fu: 75, ff: 25, bu: 115, bf: 45, ft: 72, fs: 100, bt: 110, bs: 95 },
+  kick:   { tor: -118, fu: 60, ff: -40, bu: 110, bf: -30, ft: -8, fs: -2, bt: 95, bs: 92 },
+  upper:  { tor: -66, fu: -80, ff: -96, bu: 110, bf: 50, ft: 35, fs: 115, bt: 125, bs: 70 },
+  launch: { tor: -150, fu: -165, ff: -172, bu: -140, bf: -150, ft: 20, fs: 50, bt: 40, bs: 70 },
+  lying:  { tor: -180, fu: -200, ff: -186, bu: -160, bf: -176, ft: 4, fs: 0, bt: -6, bs: 4 },
+  win:    { tor: -88, fu: -84, ff: -92, bu: 100, bf: -40, ft: 68, fs: 92, bt: 112, bs: 98 },
+};
+const KEYS_O = [[10.0, 'stance'], [11.0, 'jab'], [11.2, 'stance'], [11.52, 'hurt'], [11.75, 'stance'], [12.0, 'upper'], [12.5, 'stance'], [13.0, 'win']];
+const KEYS_B = [[10.0, 'stance'], [11.05, 'hurt'], [11.25, 'stance'], [11.5, 'kick'], [11.72, 'stance'], [12.0, 'launch'], [12.6, 'lying']];
+function poseAt(keys, t) {
+  let i = 0; while (i + 1 < keys.length && keys[i + 1][0] <= t) i++;
+  if (i === 0) return POSE[keys[0][1]];
+  const A = POSE[keys[i - 1][1]], B = POSE[keys[i][1]], f = expo((t - keys[i][0]) / 0.09), o = {};
+  for (const k in A) o[k] = lerp(A[k], B[k], f);
+  return o;
+}
+const bob = t => (t >= 10.5 && t < 12.0) ? 1.6 * Math.exp(-((t - 10.5) % 0.5) * 12) : 0;
+function fighterO(t) {
+  const x = 140 + 10 * expo((t - 10.5) / 0.2) + 5 * expo((t - 11.0) / 0.08) * (1 - expo((t - 11.2) / 0.15))
+    - 6 * expo((t - 11.52) / 0.1) * (1 - expo((t - 11.75) / 0.2)) + 10 * expo((t - 12) / 0.15) * (1 - 0.5 * expo((t - 12.5) / 0.3));
+  const y = FLOOR - 25 + bob(t) - 13 * Math.sin(Math.PI * clamp((t - 12) / 0.5));
+  return { x, y, f: 1, pose: poseAt(KEYS_O, t), col: C.or };
+}
+function fighterB(t) {
+  let x = 244 - 10 * expo((t - 10.5) / 0.2) + 5 * expo((t - 11.05) / 0.08) * (1 - expo((t - 11.25) / 0.15)) - 4 * expo((t - 11.5) / 0.1) * (1 - expo((t - 11.72) / 0.2));
+  let y = FLOOR - 25 + bob(t);
+  if (t >= 12) { const u = clamp((t - 12) / 0.62); x += 72 * (1 - (1 - u) * (1 - u)); y = lerp(FLOOR - 25, FLOOR - 5, u) - 62 * 4 * u * (1 - u); }
+  return { x, y, f: -1, pose: poseAt(KEYS_B, t), col: C.bl };
+}
+function rig(F) {
+  const p = F.pose, d = a => [F.f * Math.cos(a * D2R), Math.sin(a * D2R)];
+  const Hp = [F.x, F.y], add2 = (P, a, L) => { const v = d(a); return [P[0] + v[0] * L, P[1] + v[1] * L]; };
+  const N = add2(Hp, p.tor, 22), Sh = add2(Hp, p.tor, 19), head = add2(Hp, p.tor, 29);
+  const bE = add2(Sh, p.bu, 10), bH = add2(bE, p.bf, 10), fE = add2(Sh, p.fu, 10), fH = add2(fE, p.ff, 10);
+  const bK = add2(Hp, p.bt, 13), bF = add2(bK, p.bs, 13), fK = add2(Hp, p.ft, 13), fF = add2(fK, p.fs, 13);
+  return { Hp, N, Sh, head, bE, bH, fE, fH, bK, bF, fK, fF };
+}
+function drawFighter(F, t, origin, ink) {
+  const r = rig(F), back = ink || mixc(F.col, C.ink, 0.42), fr = ink || F.col;
+  const parts = [[r.Sh, r.bE, 5, back], [r.bE, r.bH, 5, back], [r.Hp, r.bK, 6, back], [r.bK, r.bF, 5, back],
+                 [r.Hp, r.N, 9, fr], ['head', r.head, 11, fr], [r.Hp, r.fK, 6, fr], [r.fK, r.fF, 5, fr], [r.Sh, r.fE, 5, fr], [r.fE, r.fH, 5, fr]];
+  lx.lineCap = 'square';
+  parts.forEach((pt, k) => {
+    const e = expo((t - 10.05 - k * 0.03) / 0.28);
+    const mid = pt[0] === 'head' ? pt[1] : [(pt[0][0] + pt[1][0]) / 2, (pt[0][1] + pt[1][1]) / 2];
+    const o = origin(k), ox = (1 - e) * (o[0] - mid[0]), oy = (1 - e) * (o[1] - mid[1]);
+    if (pt[0] === 'head') { lx.fillStyle = pt[3]; lx.fillRect(Math.round(pt[1][0] - 5.5 + ox), Math.round(pt[1][1] - 5.5 + oy), 11, 11); return; }
+    lx.strokeStyle = pt[3]; lx.lineWidth = pt[2];
+    lx.beginPath(); lx.moveTo(pt[0][0] + ox, pt[0][1] + oy); lx.lineTo(pt[1][0] + ox, pt[1][1] + oy); lx.stroke();
+  });
+}
+function health(t, side) {
+  let v, tr;
+  if (side === 'R') { v = 1 - 0.3 * expo((t - 11.05) / 0.08) - 0.7 * expo((t - 12.0) / 0.3); tr = 1 - 0.3 * expo((t - 11.3) / 0.25) - 0.7 * expo((t - 12.35) / 0.35); }
+  else { v = 1 - 0.38 * expo((t - 11.6) / 0.08); tr = 1 - 0.38 * expo((t - 11.85) / 0.25); }
+  const rf = expo((t - 13.18) / 0.2);
+  return [lerp(v, 1, rf), lerp(Math.max(v, tr), 1, rf)];
+}
+function drawGame(t) {
+  if (t < 10.0 || t >= 13.66) return;
+  lx.setTransform(1, 0, 0, 1, 0, 0); lx.clearRect(0, 0, 384, 216);
+  const hitF = t >= 12.0 && t < 12.05;
+  if (hitF) { lx.fillStyle = C.li; lx.fillRect(0, 0, 384, 216); }
+  const ex = expoIn((t - 13.4) / 0.25);
+  const O = fighterO(t), Bf = fighterB(t);
+  // world camera: push in through bar 6, punch at the K.O., track the action sideways
+  const z = 1 + 0.13 * expoIO((t - 10.5) / 1.5) + 0.12 * expo((t - 12) / 0.1) * (1 - expoIO((t - 12.25) / 0.7));
+  const mid = (O.x + Bf.x) / 2, track = (192 - mid) * 0.6 * expoIO((t - 10.5) / 1.5);
+  lx.save();
+  lx.translate(192, 170); lx.scale(z, z); lx.translate(-192 + track, -170 + ex * 140);
+  // floor
+  const fp = expo((t - 10.0) / 0.3);
+  lx.fillStyle = hitF ? C.ink : C.white; lx.fillRect(192 - 260 * fp, FLOOR, 520 * fp, 1);
+  lx.fillStyle = hitF ? C.ink : C.dark;
+  for (let x = -60; x < 444; x += 12) { if (Math.abs(x + 3 - 192) < 260 * fp) lx.fillRect(x, FLOOR + 4, 6, 1); }
+  // fighters (assembled out of the health bars)
+  const oL = k => [24 + 150 * (k / 9), 23 - track], oR = k => [360 - 150 * (k / 9), 23 - track];
+  drawFighter(Bf, t, oR, hitF ? C.ink : null);
+  drawFighter(O, t, oL, hitF ? C.ink : null);
+  // shock rings at the K.O.
+  if (t >= 12.0 && t < 12.5) {
+    const hb = rig(fighterB(12.0)).head;
+    [[0, C.li], [0.07, C.white]].forEach(([d, col]) => {
+      const p = expo((t - 12.0 - d) / 0.35); if (t < 12 + d) return;
+      const rr = 6 + 64 * p, lw = Math.max(0, 5 * (1 - p));
+      if (lw < 0.6) return;
+      lx.strokeStyle = hitF ? C.ink : col; lx.lineWidth = lw; lx.lineCap = 'butt'; lx.strokeRect(hb[0] - rr, hb[1] - rr, rr * 2, rr * 2);
+    });
+  }
+  lx.restore();
+  // K . O .
+  lx.font = font(900, 64);
+  const wK = lx.measureText('K.').width, wO = lx.measureText('O.').width, gp = 8, x0 = 192 - (wK + gp + wO) / 2, by = 104 + ex * 160;
+  [['K.', x0, wK, 12.5], ['O.', x0 + wK + gp, wO, 13.0]].forEach(([s, x, w, t0]) => {
+    if (t < t0) return;
+    const sc = 1 + 1.7 * (1 - expo((t - t0) / 0.16));
+    lx.save(); lx.translate(x + w / 2, by - 23); lx.scale(sc, sc); lx.fillStyle = C.li; lx.fillText(s, -w / 2, 23); lx.restore();
+  });
+  // HUD — health bars split out of the career bar
+  if (t < 13.4) {
+    const g = expo((t - 10.0) / 0.25), fr = expo((t - 10.06) / 0.2);
+    const Lb = [24, lerp(192, 180, g)], Rb = [lerp(192, 204, g), 360];
+    const [hL, tL] = health(t, 'L'), [hR, tR] = health(t, 'R');
+    lx.fillStyle = C.white;
+    if (fr > 0.01) { lx.globalAlpha = 1; lx.fillRect(Lb[0] - 1, 19, (Lb[1] - Lb[0] + 2) * fr, 9); lx.fillRect(Rb[1] + 1 - (Rb[1] - Rb[0] + 2) * fr, 19, (Rb[1] - Rb[0] + 2) * fr, 9); }
+    lx.fillStyle = C.ink; lx.fillRect(Lb[0], 20, Lb[1] - Lb[0], 7); lx.fillRect(Rb[0], 20, Rb[1] - Rb[0], 7);
+    const wl = Lb[1] - Lb[0], wr = Rb[1] - Rb[0];
+    lx.fillStyle = C.white; lx.fillRect(Lb[0], 20, wl * tL, 7); lx.fillRect(Rb[1] - wr * tR, 20, wr * tR, 7);
+    lx.fillStyle = C.li; lx.fillRect(Lb[0], 20, wl * hL, 7); lx.fillRect(Rb[1] - wr * hR, 20, wr * hR, 7);
+  }
+  // label, snapped to the pixel grid
+  lx.save(); lx.beginPath(); lx.rect(0, 180, 384, 21); lx.clip();
+  lx.font = font(900, 13);
+  const dy = (1 - expo((t - 10.05) / 0.3)) * 20 + ex * 20;
+  lx.fillStyle = C.li; lx.fillText('GAME DEV', 24, 198 + dy);
+  lx.fillStyle = C.white; lx.fillText(' — 2D FIGHTER', 24 + lx.measureText('GAME DEV').width, 198 + dy);
+  lx.restore();
+  // hard alpha threshold = real pixels, no anti-aliasing
+  const im = lx.getImageData(0, 0, 384, 216), d = im.data;
+  for (let i = 3; i < d.length; i += 4) d[i] = d[i] >= 120 ? 255 : 0;
+  lx.putImageData(im, 0, 0);
+  ctx.imageSmoothingEnabled = false; ctx.drawImage(low, 0, 0, W, H); ctx.imageSmoothingEnabled = true;
+  // bars leave the pixel grid and slide together into one line
+  if (t >= 13.4) {
+    const p = expoIO((t - 13.4) / 0.22), col = mixc(C.li, C.white, p);
+    ctx.fillStyle = col;
+    ctx.fillRect(lerp(115, 660, p), lerp(95, 532, p), lerp(790, 300, p), lerp(45, 16, p));
+    ctx.fillRect(lerp(1015, 960, p), lerp(95, 532, p), lerp(790, 300, p), lerp(45, 16, p));
+  }
+}
+
+/* =====================================================================
+   THE LINE — one stroke through the whole piece
+   ===================================================================== */
+function hero(t) {
+  if (t < 0.5) { const p = spring(t, 16); return { pts: morph(R.line0, R.abig, p), w: lerp(16, ABIG.w, p), col: C.white, clip: ABIG.base }; }
+  if (t < 1.55) { const p = spring(t - 0.5, 18); return { pts: morph(R.abig, R.a1, p), w: lerp(ABIG.w, LK1.stem, p), col: C.white, clip: lerp(ABIG.base, LK1.base1, p) }; }
+  if (t < 2.0) { const p = spring(t - 1.55, 15); return { pts: morph(R.a1, resample(skel2D(armState(t))), p), w: lerp(LK1.stem, 14, p), col: mixc(C.white, C.or, p), clip: lerp(LK1.base1, H + 400, p) }; }
+  if (t < 5.7) { const w = 14 * (1 - expo((t - 2.5) / 0.3)); return w < 0.3 ? null : { pts: skel2D(armState(t)), w, col: C.or }; }
+  if (t < 5.9) return { pts: skel2D(armState(t)), w: 10 * expo((t - 5.7) / 0.15), col: C.or };
+  if (t < 6.35) {
+    const p = spring(t - 5.9, 16), c = caretBox(t);
+    return { pts: morph(resample(skel2D(armState(t))), resample([[c.x, c.y0], [c.x, c.y1]]), p), w: lerp(10, 9 * LBIG, p), col: mixc(C.or, C.bl, p) };
+  }
+  if (t < 9.66) { if (!caretVisible(t)) return null; const c = caretBox(t); return { pts: [[c.x, c.y0], [c.x, c.y1]], w: 9 * labXf(t).s, col: C.bl }; }
+  if (t < 13.6) return null;
+  if (t < 14.75) { const p = spring(t - 13.6, 24); return { pts: morph(R.line0, R.ae, p), w: lerp(16, LKE.stem, p), col: C.white, clip: lerp(H + 400, LKE.base1, p) }; }
+  const p = expoIO((t - 14.72) / 0.26);
+  return { pts: morph(R.ae, R.line0, p), w: lerp(LKE.stem, 16, p), col: C.white, clip: lerp(LKE.base1, H + 400, p) };
+}
+
+/* =====================================================================
+   seek(t)
+   ===================================================================== */
+window.seek = function (t) {
+  t = ((t % DUR) + DUR) % DUR;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  ctx.textBaseline = 'alphabetic';
+  // hook + end title type
+  drawLockup(t, LK1, { lIn: 0.6, eIn: 1.0, out: 1.5 });
+  drawLockup(t, LKE, { lIn: 13.8, eIn: 13.95, tagIn: 14.05, out: 14.58 });
+  drawHardware(t);
+  drawSoftware(t);
+  drawGame(t);
+  const h = hero(t);
+  if (h && h.w > 0.2) {
+    ctx.save();
+    if (h.clip !== undefined) { ctx.beginPath(); ctx.rect(0, 0, W, h.clip); ctx.clip(); }
+    strokePoly(h.pts, h.w, h.col);
+    ctx.restore();
+  }
+};
+
+window.ready = (async () => {
+  await Promise.all([document.fonts.load(font(900, 100)), document.fonts.load(font(700, 100)), document.fonts.load(font(500, 100))]);
+  await document.fonts.ready;
+  initLayout();
+  window.seek(0);
+  return true;
+})();
+</script>
+<script>
+/* =====================================================================
+   SOUNDTRACK — Web Audio, rendered offline to a 15.0 s WAV
+   120 BPM: kick every beat, riser across bar 6, hit on every scene change,
+   one synthesized signature per team (servo whir / key clicks / 8-bit blips)
+   ===================================================================== */
+window.renderAudio = async function () {
+  const SR = 48000, N = SR * 15, ac = new OfflineAudioContext(2, N, SR);
+  const out = ac.createGain(); out.gain.value = 0.8;
+  const comp = ac.createDynamicsCompressor();
+  comp.threshold.value = -18; comp.knee.value = 8; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.14;
+  out.connect(comp); comp.connect(ac.destination);
+  // deterministic noise
+  const nb = ac.createBuffer(1, SR * 2, SR), nd = nb.getChannelData(0); let sd = 12345;
+  for (let i = 0; i < nd.length; i++) { sd = (sd * 16807) % 2147483647; nd[i] = sd / 1073741823.5 - 1; }
+  const noise = (t, dur) => { const s = ac.createBufferSource(); s.buffer = nb; s.start(t, (t * 0.37) % 1, dur); return s; };
+  const env = (t, peak, att, dec) => { const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + att); g.gain.exponentialRampToValueAtTime(0.0001, t + att + dec); return g; };
+  const pan = (v) => { const p = ac.createStereoPanner(); p.pan.value = v; p.connect(out); return p; };
+  const filt = (type, f, Q = 0.7) => { const b = ac.createBiquadFilter(); b.type = type; b.frequency.value = f; b.Q.value = Q; return b; };
+  const osc = (type, f, t, dur) => { const o = ac.createOscillator(); o.type = type; o.frequency.setValueAtTime(f, t); o.start(t); o.stop(t + dur); return o; };
+
+  function kick(t, a = 1) {
+    const o = osc('sine', 155, t, 0.5); o.frequency.exponentialRampToValueAtTime(43, t + 0.12);
+    o.connect(env(t, a, 0.003, 0.42)).connect(out);
+    const n = noise(t, 0.03); n.connect(filt('highpass', 2500)).connect(env(t, 0.22 * a, 0.001, 0.02)).connect(out);
+  }
+  function hat(t, a = 0.1) { noise(t, 0.08).connect(filt('highpass', 7500)).connect(env(t, a, 0.001, 0.05)).connect(pan(0.25)); }
+  function bass(t, f, dur = 0.22, a = 0.28) {
+    [1, 1.006].forEach(dt => {
+      const o = osc('sawtooth', f * dt, t, dur + 0.05), lp = filt('lowpass', 1100, 4);
+      lp.frequency.setValueAtTime(1100, t); lp.frequency.exponentialRampToValueAtTime(160, t + dur);
+      o.connect(lp).connect(env(t, a, 0.004, dur)).connect(out);
+    });
+  }
+  function hit(t, big = false) {
+    const o = osc('sine', big ? 70 : 90, t, 1.2); o.frequency.exponentialRampToValueAtTime(36, t + 0.6);
+    o.connect(env(t, big ? 0.9 : 0.55, 0.002, big ? 1.0 : 0.55)).connect(out);
+    const n = noise(t, 0.8), lp = filt('lowpass', 7000, 0.8); lp.frequency.setValueAtTime(7000, t); lp.frequency.exponentialRampToValueAtTime(250, t + 0.5);
+    n.connect(lp).connect(env(t, big ? 0.55 : 0.32, 0.002, 0.5)).connect(out);
+    [523, 784].forEach((f, i) => osc('square', f, t, 0.25).connect(filt('bandpass', f * 2, 3)).connect(env(t, 0.05, 0.002, 0.2)).connect(pan(i ? 0.4 : -0.4)));
+  }
+  function whoosh(t, dur, up = true, a = 0.22) {
+    const n = noise(t, dur), bp = filt('bandpass', up ? 400 : 5000, 1.4);
+    bp.frequency.setValueAtTime(up ? 400 : 5000, t); bp.frequency.exponentialRampToValueAtTime(up ? 5000 : 300, t + dur);
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(a, t + dur * 0.75); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    n.connect(bp).connect(g).connect(out);
+  }
+  function click(t, a = 0.2, p = 0) {
+    noise(t, 0.02).connect(filt('highpass', 3200)).connect(env(t, a, 0.0008, 0.014)).connect(pan(p));
+    osc('sine', 2100, t, 0.03).connect(env(t, a * 0.25, 0.001, 0.012)).connect(pan(p));
+  }
+  function servo(t, dur) {
+    const o = osc('sawtooth', 70, t, dur + 0.05); o.frequency.exponentialRampToValueAtTime(150, t + dur * 0.6); o.frequency.exponentialRampToValueAtTime(95, t + dur);
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.16, t + 0.03); g.gain.setValueAtTime(0.16, t + dur - 0.06); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(filt('bandpass', 900, 3)).connect(g).connect(out);
+  }
+  function clamp_(t) {
+    [950, 1420].forEach(f => osc('square', f, t, 0.08).connect(filt('bandpass', f, 6)).connect(env(t, 0.12, 0.001, 0.06)).connect(out));
+    noise(t, 0.05).connect(filt('highpass', 2000)).connect(env(t, 0.2, 0.001, 0.04)).connect(out);
+  }
+  function blip(t, f, dur = 0.07, a = 0.09, p = 0) {
+    const o = osc('square', f, t, dur + 0.02); o.frequency.setValueAtTime(f * 1.5, t + dur / 2);
+    o.connect(env(t, a, 0.002, dur)).connect(pan(p));
+  }
+  function thump(t, a = 0.3) { const o = osc('sine', 260, t, 0.25); o.frequency.exponentialRampToValueAtTime(90, t + 0.12); o.connect(env(t, a, 0.002, 0.18)).connect(out); }
+  function snare(t, a) {
+    noise(t, 0.15).connect(filt('bandpass', 1900, 0.9)).connect(env(t, a, 0.001, 0.1)).connect(out);
+    osc('triangle', 190, t, 0.1).connect(env(t, a * 0.5, 0.001, 0.07)).connect(out);
+  }
+
+  // --- groove: kick on every beat, hats on the off-beats, bass by section
+  for (let b = 0; b < 30; b++) kick(b * 0.5, b === 24 ? 1.1 : 0.95);
+  for (let b = 0; b < 30; b++) hat(b * 0.5 + 0.25, 0.09);
+  const root = t => t < 2 ? 55 : t < 6 ? 43.65 : t < 10 ? 65.41 : t < 12 ? 49 : 55;
+  for (let b = 0; b < 30; b++) { const t = b * 0.5 + 0.25; bass(t, root(t)); }
+  // --- scene hits
+  [2.0, 6.0, 10.0].forEach(t => hit(t)); hit(12.0, true); hit(13.6);
+  // final chord on the end title
+  [110, 130.8, 164.8, 220].forEach((f, i) => {
+    const o = osc('sawtooth', f, 13.95, 1.05), lp = filt('lowpass', 1800, 1); lp.frequency.setValueAtTime(2400, 13.95); lp.frequency.exponentialRampToValueAtTime(400, 15);
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, 13.95); g.gain.exponentialRampToValueAtTime(0.05, 13.97); g.gain.setValueAtTime(0.05, 14.7); g.gain.exponentialRampToValueAtTime(0.0001, 15.0);
+    o.connect(lp).connect(g).connect(pan([-0.3, 0.3, -0.15, 0.15][i]));
+  });
+  // --- hook: type ticks
+  for (let i = 0; i < 4; i++) click(0.6 + i * 0.045, 0.12, 0.2);
+  for (let i = 0; i < 9; i++) click(1.0 + i * 0.022, 0.08, -0.2);
+  whoosh(1.4, 0.45, true, 0.18);
+  // --- hardware: servo whir on each joint move, clamp on the grip
+  whoosh(2.85, 0.5, true, 0.16);
+  servo(4.0, 0.34); servo(4.5, 0.32); servo(5.0, 0.36); clamp_(5.5); whoosh(5.55, 0.45, false, 0.14);
+  // --- software: key clicks while typing, thumps as cards land, mouse click
+  for (let i = 0; i < 26; i++) click(6.12 + i * 0.024, 0.16, ((i * 7) % 5 - 2) * 0.12);
+  thump(7.5); thump(8.0); thump(8.5); click(9.0, 0.35); click(9.08, 0.2); whoosh(9.45, 0.5, true, 0.16);
+  // --- game: assembly blips, riser across bar 6, 8-bit hits, K.O.
+  for (let k = 0; k < 20; k++) blip(10.05 + k * 0.03, 330 * Math.pow(2, (k % 10) / 12), 0.04, 0.05, k % 2 ? 0.3 : -0.3);
+  const arpG = [196, 247, 294, 392], arpA = [220, 262, 330, 440];
+  for (let i = 0; i < 16; i++) blip(10.5 + i * 0.125 - 0.5 * 0 , arpG[i % 4] * 2, 0.06, 0.035 + i * 0.002, (i % 2 ? 0.25 : -0.25));
+  for (let i = 0; i < 12; i++) blip(12.0 + i * 0.125, arpA[i % 4] * 2, 0.06, 0.05, (i % 2 ? 0.25 : -0.25));
+  { // riser
+    const n = noise(10.0, 2.0), bp = filt('bandpass', 300, 1.2); bp.frequency.setValueAtTime(300, 10); bp.frequency.exponentialRampToValueAtTime(7000, 12);
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, 10); g.gain.exponentialRampToValueAtTime(0.32, 11.98); g.gain.linearRampToValueAtTime(0.0001, 12.0);
+    n.connect(bp).connect(g).connect(out);
+    const o = osc('sawtooth', 55, 10, 2.0); o.frequency.exponentialRampToValueAtTime(440, 12);
+    const g2 = ac.createGain(); g2.gain.setValueAtTime(0.0001, 10); g2.gain.exponentialRampToValueAtTime(0.09, 11.98); g2.gain.linearRampToValueAtTime(0.0001, 12.0);
+    o.connect(filt('lowpass', 2500)).connect(g2).connect(out);
+    for (let i = 0; i < 8; i++) snare(11.0 + i * 0.0625, 0.05 + i * 0.02);
+    for (let i = 0; i < 8; i++) snare(11.5 + i * 0.0625, 0.2 + i * 0.03);
+  }
+  blip(11.0, 523, 0.06, 0.12); hit(11.0); blip(11.5, 392, 0.06, 0.12);
+  { const o = osc('square', 880, 12.0, 0.5); o.frequency.exponentialRampToValueAtTime(110, 12.45); o.connect(env(12.0, 0.1, 0.002, 0.45)).connect(out); }
+  [12.5, 13.0].forEach((t, i) => { thump(t, 0.4); blip(t, i ? 659 : 523, 0.12, 0.12); });
+  // bars refill + collapse into the line
+  for (let i = 0; i < 6; i++) blip(13.18 + i * 0.03, 440 * Math.pow(2, i / 6), 0.03, 0.05);
+  whoosh(13.3, 0.32, false, 0.18);
+  // end title type ticks, retract tick
+  for (let i = 0; i < 4; i++) click(13.8 + i * 0.045, 0.1, 0.2);
+  click(14.75, 0.2); whoosh(14.6, 0.4, false, 0.1);
+
+  const buf = await ac.startRendering();
+  const L = buf.getChannelData(0), Rr = buf.getChannelData(1);
+  let peak = 0; for (let i = 0; i < N; i++) peak = Math.max(peak, Math.abs(L[i]), Math.abs(Rr[i]));
+  const gain = 0.89 / (peak || 1);
+  const ab = new ArrayBuffer(44 + N * 4), dv = new DataView(ab);
+  const ws = (o, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(o + i, s.charCodeAt(i)); };
+  ws(0, 'RIFF'); dv.setUint32(4, 36 + N * 4, true); ws(8, 'WAVE'); ws(12, 'fmt '); dv.setUint32(16, 16, true);
+  dv.setUint16(20, 1, true); dv.setUint16(22, 2, true); dv.setUint32(24, SR, true); dv.setUint32(28, SR * 4, true);
+  dv.setUint16(32, 4, true); dv.setUint16(34, 16, true); ws(36, 'data'); dv.setUint32(40, N * 4, true);
+  for (let i = 0; i < N; i++) {
+    dv.setInt16(44 + i * 4, Math.round(clamp(L[i] * gain, -1, 1) * 32767), true);
+    dv.setInt16(46 + i * 4, Math.round(clamp(Rr[i] * gain, -1, 1) * 32767), true);
+  }
+  const u8 = new Uint8Array(ab); let bin = '';
+  for (let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+  return btoa(bin);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+out/beats/
+out/check/
+out/vcheck/
+out/segs.txt
+out/seg_*.mkv
