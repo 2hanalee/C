@@ -116,6 +116,60 @@
     var ico = tab.querySelector(".rec-ico");
     if (ico) ico.outerHTML = secret && !on ? ICON_LOCK : ICON_DOWN;
     setOpen(box.dataset.key, on);
+    syncRedact(box.dataset.key, on, fresh);
+  };
+
+  /* ── 먹칠 문장 ──
+     원문 문장을 그 자리에서 가린다. 같은 사실을 담은 가려진 기록과 열쇠(key)를 함께 써서,
+     어느 쪽을 열든 둘 다 열린 상태가 된다. 내부용은 누르면 바로, 기밀은 경고창을 거쳐 열린다.
+     it: { lv, key, topic, owner, text }  text 는 화면에 보일 문장(◇는 이미 뺀 것). */
+  // 막대 길이를 문장 길이에 맞춘다. 한글과 한자는 전각 공백, 나머지는 반각 공백 하나로 바꾼다
+  var bar = function (s) {
+    return String(s).replace(/[\s\S]/g, function (ch) { return /[ᄀ-ᇿ　-鿿가-힯＀-￯]/.test(ch) ? "　" : " "; });
+  };
+  var redact = function (it) {
+    var secret = it.lv === 2;
+    var grade = secret ? "기밀" : "내부";
+    var open = isOpen(it.key);
+    return '<span class="redact' + (open ? " open" : "") + '" data-lv="' + it.lv + '" data-key="' + esc(it.key) + '"' +
+      ' data-topic="' + esc(it.topic) + '" data-owner="' + esc(it.owner || "") + '"' +
+      (open ? ' tabindex="-1"' : ' role="button" tabindex="0" aria-label="가려진 문장, ' + grade + '. 누르면 열람합니다"' + (secret ? ' aria-haspopup="dialog"' : "")) + ">" +
+      '<span class="redact-bar" aria-hidden="true"' + (open ? " hidden" : "") + ">" + bar(it.text) + "</span>" +
+      '<span class="redact-text"' + (open ? "" : " hidden") + ">" + esc(it.text) + "</span>" +
+      '<i class="redact-tag" aria-hidden="true">' + grade + "</i></span>";
+  };
+  var setRedact = function (el, on, fresh) {
+    var secret = el.dataset.lv === "2";
+    el.classList.toggle("open", on);
+    el.classList.toggle("just", !!(on && fresh));
+    el.querySelector(".redact-bar").hidden = on;
+    el.querySelector(".redact-text").hidden = !on;
+    if (on) {
+      el.removeAttribute("role"); el.removeAttribute("aria-label"); el.removeAttribute("aria-haspopup");
+      el.setAttribute("tabindex", "-1");
+    } else {
+      el.setAttribute("role", "button"); el.setAttribute("tabindex", "0");
+      el.setAttribute("aria-label", "가려진 문장, " + (secret ? "기밀" : "내부") + ". 누르면 열람합니다");
+      if (secret) el.setAttribute("aria-haspopup", "dialog");
+    }
+  };
+  var each = function (sel, key, fn) {
+    Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) { if (el.dataset.key === key) fn(el); });
+  };
+  function syncRedact(key, on, fresh) {
+    each(".redact", key, function (el) { if (el.classList.contains("open") !== on) setRedact(el, on, fresh); });
+  }
+  // 먹칠 문장에서 열면 같은 열쇠의 가려진 기록도 함께 연다
+  var openKey = function (key) {
+    setOpen(key, true);
+    syncRedact(key, true, true);
+    each(".rec", key, function (box) { if (!box.classList.contains("open")) toggleRec(box, true, false); });
+  };
+  var tryRedact = function (el) {
+    if (el.classList.contains("open")) return;
+    if (el.dataset.lv === "2" && !confirmed) { askSecret(el); return; }
+    openKey(el.dataset.key);
+    el.focus();
   };
 
   /* 기밀 경고창. 페이지마다 하나만 만든다. */
@@ -155,7 +209,8 @@
       var box = pending;
       pending = null;
       shut();
-      if (box) toggleRec(box, true, true);
+      if (box && box.classList.contains("redact")) openKey(box.dataset.key);
+      else if (box) toggleRec(box, true, true);
     });
     // 바깥 어두운 곳을 누르면 닫는다
     sheet.addEventListener("click", function (e) { if (e.target === sheet) shut(); });
@@ -168,7 +223,7 @@
   var askSecret = function (box) {
     var dlg = buildSheet();
     pending = box;
-    lastFocus = box.querySelector(".rec-tab");
+    lastFocus = box.querySelector(".rec-tab") || box;
     var owner = box.dataset.owner;
     dlg.querySelector("#warn-about").textContent = (box.dataset.about ||
       "이 기록은 " + (owner ? owner + " " : "") + "「" + box.dataset.topic + "」에 관한 기밀입니다.") +
@@ -184,6 +239,17 @@
     var on = !box.classList.contains("open");
     if (on && box.dataset.lv === "2" && !confirmed) { askSecret(box); return; }
     toggleRec(box, on, on);
+  });
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest ? e.target.closest(".redact") : null;
+    if (el) tryRedact(el);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var el = e.target.closest ? e.target.closest('.redact[role="button"]') : null;
+    if (!el) return;
+    e.preventDefault();
+    tryRedact(el);
   });
 
   /* ── 대화 버튼: 설정에 등록된 플랫폼만 보여 준다 ── */
@@ -395,7 +461,7 @@
   window.BLACKOUT = {
     local: local, session: session,
     esc: esc, josa: josa, people: people, charById: charById,
-    rec: rec, records: records, hiddenSection: hiddenSection,
+    rec: rec, records: records, hiddenSection: hiddenSection, redact: redact,
     seen: seen, recent: recent, inkOn: inkOn, fillChat: fillChat, mark: mark,
   };
   /* ── 미리 불러오기 ──

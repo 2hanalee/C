@@ -195,6 +195,43 @@
     });
   };
 
+  /* ───── 과거 ─────
+     설정집 v3 의 인물 문단을 문장 그대로 싣는다. 가려진 기록과 같은 사실을 담은 문장은 먹칠로 가린다.
+     문장 항목: 글자면 공개, { t, ref } 면 같은 인물의 가려진 기록(주제)과 열쇠를 함께 쓰고,
+     { t, lv } 면 그 문장만의 등급으로 가린다. ◇ 표시는 화면에 그리지 않는다. */
+  var noDiamond = function (s) { return String(s).replace(/\s*◇/g, ""); };
+  var pastPart = function (c, it, slot) {
+    if (typeof it === "string") return { text: noDiamond(it) };
+    var ns = "c:" + c.id, key, lv, topic = it.ref;
+    if (it.ref) {
+      var i = c.internal.map(function (r) { return r.topic; }).indexOf(it.ref);
+      var s = c.secret.map(function (r) { return r.topic; }).indexOf(it.ref);
+      if (s !== -1) { key = ns + ":s" + s; lv = 2; } else { key = ns + ":i" + i; lv = 1; }
+    } else {
+      key = ns + ":" + slot; lv = it.lv; topic = "과거";
+    }
+    return { lv: lv, key: key, topic: topic, owner: c.name + "의", text: noDiamond(it.t) };
+  };
+  // 같은 기록을 가리키는 문장이 이어지면 막대 하나로 묶는다. 문장 사이는 원문처럼 공백 하나다
+  var pastLine = function (c, list, prefix) {
+    var parts = [];
+    list.forEach(function (it, n) {
+      var p = pastPart(c, it, prefix + n), last = parts[parts.length - 1];
+      if (p.key && last && last.key === p.key) last.text += " " + p.text;
+      else parts.push(p);
+    });
+    return parts.map(function (p) { return p.key ? B.redact(p) : esc(p.text); }).join(" ");
+  };
+  var pastHtml = function (c) {
+    if (!c.past || !c.past.length) return "";
+    var body = pastLine(c, c.past, "p");
+    var traces = (c.pastTraces || []).map(function (it, n) { return "<li>" + pastLine(c, [it], "t" + n) + "</li>"; }).join("");
+    var hidden = c.past.concat(c.pastTraces || []).some(function (it) { return typeof it !== "string"; });
+    return '<section class="sc-sec sc-past"><h2>과거</h2><p>' + body + "</p>" +
+      (traces ? '<h3 class="past-sub">남은 흔적</h3><ul class="past-traces">' + traces + "</ul>" : "") +
+      (hidden ? '<p class="past-note mono">검게 가린 문장은 누르면 열람할 수 있습니다.</p>' : "") + "</section>";
+  };
+
   /* ───── 상세 ───── */
   var renderDetail = function (c) {
     document.title = c.name + " · 블랙아웃";
@@ -240,6 +277,7 @@
               "<dt>성격</dt><dd>" + esc(c.traits.join(", ")) + "</dd>" +
             "</dl>" +
             '<section class="sc-sec"><h2>개요</h2><p>' + esc(c.summary) + "</p></section>" +
+            pastHtml(c) +
             (c.ability ? '<section class="sc-ability"><h2>능력</h2><p class="ab-name">' + esc(c.ability.name) + "</p><p>" + esc(c.ability.text) + "</p>" +
               (c.subs && c.subs.length ? '<dl class="ab-subs">' + c.subs.map(function (u) { return "<dt>" + esc(u.name) + "</dt><dd>" + esc(u.text) + "</dd>"; }).join("") + "</dl>" : "") +
               '<p class="ab-limit"><strong>한계</strong> ' + esc(c.ability.limit) + "</p></section>" : "") +

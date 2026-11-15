@@ -1265,3 +1265,32 @@ button.kw.term:hover { text-decoration-style: solid; }
     transform-origin: 0 50%; transform: scaleX(0); animation: read-line linear both; animation-timeline: scroll(root); }
 }
 @keyframes read-line { to { transform: scaleX(1); } }
+
+/* ───── 인사기록카드: 과거와 먹칠 (11월 15일) ─────
+   과거는 설정집 v3 인물 문단을 그대로 싣는다. 가린 문장은 그 자리를 검은 막대로 덮고,
+   막대 길이는 문장 길이에 맞춘다. 줄이 바뀌면 막대도 다음 줄로 이어진다. */
+.sc-past p { text-wrap: pretty; }
+.redact { border-radius: 1px; }
+.redact[role="button"] { cursor: pointer; position: relative; }
+.redact-bar { background: var(--sheet-ink); color: transparent; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  word-break: break-all; line-break: anywhere; border-radius: 1px; user-select: none; transition: background-color 0.15s ease; }
+/* 글줄 안의 막대도 누르기 쉽게 위아래 누름 영역을 넓힌다 */
+.redact[role="button"]::before { content: ""; position: absolute; inset: -0.6em 0; }
+.redact[role="button"]:hover .redact-bar { background: #2E3A43; }
+.redact[role="button"]:focus-visible { outline: none; }
+.redact[role="button"]:focus-visible .redact-bar { outline: 2px solid var(--char-ink, var(--brass-ink)); outline-offset: 2px; }
+.redact-tag { display: inline-block; margin-left: 0.3em; padding: 0 0.3em; font-family: var(--f-mono); font-style: normal; font-size: 0.68rem; line-height: 1.5;
+  letter-spacing: 0.04em; color: var(--rust-ink); box-shadow: inset 0 0 0 1px currentColor; border-radius: 2px; vertical-align: 0.15em; white-space: nowrap; }
+.redact[data-lv="1"] .redact-tag { color: var(--sheet-ink-3); }
+.redact.open .redact-text { background: linear-gradient(transparent 62%, rgba(138, 63, 63, 0.16) 62%); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.redact.open[data-lv="1"] .redact-text { background: linear-gradient(transparent 62%, rgba(78, 88, 94, 0.14) 62%); }
+.redact.open:focus { outline: none; }
+/* 방금 연 문장은 먹이 걷히듯 드러난다 */
+.redact.just .redact-text { animation: unredact 0.45s ease-out; }
+@keyframes unredact { from { background-color: var(--sheet-ink); color: transparent; } 60% { color: transparent; } to { background-color: transparent; } }
+.past-sub { margin-top: 0.4rem; font-family: var(--f-mono); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.06em; color: var(--sheet-ink-3); }
+.past-traces { display: grid; gap: 0.45rem; max-width: 40em; }
+.past-traces li { position: relative; padding-left: 1.1rem; line-height: 1.75; }
+.past-traces li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 0.45rem; height: 1px; background: var(--brass-line); }
+.past-note { font-size: 0.72rem; color: var(--sheet-ink-3); }
+@media (prefers-reduced-motion: reduce) { .redact.just .redact-text { animation: none; } .redact-bar { transition: none; } }
