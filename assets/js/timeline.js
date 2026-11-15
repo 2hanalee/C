@@ -41,11 +41,11 @@ window.ERAS = [
   {
     id: "truce", title: "휴전기",
     events: [
-      { when: "5년 전", title: "경계의 울음", level: 1, text: "레인 스타폴이 경계가 무너지는 곳을 쫓기 시작한다.", people: ["rain-starfall"] },
+      { when: "5년 전", title: "경계의 울음", level: 0, text: "레인 스타폴이 경계가 무너지는 곳을 쫓기 시작한다.", people: ["rain-starfall"] },
       { when: "5년 전", title: "예고 장부 성립", level: 2, text: "안개고개의 협상 통로가 굳어져 예고 장부가 된다." }, // ◇
+      { when: "4년 전", title: "감독관 파견", level: 0, text: "강태오가 외부 감독관으로 감독부에 파견된다.", people: ["kang-taeo"] },
       { when: "4년 전", title: "라그바르의 승좌", level: 0, text: "이계의 제6좌에 라그바르가 오른다.", people: ["lagbar"], topic: "thrones",
         more: [
-          { level: 1, text: "같은 해 강태오가 외부 감독관으로 감독부에 파견된다." },
           { level: 1, text: "늦가을, 이서현이 지하 공동구에서 이계 기생체 쿠오와 한 몸이 된다." },
         ] },
       { when: "3년 전", title: "폐항 사건", level: 0, text: "인천 북항 폐부두에서 사건이 일어난다. 상세는 공개되지 않았다.", place: "closed-pier",
