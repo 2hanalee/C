@@ -1,5 +1,7 @@
 out/beats/
 out/check/
 out/vcheck/
+out/tile_*/
+out/render.log
 out/segs.txt
 out/seg_*.mkv
