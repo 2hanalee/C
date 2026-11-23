@@ -122,11 +122,12 @@
   /* ── 먹칠 문장 ──
      원문 문장을 그 자리에서 가린다. 같은 사실을 담은 가려진 기록과 열쇠(key)를 함께 써서,
      어느 쪽을 열든 둘 다 열린 상태가 된다. 내부용은 누르면 바로, 기밀은 경고창을 거쳐 열린다.
-     it: { lv, key, topic, owner, text }  text 는 화면에 보일 문장(◇는 이미 뺀 것). */
-  // 막대 길이를 문장 길이에 맞춘다. 한글과 한자는 전각 공백, 나머지는 반각 공백 하나로 바꾼다
+     it: { lv, key, topic, owner, text }  text 는 화면에 보일 문장. */
+  // 막대 길이를 문장 길이에 맞춘다. 한글과 한자는 전각 글자, 나머지는 반각 글자 하나로 바꾼다(막대는 투명이라 글자는 보이지 않는다)
   var bar = function (s) {
-    return String(s).replace(/[\s\S]/g, function (ch) { return /[ᄀ-ᇿ　-鿿가-힯＀-￯]/.test(ch) ? "　" : " "; });
+    return String(s).replace(/[\s\S]/g, function (ch) { return /[\u1100-\u11ff\u3000-\u9fff\uac00-\ud7af\uff00-\uffef]/.test(ch) ? "\uac00" : /\s/.test(ch) ? "\u00a0" : "a"; });
   };
+
   var redact = function (it) {
     var secret = it.lv === 2;
     var grade = secret ? "기밀" : "내부";
@@ -337,7 +338,7 @@
     if (c.rank != null) { var rk = set("rk", String(c.rank)); if (rk) rk.setAttribute("aria-label", "랭킹 " + c.rank + "위"); }
     var traits = box.querySelector('[data-f="traits"]');
     if (traits) traits.innerHTML = c.traits.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
-    if (c.ability) { set("ab-name", c.ability.name); set("ab-text", c.ability.text + " " + c.ability.limit); }
+    if (c.ability) { set("ab-name", c.ability.name); set("ab-text", c.ability.text + (c.ability.limit ? " " + c.ability.limit : "")); }
     var n = (c.internal || []).length + (c.secret || []).length;
     set("note", n ? "이 기록에는 가려진 기록 " + n + "건이 붙어 있습니다. 카드를 열면 내부 기록과 기밀을 볼 수 있습니다." : "이 기록에는 가려진 기록이 없습니다.");
   });
@@ -360,9 +361,9 @@
      본문의 핵심어에 색을 준다. 한 문단에서 같은 말은 처음 한 번만.
      world.js 의 TERMS 에 정의가 있는 말은 누르면 설명 창이 열리는 단추가 되고, 없는 말은 색만 칠한다. */
   var KW = [
-    ["칠월의 밤", ""], ["침식의 5단계", "r"], ["침식", "r"], ["마모", "r"], ["회색 구역", "r"], ["이계 균류", "r"],
-    ["왕명", ""], ["칠좌", ""], ["경계인", ""], ["임시 봉합", ""], ["랭킹제", "b"], ["휴전", "b"], ["종전", "b"], ["만기", "b"],
-    ["4,172명", "r"], ["340미터의 흉터", ""], ["안전파", "b"], ["이윤파", "b"], ["진화파", "b"], ["위협 등급", "b"], ["판정위원회", "b"], ["홍보팀", "b"], ["파스텔 구역", ""], ["녹 구역", "r"],
+    ["인공 전투력 프로젝트", "b"], ["하란 아카데미", ""], ["역천의 군주", ""], ["왕의 패시브", "b"], ["별이 떨어진 밤", "r"],
+    ["칠왕정", ""], ["칠좌", ""], ["경계인", ""], ["기업 연합", "b"], ["상위권 심사", "b"], ["사건 동결", "b"], ["도전전", "b"],
+    ["공석", "r"], ["학생위원회", ""], ["감독부", ""], ["랭킹", "b"],
   ];
   var termByName = {};
   (window.TERMS || []).forEach(function (t) { termByName[t.term] = t; });

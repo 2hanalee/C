@@ -5,7 +5,7 @@ module.exports = async ({ browser, newPage, BASE, fail, out, overflow }) => {
   for (const v of ['phone', 'pc']) {
     const p = await newPage(browser, v);
     let termCount = 0;
-    for (const url of ['index.html', 'world.html#law', 'world.html#truce', 'timeline.html']) {
+    for (const url of ['index.html', 'world.html#academy', 'world.html#throne', 'timeline.html']) {
       await p.goto(BASE + url); await p.waitForTimeout(150);
       const n = await p.locator('button.term').count(); termCount += n;
       if (!n) { fail(`용어 단추 없음 ${v} ${url}`); continue; }

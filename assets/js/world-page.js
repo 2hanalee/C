@@ -17,7 +17,7 @@
   PLACES.forEach(function (p) { placeById[p.id] = p; });
 
   // 문서 머리에 놓는 세력 기호
-  var MARKS = { academy: "faction-academy", thrones: "celestis", consortium: "faction-consortium", "grey-zone": "faction-grey-zone" };
+  var MARKS = { academy: "faction-academy", throne: "celestis", consortium: "faction-consortium" };
   var ARROW = '<svg class="go-ico" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 7h9M8 3.5 11.5 7 8 10.5"/></svg>';
   var LOCK = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"/></svg>';
 
@@ -27,8 +27,8 @@
   var renderList = function () {
     document.title = "세계관 · 블랙아웃";
     app.innerHTML =
-      '<header class="page-head" data-ghost="ARCHIVE"><p class="kicker">방위청 공개 기록철</p><h1 class="lit">세계관</h1>' +
-        "<p>인천과 이계에 관한 공개 문서 " + DOCS.length + "건입니다. 번호 순서대로 읽으면 20년의 흐름이 이어집니다. 문서를 누르면 본문이 열립니다.</p></header>" +
+      '<header class="page-head" data-ghost="ARCHIVE"><p class="kicker">하란 아카데미 공개 기록철</p><h1 class="lit">세계관</h1>' +
+        "<p>하란 아카데미와 이계에 관한 공개 문서 " + DOCS.length + "건입니다. 문서를 누르면 본문이 열립니다.</p></header>" +
       '<ol class="folders">' + DOCS.map(function (d) {
         var n = hiddenCount(d);
         return '<li><span class="tab" aria-hidden="true">문서 ' + d.no + "</span>" +
@@ -44,12 +44,12 @@
 
   var seatsHtml = function () {
     return '<ol class="seats">' + SEATS.map(function (s) {
-      var c = B.charById[s.id];
-      return '<li><a class="plaque" href="characters.html#' + s.id + '" aria-label="' + esc(c ? c.name : s.id) + ' 기록 보기"><img src="assets/img/emblems/sm/seat-' + s.id + '.webp" alt="" loading="lazy"></a>' +
-        '<div class="who"><span class="seat-no">제' + s.seat + '좌</span><a href="characters.html#' + s.id + '">' + esc(c ? c.name : s.id) + ARROW + "</a>" +
-        "<span>" + esc(s.sin) + "의 자리, " + esc(s.law) + "의 법</span></div>" +
-        '<p><span class="mono">흔드는 것</span>' + esc(s.pillar) + "</p>" +
-        '<p><span class="mono">조건과 한계</span>' + esc(s.limit) + "</p></li>";
+      var c = B.charById[s.id] || {};
+      return '<li><a class="plaque" href="characters.html#' + s.id + '" aria-label="' + esc(c.name || s.id) + ' 기록 보기"><img src="assets/img/emblems/sm/seat-' + s.id + '.webp" alt="" loading="lazy"></a>' +
+        '<div class="who"><span class="seat-no">제' + s.seat + '좌</span><a href="characters.html#' + s.id + '">' + esc(c.name || s.id) + ARROW + "</a>" +
+        "<span>" + esc(s.sin) + "의 자리</span></div>" +
+        (c.ability ? '<p><span class="mono">고유능력</span>' + esc(c.ability.name) + "</p>" : "") +
+        (c.passive ? '<p><span class="mono">왕의 패시브</span>' + esc(c.passive.name) + "</p>" : "") + "</li>";
     }).join("") + "</ol>";
   };
 
@@ -79,7 +79,7 @@
         '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg>세계관 목록으로</a>' +
         '<div><a href="#' + prev.id + '" aria-keyshortcuts="ArrowLeft">이전 문서: ' + esc(prev.title) + '</a><a href="#' + next.id + '" aria-keyshortcuts="ArrowRight">다음 문서: ' + esc(next.title) + "</a></div></nav>" +
       '<article class="sheetcard docsheet">' +
-        '<header class="sc-head"><span>방위청 공개 기록철</span><span class="mono">문서 ' + d.no + ", 열람용 사본</span></header>" +
+        '<header class="sc-head"><span>하란 아카데미 공개 기록철</span><span class="mono">문서 ' + d.no + ", 열람용 사본</span></header>" +
         '<div class="doc">' +
           '<header class="doc-head' + (MARKS[d.id] ? " marked" : "") + '"><h1>' + esc(d.title) + "</h1><p>" + esc(d.lead) + "</p>" +
             (MARKS[d.id] ? '<span class="mark"><img src="assets/img/emblems/' + MARKS[d.id] + '.webp" alt=""></span>' : "") + "</header>" +

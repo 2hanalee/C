@@ -11,7 +11,7 @@ const BASE = 'http://localhost:8765/';
     await p.goto(BASE + 'characters.html'); await p.waitForTimeout(300);
     if (await p.locator('.recent').count()) fails.push(v + ' 열어 본 적이 없는데 최근 기록이 보임');
     const want = [];
-    for (const id of ['jeong-haeun', 'kwon-doha', 'reina-de-rose', 'jeong-haeun']) {
+    for (const id of ['jeong-haeun', 'adelia', 'reina-de-rose', 'jeong-haeun']) {
       await p.evaluate((i) => { location.hash = '#' + i; }, id); await p.waitForTimeout(600);
       const i = want.indexOf(id); if (i !== -1) want.splice(i, 1); want.unshift(id);
     }
@@ -37,7 +37,7 @@ const BASE = 'http://localhost:8765/';
     p.once('dialog', d => d.accept());
     await p.click('[data-forget]'); await p.waitForTimeout(700);
     if (await p.locator('.recent').count()) fails.push(v + ' 기록을 지웠는데 최근 기록이 남음');
-    if (v === 'phone') { await p.evaluate(() => { localStorage.setItem('blackout.recent', JSON.stringify(['c:reina-de-rose', 'c:kwon-doha', 'c:on-saebyeol'])); location.reload(); }); await p.waitForTimeout(600); await p.screenshot({ path: __dirname + '/recent-phone.png', clip: { x: 0, y: 0, width: 390, height: 520 } }); }
+    if (v === 'phone') { await p.evaluate(() => { localStorage.setItem('blackout.recent', JSON.stringify(['c:reina-de-rose', 'c:adelia', 'c:neisa'])); location.reload(); }); await p.waitForTimeout(600); await p.screenshot({ path: __dirname + '/recent-phone.png', clip: { x: 0, y: 0, width: 390, height: 520 } }); }
     await ctx.close();
   }
   await b.close();

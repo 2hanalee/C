@@ -58,19 +58,17 @@ window.SITE = { chat: [ { name: "플랫폼 이름", url: "https://..." } ] };
 
 인물은 `characters.js` 의 `internal`(내부용)과 `secret`(기밀), 세계관은 `world.js`, 연표와 지도는 `timeline.js` 에 있습니다. 기준은 `characters.js` 맨 위에 적혀 있습니다. 한 사실은 모든 파일에서 같은 등급이어야 합니다.
 
-## 과거
+## 설정 원문과 인물 데이터
 
-인물 상세의 「과거」는 설정집 v3 인물 문단을 글자 그대로 싣는 칸입니다. 손으로 고치지 않습니다.
+사이트 설정의 유일한 기준은 `docs/source/settings-integrated.md`(캐릭터 설정 통합 정리본)입니다.
 
-- 원문은 `docs/v3-past.json` 에 있습니다. 항목마다 v3 블록 해시(`h`)가 있어, 점검 도구가 원문과 한 글자라도 다르면 알려 줍니다.
-- 가릴 문장은 `tools/qa/build-past.js` 의 `GRADES` 에 적습니다. 값이 기록 주제면 그 가려진 기록과 같은 등급으로 먹칠되고, 둘 중 하나를 열면 함께 열립니다. 값이 1이면 내부용, 2면 기밀로 그 문장만 가립니다.
-- 고친 뒤 `node tools/qa/build-past.js` 를 돌리면 `characters.js` 의 `past` 가 새로 만들어집니다.
-- v3 문단이 바뀌면 `docs/v3-past.json` 의 그 항목을 새 원문과 새 해시로 바꾸고 같은 명령을 돌립니다.
-- 원문의 ◇ 는 데이터에 그대로 두고 화면에서만 숨깁니다.
+- `assets/js/characters.js` 는 손으로 고치지 않습니다. `tools/qa/build-canon.js` 가 정리본에서 만듭니다. 개요, 분류, 순위, 가릴 문장(HIDDEN), 한계로 옮길 능력 문장(LIMIT), 싣는 비고(NOTE)는 그 파일의 표에 있습니다.
+- 정리본을 고쳤거나 표를 고쳤으면 `node tools/qa/build-canon.js` 를 다시 돌립니다.
+- 정리본의 문장은 고치지 않고, 코드 표기(MG01 등)와 말투·능력계열 기호만 뺍니다.
+- 가린 문장은 먹칠로 보이고, 같은 기록(가려진 기록)과 함께 열립니다. `node tools/qa/qa-canon.js` 가 정리본과 사이트 문장이 어긋나는 곳을 알려 줍니다.
+- 세계관 문서(`world.js`), 연표와 장소(`timeline.js`), 입장 대사(`quotes.js`)는 정리본 문장을 옮겨 손으로 관리합니다.
+- `node tools/qa/scan-removed.js` 는 정리본에 없어서 지운 설정(칠월의 밤, 안개고개 등)과 기호가 남았는지 훑습니다.
 
-## 등수 변동
-
-`characters.js` 의 `"move"` 값입니다. 양수는 상승, 음수는 하락, 0 은 표시 없음입니다. 지금 값은 임시입니다.
 
 ## 지도
 

@@ -43,7 +43,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   await p.goto(BASE + 'world.html');
   const docs = await p.evaluate(() => window.WORLD.map((d) => d.id));
-  if (docs.length !== 10) fail('문서 수 ' + docs.length);
+  if (docs.length !== 5) fail('문서 수 ' + docs.length);
   for (const id of docs) {
     await p.goto(BASE + 'world.html#' + id);
     const shown = await p.waitForFunction((i) => { const h = document.querySelector('.docsheet h1'); return h && h.textContent === window.WORLD.find((d) => d.id === i).title; }, id, { timeout: 4000 }).then(() => 1, () => 0);
@@ -52,7 +52,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   await p.goto(BASE + 'timeline.html#map');
   const places = await p.evaluate(() => window.PLACES.map((x) => x.id));
-  if (places.length !== 11) fail('장소 수 ' + places.length);
+  if (places.length !== 1) fail('장소 수 ' + places.length);
   for (const id of places) {
     await p.goto(BASE + 'timeline.html#' + id); await p.waitForTimeout(50);
     const pressed = await p.locator(`.pin[data-place="${id}"][aria-pressed="true"]`).count(); if (!pressed) fail('장소 선택 안 됨 ' + id);
@@ -78,7 +78,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   out.notes.push('링크 ' + linkCount + '개 확인');
   // 4. 기밀 흐름
-  await p.goto(BASE + 'world.html#july-night');
+  await p.goto(BASE + 'world.html#conflict');
   await p.locator('.rec[data-lv="2"] .rec-tab').first().click();
   if (!(await p.locator('dialog.warn-sheet[open]').count())) fail('기밀 경고창 안 열림');
   await p.fill('#warn-input', '아니');

@@ -56,7 +56,7 @@
   var renderTimeline = function () {
     document.title = "연표 · 블랙아웃";
     app.innerHTML =
-      '<header class="page-head" data-ghost="CHRONICLE"><p class="kicker">방위청 사건 일지</p><h1 class="lit">연표</h1><p>약 300년 전의 첫 균열부터 지금까지 일어난 일을 적었습니다. 가려진 사건은 날짜만 보이고, 누르면 내용이 열립니다.</p></header>' +
+      '<header class="page-head" data-ghost="CHRONICLE"><p class="kicker">하란 아카데미 사건 일지</p><h1 class="lit">연표</h1><p>알려진 사건을 시기별로 적었습니다. 정리본에는 날짜가 없어 시점이 정해지지 않은 사건은 따로 묶었습니다. 가려진 사건은 시기만 보이고, 누르면 열람할 수 있습니다.</p></header>' +
       tabs("timeline") +
       // 좁은 화면에서 위에 붙는 시대 막대. 넓은 화면은 왼쪽 목차를 쓰고 이 막대는 숨긴다
       '<nav class="era-bar" aria-label="시대 바로가기"><ol>' + ERAS.map(function (era) {
@@ -69,52 +69,22 @@
   };
 
   /* ───── 지도 ───── */
-  // 인천 약도. 실제 지형을 단순하게 줄이고, 장소가 몰린 내항과 구도심을 크게 그렸다. 서쪽은 서해, 남쪽은 바다를 메운 송도다. 좌표계는 800 x 560.
+  // 인천 약도. 서쪽은 서해다. 정리본에 나온 장소는 하란 아카데미뿐이라 땅과 바다만 단순하게 그렸다. 좌표계는 800 x 560.
   var COAST = "400,0 330,50 262,74 232,128 214,180 200,240 214,300 260,345 330,372 420,392 500,410 575,440 640,470 700,520 740,560";
-  var SONGDO = "250,420 440,415 470,450 475,535 290,545 245,490";
-  var YEONGJONG = "0,36 118,18 168,78 150,168 62,198 0,178";
   var mapSvg = function () {
-    return '<svg viewBox="0 0 800 560" role="img" aria-label="인천 약도. 서쪽은 서해, 내항 일대가 회색 구역이고 남쪽 매립지에 송도가 있다." preserveAspectRatio="xMidYMid slice">' +
+    return '<svg viewBox="0 0 800 560" role="img" aria-label="인천 약도. 서쪽은 서해이고 가운데에 하란 아카데미가 있다." preserveAspectRatio="xMidYMid slice">' +
       "<defs>" +
         '<pattern id="sea" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 5 H10" class="m-sea-line"/></pattern>' +
-        '<pattern id="spore" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" class="m-spore"/><circle cx="6.5" cy="6.5" r="0.8" class="m-spore"/></pattern>' +
-        '<pattern id="scrap" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0 V8" class="m-scrap"/></pattern>' +
       "</defs>" +
       // 바다를 깔고 그 위에 땅을 얹는다
       '<rect width="800" height="560" class="m-sea"/><rect width="800" height="560" fill="url(#sea)"/>' +
       '<polygon points="' + COAST + ' 800,560 800,0" class="m-land"/>' +
       '<polyline points="' + COAST + '" class="m-coast"/>' +
-      '<polygon points="' + SONGDO + '" class="m-land"/><polygon points="' + SONGDO + '" class="m-coast"/>' +
-      '<polygon points="' + YEONGJONG + '" class="m-land"/><polygon points="' + YEONGJONG + '" class="m-coast"/>' +
-      '<ellipse cx="96" cy="291" rx="36" ry="21" class="m-land"/><ellipse cx="96" cy="291" rx="36" ry="21" class="m-coast"/>' +
-      // 부두(북항, 내항)와 월미도로 가는 둑길
-      '<path d="M262 70 H238 M256 88 H230 M204 236 H180 M202 252 H176 M206 268 H182 M132 286 L200 262" class="m-pier"/>' +
-      // 큰길과 다리: 내항에서 부평으로, 송도로
-      '<path d="M215 262 L480 272 L650 246 L800 236 M480 272 L470 120 L440 0 M480 272 L520 404 M350 378 L346 418 M402 390 L399 416" class="m-road"/>' +
-      // 회색 구역: 내항 일대
-      '<clipPath id="zone"><ellipse cx="300" cy="235" rx="105" ry="75"/></clipPath>' +
-      '<image class="m-myc" href="assets/img/texture/mycelium-pattern.svg" x="180" y="130" width="250" height="210" clip-path="url(#zone)"/>' +
-      '<ellipse cx="300" cy="235" rx="105" ry="75" fill="url(#spore)" opacity="0.55"/>' +
-      '<ellipse cx="300" cy="235" rx="105" ry="75" class="m-zone"/>' +
-      // 고철동(만석동, 화수동 공장지대)
-      '<polygon points="335,112 405,106 412,160 342,168" fill="url(#scrap)"/><polygon points="335,112 405,106 412,160 342,168" class="m-block"/>' +
-      // 구도심
-      '<rect x="322" y="298" width="84" height="44" class="m-block"/><path d="M350 298 V342 M378 298 V342 M322 320 H406" class="m-grid"/>' +
-      // 부평
-      '<rect x="612" y="200" width="72" height="48" class="m-block"/><path d="M636 200 V248 M660 200 V248 M612 224 H684" class="m-grid"/>' +
-      // 송도: 기업 타워 지구와 남단 캠퍼스
-      '<path d="M296 468 V446 M306 468 V436 M316 468 V442 M326 468 V430 M336 468 V444" class="m-grid"/>' +
-      '<rect x="318" y="490" width="68" height="28" class="m-block"/>' +
+      // 하란 아카데미
+      '<rect x="382" y="258" width="68" height="44" class="m-block"/><path d="M405 258 V302 M428 258 V302 M382 280 H450" class="m-grid"/>' +
       // 글자
       '<text x="70" y="440" class="m-label big">서해</text>' +
       '<text x="590" y="130" class="m-label big">인천</text>' +
-      '<text x="50" y="112" class="m-label">영종도</text>' +
-      '<text x="72" y="332" class="m-label">월미도</text>' +
-      '<text x="340" y="360" class="m-label">구도심</text>' +
-      '<text x="630" y="268" class="m-label">부평</text>' +
-      '<text x="404" y="476" class="m-label">송도</text>' +
-      '<text x="560" y="40" class="m-label">서울, 강원 방면</text>' +
-      '<path d="M700 34 l18 0 M712 28 l6 6 l-6 6" class="m-arrow"/>' +
       // 방위
       '<path d="M40 534 V494 M40 494 l-6 10 M40 494 l6 10" class="m-arrow"/><text x="52" y="532" class="m-label">N</text>' +
       "</svg>";

@@ -14,18 +14,19 @@
 
   var FACTIONS = [
     ["all", "전체"],
-    ["academy", "아카데미와 협력자"],
-    ["outsider", "반역자와 외부 인물, 판정위원회"],
-    ["throne", "이계의 왕과 칠좌"],
-    ["border", "경계인과 연예, 기업, 용병"],
+    ["academy", "하란 아카데미"],
+    ["villain", "아카데미 빌런"],
+    ["throne", "칠왕정"],
+    ["border", "경계인·연예계·기업 연합·용병"],
   ];
   var factionName = function (f) { return FACTIONS.filter(function (x) { return x[0] === f; })[0][1]; };
   // 데이터의 가운뎃점 목록은 화면에서 쉼표로 읽히게 바꾼다
   var plain = function (s) { return String(s || "").replace(/\s*·\s*/g, ", "); };
   // 공개 랭킹의 빈자리. 인물이 아니라 순위표에만 나타난다.
   var VOIDS = [
-    { rank: 3, struck: true, note: "2년 전 말소" },
-    { rank: 5, name: "공석", note: "1년 전 3월 전사" },
+    { rank: 3, struck: true, note: "삭제" },
+    { rank: 5, name: "공석", note: "사망" },
+    { rank: 10, name: "공석", note: "실종" },
   ];
   var EMOTES = ["평상시", "웃음", "의문", "부끄러움", "슬픔", "분노", "기술"];
   var SEAT_SYMBOL = {
@@ -140,7 +141,7 @@
     }
     rows.sort(function (a, b) { return a.key - b.key; });
     return '<ol class="board list-board">' + rows.map(function (r) { return r.html; }).join("") + "</ol>" +
-      '<p class="mono board-key">▲ ▼ 표시는 직전 발표와 비교한 등수 변동입니다.</p>';
+      '<p class="mono board-key">3위, 5위, 10위는 기록상 공석입니다.</p>';
   };
 
   var renderResults = function () {
@@ -175,7 +176,7 @@
   var renderList = function () {
     document.title = "인물 " + ALL.length + "인 · 블랙아웃";
     app.innerHTML =
-      '<header class="page-head" data-ghost="DOSSIER"><p class="kicker">방위청 인사 기록, 열람용 사본</p><h1 class="lit">인물 ' + ALL.length + "인</h1>" +
+      '<header class="page-head" data-ghost="DOSSIER"><p class="kicker">하란 아카데미 인사 기록, 열람용 사본</p><h1 class="lit">인물 ' + ALL.length + "인</h1>" +
         "<p>아카데미에 등록된 인물과 외부 인물의 인사기록카드입니다. 카드를 누르면 전체 기록이 열립니다.</p></header>" +
       recentHtml() +
       '<div class="tools">' +
@@ -195,42 +196,39 @@
     });
   };
 
-  /* ───── 과거 ─────
-     설정집 v3 의 인물 문단을 문장 그대로 싣는다. 가려진 기록과 같은 사실을 담은 문장은 먹칠로 가린다.
-     문장 항목: 글자면 공개, { t, ref } 면 같은 인물의 가려진 기록(주제)과 열쇠를 함께 쓰고,
-     { t, lv } 면 그 문장만의 등급으로 가린다. ◇ 표시는 화면에 그리지 않는다. */
-  var noDiamond = function (s) { return String(s).replace(/\s*◇/g, ""); };
-  var pastPart = function (c, it, slot) {
-    if (typeof it === "string") return { text: noDiamond(it) };
-    var ns = "c:" + c.id, key, lv, topic = it.ref;
-    if (it.ref) {
-      var i = c.internal.map(function (r) { return r.topic; }).indexOf(it.ref);
-      var s = c.secret.map(function (r) { return r.topic; }).indexOf(it.ref);
-      if (s !== -1) { key = ns + ":s" + s; lv = 2; } else { key = ns + ":i" + i; lv = 1; }
-    } else {
-      key = ns + ":" + slot; lv = it.lv; topic = "과거";
-    }
-    return { lv: lv, key: key, topic: topic, owner: c.name + "의", text: noDiamond(it.t) };
+  /* ───── 문장 목록 ─────
+     성격, 과거, 지금, 외형, 덧붙임은 정리본 문장을 문장 단위로 나눈 목록이다.
+     항목이 글자면 공개 문장이고, { t, ref } 면 같은 인물의 가려진 기록(주제 ref)과 열쇠를 함께 쓰는 먹칠 문장이다. */
+  var partOf = function (c, it) {
+    if (typeof it === "string") return { text: it };
+    var ns = "c:" + c.id, key, lv;
+    var i = c.internal.map(function (r) { return r.topic; }).indexOf(it.ref);
+    var s = c.secret.map(function (r) { return r.topic; }).indexOf(it.ref);
+    if (s !== -1) { key = ns + ":s" + s; lv = 2; } else { key = ns + ":i" + i; lv = 1; }
+    return { lv: lv, key: key, topic: it.ref, owner: c.name + "의", text: it.t };
   };
   // 같은 기록을 가리키는 문장이 이어지면 막대 하나로 묶는다. 문장 사이는 원문처럼 공백 하나다
-  var pastLine = function (c, list, prefix) {
+  var sentenceLine = function (c, list) {
     var parts = [];
-    list.forEach(function (it, n) {
-      var p = pastPart(c, it, prefix + n), last = parts[parts.length - 1];
+    list.forEach(function (it) {
+      var p = partOf(c, it), last = parts[parts.length - 1];
       if (p.key && last && last.key === p.key) last.text += " " + p.text;
       else parts.push(p);
     });
     return parts.map(function (p) { return p.key ? B.redact(p) : esc(p.text); }).join(" ");
   };
-  var pastHtml = function (c) {
-    if (!c.past || !c.past.length) return "";
-    var body = pastLine(c, c.past, "p");
-    var traces = (c.pastTraces || []).map(function (it, n) { return "<li>" + pastLine(c, [it], "t" + n) + "</li>"; }).join("");
-    var hidden = c.past.concat(c.pastTraces || []).some(function (it) { return typeof it !== "string"; });
-    return '<section class="sc-sec sc-past"><h2>과거</h2><p>' + body + "</p>" +
-      (traces ? '<h3 class="past-sub">남은 흔적</h3><ul class="past-traces">' + traces + "</ul>" : "") +
-      (hidden ? '<p class="past-note mono">검게 가린 문장은 누르면 열람할 수 있습니다.</p>' : "") + "</section>";
+  var hasBar = function (list) { return (list || []).some(function (it) { return typeof it !== "string"; }); };
+  // 문장 목록 구획. 칸이 비어 있으면 그리지 않는다
+  var textSection = function (c, title, list) {
+    if (!list || !list.length) return "";
+    return '<section class="sc-sec sc-past"><h2>' + title + "</h2><p>" + sentenceLine(c, list) + "</p></section>";
   };
+  var noteList = function (c) {
+    if (!c.notes || !c.notes.length) return "";
+    return '<section class="sc-sec sc-past"><h2>덧붙임</h2><ul class="past-traces">' +
+      c.notes.map(function (it) { return "<li>" + sentenceLine(c, [it]) + "</li>"; }).join("") + "</ul></section>";
+  };
+  var anyBar = function (c) { return ["personality", "past", "now", "appearance", "notes"].some(function (k) { return hasBar(c[k]); }); };
 
   /* ───── 상세 ───── */
   var renderDetail = function (c) {
@@ -259,8 +257,7 @@
         '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg>인물 목록으로</a>' +
         '<div><a href="#' + prev.id + '" aria-keyshortcuts="ArrowLeft">이전 기록: ' + esc(prev.name) + '</a><a href="#' + next.id + '" aria-keyshortcuts="ArrowRight">다음 기록: ' + esc(next.name) + "</a></div></nav>" +
       '<article class="sheetcard"' + styleVars(c) + ">" +
-        '<header class="sc-head"><span>방위청 인사기록카드</span><span class="mono">기록 번호 ' + no2(c.no) + ", 열람용 사본</span></header>" +
-        (c.hook ? '<p class="sc-hook">' + esc(c.hook) + "</p>" : "") +
+        '<header class="sc-head"><span>하란 아카데미 인사기록카드</span><span class="mono">기록 번호 ' + no2(c.no) + ", 열람용 사본</span></header>" +
         '<div class="sc-grid">' +
           '<div class="sc-photo">' +
             '<figure class="polaroid' + (c.image ? "" : " small") + '"><span class="tape" aria-hidden="true"></span><span class="clip" aria-hidden="true"></span>' +
@@ -277,14 +274,16 @@
               "<dt>성격</dt><dd>" + esc(c.traits.join(", ")) + "</dd>" +
             "</dl>" +
             '<section class="sc-sec"><h2>개요</h2><p>' + esc(c.summary) + "</p></section>" +
-            pastHtml(c) +
+            textSection(c, "성격", c.personality) +
+            textSection(c, "과거", c.past) +
+            textSection(c, c.faction === "throne" ? "지금과 목표" : "지금", c.now) +
             (c.ability ? '<section class="sc-ability"><h2>능력</h2><p class="ab-name">' + esc(c.ability.name) + "</p><p>" + esc(c.ability.text) + "</p>" +
-              (c.subs && c.subs.length ? '<dl class="ab-subs">' + c.subs.map(function (u) { return "<dt>" + esc(u.name) + "</dt><dd>" + esc(u.text) + "</dd>"; }).join("") + "</dl>" : "") +
-              '<p class="ab-limit"><strong>한계</strong> ' + esc(c.ability.limit) + "</p></section>" : "") +
-            // 대화를 시작하는 재료: 자주 벌어지는 일과 말투
-            (c.scenes && c.scenes.length ? '<section class="sc-sec sc-scenes"><h2>자주 벌어지는 일</h2><ul>' + c.scenes.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></section>" : "") +
-            (c.voice && c.voice.text ? '<section class="sc-sec sc-voice"><h2>말투</h2><p>' + esc(c.voice.text) + "</p>" +
-              (c.voice.sample ? "<blockquote><p>" + esc(c.voice.sample) + "</p></blockquote>" : "") + "</section>" : "") +
+              (c.ability.limit ? '<p class="ab-limit"><strong>한계</strong> ' + esc(c.ability.limit) + "</p>" : "") + "</section>" : "") +
+            (c.passive ? '<section class="sc-ability sc-passive"><h2>왕의 패시브</h2><p class="ab-name">' + esc(c.passive.name) + "</p><p>" + esc(c.passive.text) + "</p></section>" : "") +
+            textSection(c, "외형", c.appearance) +
+            (c.voice && c.voice.text ? '<section class="sc-sec sc-voice"><h2>말투</h2><p>' + esc(c.voice.text) + "</p></section>" : "") +
+            noteList(c) +
+            (anyBar(c) ? '<p class="past-note mono">검게 가린 문장은 누르면 열람할 수 있습니다.</p>' : "") +
             (rels ? '<section class="sc-sec"><h2>관계</h2><ul class="rel">' + rels + "</ul></section>" : "") +
             '<div class="platforms" data-chat data-chat-with="' + esc(c.name) + '"></div>' +
           "</div>" +

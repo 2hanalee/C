@@ -4,8 +4,8 @@ const axe = fs.readFileSync(__dirname + '/node_modules/axe-core/axe.min.js', 'ut
 const BASE = 'http://localhost:8765/';
 const ONLY_TAPS = process.argv[2] === 'taps';
 const VIEWS = [
-  ['index.html', '메인'], ['world.html', '세계관 목록'], ['world.html#erosion', '문서: 침식'], ['world.html#thrones', '문서: 칠좌'],
-  ['characters.html', '인물 목록'], ['characters.html#board', '순위표'], ['characters.html#reina-de-rose', '인물: 레이나'], ['characters.html#kwon-doha', '인물: 권도하'],
+  ['index.html', '메인'], ['world.html', '세계관 목록'], ['world.html#academy', '문서: 아카데미'], ['world.html#throne', '문서: 칠좌'],
+  ['characters.html', '인물 목록'], ['characters.html#board', '순위표'], ['characters.html#reina-de-rose', '인물: 레이나'], ['characters.html#neisa', '인물: 네이사'],
   ['timeline.html', '연표'], ['timeline.html#map', '지도'], ['webtoon.html', '웹툰'],
 ];
 (async () => {

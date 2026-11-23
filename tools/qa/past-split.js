@@ -2,7 +2,7 @@
 // 경계: 마침표·물음표·느낌표(와 그 뒤의 닫는 따옴표) 다음의 공백 하나.
 // 나눈 문장을 공백 하나로 이으면 원문과 같아야 한다.
 function split(text) {
-  var out = [], re = /[.!?]['"」』)]*(?= )/g, last = 0, m;
+  var out = [], re = /[.!?]['"」』)”’]*(?= )/g, last = 0, m;
   while ((m = re.exec(text))) {
     var end = m.index + m[0].length;
     out.push(text.slice(last, end));

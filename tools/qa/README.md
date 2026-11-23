@@ -6,12 +6,13 @@
 
 | 명령 | 하는 일 |
 | --- | --- |
-| `node tools/qa/qa.js tools/qa/qa-ext-all.js` | 인물 49인, 문서 10건, 장소 11곳, 링크, 기밀 흐름, 입장 연출, 가로 넘침, 용어 판, 시대 막대, 사진 칸 |
+| `node tools/qa/qa.js tools/qa/qa-ext-all.js` | 인물 49인, 문서 5건, 장소 1곳, 링크, 기밀 흐름, 입장 연출, 가로 넘침, 용어 판, 시대 막대, 사진 칸 |
 | `node tools/qa/audit.js` | 접근성(axe), 누르는 곳 높이, 제목 구조, 화면별 용량, 안 쓰는 CSS. 결과는 `audit.json` |
 | `node tools/qa/qa-vt.js` | 메뉴로 페이지를 옮길 때의 전환 방향, 움직임 줄이기에서 전환이 꺼지는지 |
 | `node tools/qa/qa-swap.js` | 목록과 상세 사이의 기록 넘김, ←/→ 키, 열람함 도장 |
-| `node tools/qa/qa-past.js [캡처 폴더]` | 인물 「과거」: v3 원문 일치(블록 해시), 먹칠 수, 열기 전 노출, ◇ 숨김, 내부용·기밀 열람 흐름, 가려진 기록과 함께 열리고 닫히는지, 가로 넘침 |
-| `node tools/qa/build-past.js` | `docs/v3-past.json` 에서 `characters.js` 의 「과거」를 다시 만든다(점검이 아니라 생성) |
+| `node tools/qa/qa-canon.js` | 인물·세계관 문장이 정리본에 그대로 있는지, 먹칠 기록 연결, 순위 겹침, 개요 길이 |
+| `node tools/qa/scan-removed.js` | 정리본에 없어서 지운 설정과 말투·능력계열 기호가 남았는지 |
+| `node tools/qa/build-canon.js` | 정리본에서 `characters.js` 를 다시 만든다(점검이 아니라 생성) |
 | `node tools/qa/qa-extra.js` | 최근 열람한 기록, 읽기 진행선, 미리 불러오기 규칙 |
 | `node tools/qa/qa-music.js` | 음악 플레이어. 시험용 wav 3개가 `tools/qa/testaudio/`에 있어야 합니다 |
 | `node tools/qa/intro-test.js` | 입장 연출이 단추까지 8초 안에 끝나는지 |
