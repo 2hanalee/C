@@ -68,6 +68,6 @@
     var el = id && document.getElementById(id);
     if (el) el.scrollIntoView(); else window.scrollTo(0, 0);
   };
-  window.addEventListener("hashchange", jump);
+  window.addEventListener("hashchange", function () { U.transition(jump); });
   if (location.hash) jump();
 })();

@@ -137,6 +137,6 @@
     if (i >= 0) detail(i); else list();
     if (scroll) window.scrollTo(0, 0);
   };
-  window.addEventListener("hashchange", function () { render(true); });
+  window.addEventListener("hashchange", function () { U.transition(function () { render(true); }); });
   render(false);
 })();

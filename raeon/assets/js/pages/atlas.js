@@ -34,7 +34,7 @@
     app.innerHTML =
       '<div class="on-sky hero"><div class="band maghi"><b>산적 마그히와 대해</b><span>세계 각지의 지형</span></div>' +
       '<h1 class="page-title">지도</h1>' +
-      '<p class="lead">라에온 대륙의 17개 지역입니다. 지도의 점이나 아래 목록을 누르면 그 지역의 쪽이 열립니다. 붉은 점선은 「용사의 여정」이 지나간 길입니다.</p></div>' +
+      '<p class="lead">라에온 대륙의 17개 지역입니다. 지도의 점이나 아래 목록을 누르면 그 지역의 쪽이 열립니다. 붉은 점선은 「용사의 여정」이 지나간 길입니다.</p><p><button type="button" class="btn book-open" data-book-open="maghi">책으로 펼쳐 보기</button></p></div>' +
       '<div class="leaf">' + mapHtml(null) +
       '<p class="margin-note">지하에 있는 지저국 펀다는 지도에 안 나와. 땅 밑까지 그려 달라고? 거긴 내려가 본 놈이 없어서 못 그린다.<cite>마그히의 방주</cite></p>' +
       '<div class="entries">' + regions.map(function (r, i) {
@@ -83,7 +83,7 @@
       '<div class="on-sky hero"><nav class="crumbs"><a class="back" href="#list">지도로 돌아가기</a><span><a href="#' + prev.id + '">이전: ' + esc(prev.name) + '</a> · <a href="#' + next.id + '">다음: ' + esc(next.name) + "</a></span></nav>" +
       '<div class="band maghi"><b>산적 마그히와 대해</b><span>제' + (i + 1) + "장</span></div>" +
       '<h1 class="page-title">' + esc(r.title) + "</h1>" +
-      '<p class="lead">' + esc(r.theme) + "</p>" + card +
+      '<p class="lead">' + esc(r.theme) + '</p><p><button type="button" class="btn book-open" data-book-open="maghi" data-book-at="' + esc(r.id) + '">책으로 펼쳐 보기</button></p>' + card +
       (r.cardDesc ? '<p class="margin-note">' + esc(r.cardDesc) + "<cite>산적 마그히와 대해 발췌</cite></p>" : "") + "</div>" +
       '<div class="leaf"><div class="detail-grid"><div>' +
         '<dl class="form"><dt>다스리는 방식</dt><dd>' + esc(r.rule) + "</dd><dt>풍경</dt><dd>" + esc(r.land) + "</dd><dt>사는 이들</dt><dd>" + esc(r.people) + "</dd>" +
@@ -104,18 +104,18 @@
     app.innerHTML =
       '<div class="on-sky hero"><nav class="crumbs"><a class="back" href="' + (r ? "#" + r.id : "#list") + '">' + (r ? esc(r.name) + "(으)로 돌아가기" : "지도로 돌아가기") + "</a></nav>" +
       '<div class="band maghi"><b>' + esc(p.source || "산적 마그히와 대해") + "</b><span>" + esc(KIND[p.kind] || "장소") + "</span></div>" +
-      '<h1 class="page-title">' + esc(p.name) + "</h1>" +
+      '<h1 class="page-title">' + esc(p.name) + '</h1><p><button type="button" class="btn book-open" data-book-open="maghi" data-book-at="place:' + esc(p.id) + '">책으로 펼쳐 보기</button></p>' +
       '<div class="plate-card" style="margin-top:1rem"><img src="' + esc(p.image) + '" alt="' + esc(p.name) + " 장소 카드" + '" width="1534" height="1024"></div></div>' +
       '<div class="leaf"><dl class="form" style="margin-top:0"><dt>위험도</dt><dd>' + esc(p.grade) + "</dd><dt>지역</dt><dd>" + (r ? regionLink(r) : "어느 나라에도 속하지 않습니다") + "</dd><dt>상세설명</dt><dd>" + U.linkTerms(esc(p.desc)) + "</dd></dl></div>";
   };
 
   var route = function () {
     var id = location.hash.slice(1);
-    if (id.indexOf("place-") === 0 && placeById[id.slice(6)]) { var pl = placeById[id.slice(6)]; U.setSky(pl.region || "night"); renderPlace(pl); }
-    else if (regionById[id]) { U.setSky(id); renderRegion(regionById[id]); }
-    else { U.setSky(); renderList(); }
+    if (id.indexOf("place-") === 0 && placeById[id.slice(6)]) { var pl = placeById[id.slice(6)]; U.setBg(pl.image || U.art.region(pl.region)); renderPlace(pl); }
+    else if (regionById[id]) { U.setBg(U.art.region(id)); renderRegion(regionById[id]); }
+    else { U.setBg(); renderList(); }
     window.scrollTo(0, 0);
   };
-  window.addEventListener("hashchange", route);
+  window.addEventListener("hashchange", function () { U.transition(route); });
   route();
 })();

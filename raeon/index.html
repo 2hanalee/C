@@ -8,11 +8,12 @@
 <meta property="og:title" content="라에온">
 <meta property="og:description" content="하늘에서 내려온 거대한 닻이 대륙 곳곳에 박힌 세계. 마왕의 자리가 빈 범람기를 건너는 두 개의 여정을 소개합니다.">
 <meta property="og:image" content="assets/img/map/raeon-map.webp">
-<meta name="theme-color" content="#F2E9D6">
+<meta name="theme-color" content="#100E0B">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;600&family=Cormorant+Garamond:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;600&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap">
 <link rel="stylesheet" href="assets/css/raeon.css">
+<script>try{if(!sessionStorage.getItem("raeon.intro")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("intro-pending")}catch(e){}</script>
 </head>
 <body data-page="home">
 <a class="skip" href="#app">본문으로 건너뛰기</a>
@@ -21,7 +22,7 @@
   <nav class="nav" aria-label="주 메뉴" data-nav></nav>
 </div></header>
 <main id="app"><noscript><p class="empty">이 기록을 펼치려면 자바스크립트가 필요합니다.</p></noscript></main>
-<footer class="foot"><span>라에온 세계관 소개 · 시안</span><a class="linkish" href="world.html">세계의 법칙</a><a class="linkish" href="library.html#terms">색인</a><button type="button" class="linkish" data-forget>책갈피와 열어 본 비밀 지우기</button></footer>
+<footer class="foot"><span>라에온 세계관 소개 · 시안</span><a class="linkish" href="world.html">세계의 법칙</a><a class="linkish" href="library.html#terms">색인</a><button type="button" class="linkish" data-intro-replay>책을 여는 장면 다시 보기</button><button type="button" class="linkish" data-forget>책갈피와 열어 본 비밀 지우기</button></footer>
 <nav class="tabbar" aria-label="주 메뉴" data-nav></nav>
 <script src="assets/js/data/config.js"></script>
 <script src="assets/js/data/regions.js"></script>
@@ -35,6 +36,8 @@
 <script src="assets/js/data/secrets.js"></script>
 <script src="assets/js/data/books.js"></script>
 <script src="assets/js/core.js"></script>
+<script src="assets/js/book.js"></script>
 <script src="assets/js/pages/home.js"></script>
+<script src="assets/js/intro.js"></script>
 </body>
 </html>

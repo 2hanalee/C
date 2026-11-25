@@ -28,7 +28,7 @@
       .map(function (m) { return esc(m.name) + "(" + esc(m.grade) + ")"; }).join(", ") : "";
     var num = s.id === 1 ? (i === 0 ? "◆" : String(i)) : String(i + 1);
     return '<li class="chapter' + (read ? " read" : "") + '" id="' + s.id + "-" + p.id + '">' +
-      '<div class="sky-strip" data-sky="' + esc(p.region || "funda") + '"><span class="num">' + num + "</span><div>" +
+      '<div class="art-strip" style="background-image:url(' + U.art.region(p.region || "funda") + ')"><span class="num">' + num + "</span><div>" +
         (r ? '<span class="where">' + esc(r.title) + "</span>" : '<span class="where">당신의 선택</span>') + "<h3>" + esc(p.title) + "</h3></div></div>" +
       '<div class="page">' +
       "<p>" + U.linkTerms(esc(p.summary)) + (p.draft ? '<span class="draft-tag">초안</span>' : "") + "</p>" +

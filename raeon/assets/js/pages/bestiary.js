@@ -19,7 +19,7 @@
 
   var frame = function (m, mini) {
     var b = BOOK[m.book] || BOOK["101"];
-    if (m.image) return '<img src="' + esc(m.image) + '" alt="' + esc(m.name) + " 도감 카드. 위험도 " + esc(m.grade) + ". " + esc(m.line) + '" loading="lazy" width="1536" height="1024">';
+    if (m.image) return '<img src="' + esc(m.image) + '" alt="' + esc(m.name) + " 도감 카드. 위험도 " + esc(m.grade) + ". " + esc(m.line) + '" loading="lazy" width="1200" height="800">';
     return '<div class="plate-frame"><div class="crest" aria-hidden="true">' + crest(m) + "</div>" +
       (m.book === "101" && m.no ? '<p class="en">제' + m.no + "항</p>" : "") +
       "<h3>" + esc(nameOf(m)) + "</h3>" + (m.en ? '<p class="en">' + esc(m.en) + "</p>" : "") +
@@ -55,7 +55,7 @@
   var renderList = function () {
     var b = BOOK[state.book];
     U.setBook(state.book === "romance" ? "romance" : "101");
-    U.setSky(state.book === "rift" ? "night" : state.book === "romance" ? "dusk" : "night");
+    U.setBg(U.art.book(state.book));
     document.title = b.short + " · 라에온";
     var inBook = all.filter(function (m) { return m.book === state.book; });
     var regionIds = [];
@@ -65,6 +65,7 @@
       '<div class="band ' + b.band + '"><b>' + esc(b.title) + "</b><span>" + inBook.length + "종</span></div>" +
       '<h1 class="page-title">마물 도감</h1>' +
       '<p class="lead">세 권의 책이 마물을 나눠 맡습니다. 총해록은 사람의 모습이 아닌 마물을, 노바카사의 연애록은 사람의 모습을 한 마물을, 균열 문헌은 균열 너머에서 온 것들을 다룹니다.</p>' +
+      '<p><button type="button" class="btn book-open" data-book-open="' + esc(state.book) + '">책으로 펼쳐 보기</button></p>' +
       '<div class="chips" role="group" aria-label="책 고르기" style="margin-top:.8rem">' + Object.keys(BOOK).map(function (k) {
         return '<button type="button" data-book="' + k + '" aria-pressed="' + (state.book === k) + '">' + BOOK[k].short + "<small>" + all.filter(function (m) { return m.book === k; }).length + "</small></button>";
       }).join("") + "</div>" +
@@ -86,7 +87,7 @@
   var renderItem = function (m) {
     document.title = m.name + " · 라에온";
     U.setBook(m.book === "romance" ? "romance" : "101");
-    U.setSky((m.regions || [])[0] || "night");
+    U.setBg(U.art.monster(m));
     var b = BOOK[m.book] || BOOK["101"];
     var back = m.book === "101" ? "#" : "#" + m.book;
     if (!U.isOpen(m)) {
@@ -101,7 +102,7 @@
     }).join("");
     var same = all.filter(function (x) { return x.book === m.book && x.grade === m.grade && x.id !== m.id && U.isOpen(x); }).slice(0, 8);
     app.innerHTML =
-      '<nav class="crumbs"><a class="back" href="' + back + '">' + b.short + "(으)로 돌아가기</a></nav>" +
+      '<nav class="crumbs"><a class="back" href="' + back + '">' + b.short + '(으)로 돌아가기</a><button type="button" class="btn book-open" data-book-open="' + esc(m.book) + '" data-book-at="' + esc(m.id) + '">책으로 펼쳐 보기</button></nav>' +
       '<div class="band ' + b.band + '"><b>' + esc(b.title) + "</b><span>" + (m.no ? "제" + m.no + "항" : "") + "</span></div>" +
       '<div class="detail-grid"><div>' +
         '<div class="plate-card ' + b.cls + '" style="margin-top:.5rem">' + frame(m, false) + "</div>" +
@@ -132,6 +133,6 @@
     renderList();
     window.scrollTo(0, 0);
   };
-  window.addEventListener("hashchange", route);
+  window.addEventListener("hashchange", function () { U.transition(route); });
   route();
 })();

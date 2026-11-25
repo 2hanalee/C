@@ -34,6 +34,6 @@
     var el = id && document.getElementById(id);
     if (el) el.scrollIntoView();
   };
-  window.addEventListener("hashchange", jump);
+  window.addEventListener("hashchange", function () { U.transition(jump); });
   jump();
 })();

@@ -143,15 +143,61 @@
     }).join(" ");
   };
 
-  /* ── 하늘과 종이: 페이지마다 기본 하늘과 책 종이를 정하고, 화면이 바뀌면 하늘만 바꾼다 ── */
-  var PAGE_LOOK = { home: ["dawn", ""], journey: ["dawn", ""], atlas: ["dawn", "maghi"], guild: ["laeon", "guild"], bestiary: ["night", "101"], world: ["dusk", "law"], library: ["dusk", "library"] };
-  var look = PAGE_LOOK[document.body.getAttribute("data-page")] || ["dawn", ""];
-  var setSky = function (sky) { document.body.setAttribute("data-sky", sky || look[0]); };
+  /* ── 바탕 그림: 사이트는 색을 칠하지 않는다. 지금 보는 카드 그림을 흐리고 어둡게 깔고, 바뀌면 녹여 바꾼다 ── */
+  var MAP = "assets/img/map/raeon-map.webp";
+  var PAGE_LOOK = { home: [MAP, ""], journey: [MAP, ""], atlas: [MAP, "maghi"], guild: ["assets/img/places/place-18.webp", "guild"], bestiary: ["assets/img/monsters/ogre.webp", "101"], world: [MAP, "law"], library: [MAP, "library"] };
+  var look = PAGE_LOOK[page] || [MAP, ""];
+  var reduced = function () { return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; };
+  var bgBox = document.createElement("div");
+  bgBox.className = "bg-art";
+  bgBox.setAttribute("aria-hidden", "true");
+  bgBox.innerHTML = "<i></i><i></i>";
+  document.body.insertBefore(bgBox, document.body.firstChild);
+  var bgLayers = bgBox.children, bgFront = 0, bgNow = "";
+  var setBg = function (src) {
+    src = src || look[0];
+    if (src === bgNow) return;
+    bgNow = src;
+    var next = bgLayers[1 - bgFront], prev = bgLayers[bgFront];
+    var show = function () { next.classList.add("on"); prev.classList.remove("on"); bgFront = 1 - bgFront; };
+    next.style.backgroundImage = "url(" + src + ")";
+    // 쪽을 처음 그릴 때는 녹이지 않고 바로 깐다. 쪽 사이 이동은 뷰 트랜지션이 녹여 준다
+    if (!bgBox.classList.contains("ready")) {
+      bgBox.classList.add("ready", "instant");
+      show();
+      requestAnimationFrame(function () { requestAnimationFrame(function () { bgBox.classList.remove("instant"); }); });
+      return;
+    }
+    var probe = new Image();
+    probe.onload = probe.onerror = show;
+    probe.src = src;
+  };
   var setBook = function (book) { if (book) document.body.setAttribute("data-book", book); else document.body.removeAttribute("data-book"); };
-  setSky(); setBook(look[1]);
+  setBook(look[1]);
+
+  // 그림 찾기: 지역은 지역 카드, 없으면 그 지역 첫 장소 카드, 그것도 없으면 대륙 지도
+  var regionArt = {};
+  (R.regions || []).forEach(function (r) { if (r.card) regionArt[r.id] = r.card; });
+  (R.places || []).forEach(function (p) { if (p.region && p.image && !regionArt[p.region]) regionArt[p.region] = p.image; });
+  var art = {
+    region: function (id) { return regionArt[id] || MAP; },
+    place: function (p) { return (p && p.image) || art.region(p && p.region); },
+    monster: function (m) {
+      if (!m || !isOpen(m)) return MAP;
+      return m.image || art.region((m.regions || [])[0]);
+    },
+    book: function (kind) { return { "101": "assets/img/monsters/ogre.webp", romance: art.region("silvanir"), rift: "assets/img/places/place-35.webp" }[kind] || MAP; },
+  };
+
+  // 같은 쪽 안에서 화면이 바뀔 때: 뷰 트랜지션으로 겹쳐 바꾼다
+  var transition = function (fn) {
+    if (document.startViewTransition && !reduced()) document.startViewTransition(fn);
+    else fn();
+  };
 
   R.ui = {
-    setSky: setSky, setBook: setBook, defaultBook: look[1],
+    setBg: setBg, art: art, transition: transition, reduced: reduced, MAP: MAP,
+    setBook: setBook, defaultBook: look[1],
     esc: esc, josa: josa, byId: byId, store: store,
     ORDER: ORDER, POINT_NAME: POINT_NAME, bm: bm, setBm: setBm, reached: reached,
     isOpen: isOpen, seal: seal, condition: condition, linkTerms: linkTerms, openTerm: openTerm, chatButtons: chatButtons,
@@ -159,6 +205,7 @@
     drawNav: drawNav,
   };
   drawNav();
+  setTimeout(function () { if (!bgNow) setBg(); }, 0);
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-forget]"), function (b) {
     b.addEventListener("click", function () {
