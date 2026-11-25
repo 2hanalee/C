@@ -60,7 +60,7 @@
     var inBook = all.filter(function (m) { return m.book === state.book; });
     var regionIds = [];
     inBook.forEach(function (m) { (m.regions || []).forEach(function (r) { if (regionIds.indexOf(r) === -1) regionIds.push(r); }); });
-    var humanoids = all.filter(function (m) { return m.book === "romance" && U.isOpen(m); }).slice(0, 6).map(function (m) { return esc(m.name); }).join(", ");
+    var humanoids = ["라미아", "세이렌", "하피", "아라크네", "스킬라", "메두사"].filter(function (n) { return all.some(function (m) { return m.book === "romance" && m.name === n; }); }).join(", ");
     app.innerHTML =
       '<div class="band ' + b.band + '"><b>' + esc(b.title) + "</b><span>" + inBook.length + "종</span></div>" +
       '<h1 class="page-title">마물 도감</h1>' +
@@ -68,7 +68,7 @@
       '<div class="chips" role="group" aria-label="책 고르기" style="margin-top:.8rem">' + Object.keys(BOOK).map(function (k) {
         return '<button type="button" data-book="' + k + '" aria-pressed="' + (state.book === k) + '">' + BOOK[k].short + "<small>" + all.filter(function (m) { return m.book === k; }).length + "</small></button>";
       }).join("") + "</div>" +
-      (state.book === "101" ? '<p class="margin-note scholar">라미아나 세이렌을 찾으신다면, 그건 담당이 아닙니다. 노바카사의 연애록을 펼치십시오(' + humanoids + " 등).<cite>총해록의 서문</cite></p>" : "") +
+      (state.book === "101" ? '<p class="margin-note scholar">사람의 모습을 한 마물을 찾으신다면, 그건 담당이 아닙니다. 노바카사의 연애록을 펼치십시오(' + humanoids + " 등).<cite>총해록의 서문</cite></p>" : "") +
       (state.book === "romance" ? '<p class="margin-note bard">사람의 얼굴을 한 마물들이라네. 다들 한 번쯤 누군가를 울렸고, 누군가에게 울었지.<cite>노바카사의 서문</cite></p>' : "") +
       (state.book !== "rift" ? '<div class="ladder" role="group" aria-label="등급으로 거르기">' + GRADES.map(function (g) {
         return '<button type="button" data-grade="' + g + '" aria-pressed="' + (state.grade === g) + '"' + (g === "D+" ? ' class="base" title="무기를 든 일반인 성인 남성"' : "") + ">" + g + "</button>";
