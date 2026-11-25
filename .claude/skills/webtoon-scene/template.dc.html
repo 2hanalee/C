@@ -11,6 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&amp;family=Noto+Sans+KR:wght@400;700;900&amp;family=Black+Han+Sans&amp;family=Nanum+Pen+Script&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
+/* 넘칠 때 여백이 몰래 줄어들지 않게 */
+.pg>*,.sec>*{flex-shrink:0}
 /* 한 장 = 1000×8000. 배경색은 장면 톤에 맞춰 .pg의 background만 바꾼다 */
 .pg{width:1000px;height:8000px;overflow:hidden;display:flex;flex-direction:column;align-items:center;background:#fff;font-family:'Noto Serif KR',serif;color:#111}
 .sec{width:1000px;display:flex;flex-direction:column;align-items:center}

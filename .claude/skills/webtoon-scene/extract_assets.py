@@ -31,7 +31,9 @@ for f in order:
             st = ph[-1].group(1)
             w = re.search(r"width:\s*(\d+)px", st)
             h = re.search(r"height:\s*(\d+)px", st)
-            size = f"{w.group(1) if w else 1000}×{h.group(1) if h else '?'}"
+            # 그리드 칸(width: 100%)은 열 수에 따라 폭이 정해지므로 따로 표시한다
+            width = w.group(1) if w else ("그리드 칸" if re.search(r"width:\s*100%", st) else "1000")
+            size = f"{width}×{h.group(1) if h else '?'}"
         desc = TAG.sub("", body.split("에셋:")[0]).replace("<br>", " ").strip(" ·\n")
         for name in re.split(r"[,，]", TAG.sub("", a.group(1))):
             name = re.sub(r"\(.*?\)", "", name).strip()

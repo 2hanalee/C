@@ -66,7 +66,9 @@ function toPlainHtml(src, notes) {
     .replace(/<script type="text\/x-dc"[\s\S]*?<\/script>/g, '')
     .replace(/<\/?x-dc>/g, '')
     .replace(/<\/?helmet>/g, '')
-    .replace(/\{\{\s*ld\s*\}\}/g, notes ? 'block' : 'none');
+    .replace(/\{\{\s*ld\s*\}\}/g, notes ? 'block' : 'none')
+    // 내용이 넘칠 때 flex가 여백(spacer)을 몰래 줄여 맞추지 않도록 고정해서, 넘침을 그대로 측정한다
+    .replace('</head>', '<style>.pg>*{flex-shrink:0}.sec>*{flex-shrink:0}</style></head>');
 }
 
 const canvas = JSON.parse(fs.readFileSync(path.join(SRC, 'canvas.json'), 'utf8'));
