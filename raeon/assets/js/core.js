@@ -145,7 +145,8 @@
 
   /* ── 바탕 그림: 사이트는 색을 칠하지 않는다. 지금 보는 카드 그림을 흐리고 어둡게 깔고, 바뀌면 녹여 바꾼다 ── */
   var MAP = "assets/img/map/raeon-map.webp";
-  var PAGE_LOOK = { home: [MAP, ""], journey: [MAP, ""], atlas: [MAP, "maghi"], guild: ["assets/img/places/place-18.webp", "guild"], bestiary: ["assets/img/monsters/ogre.webp", "101"], world: [MAP, "law"], library: [MAP, "library"] };
+  var HERO = "assets/img/ui/hero-anchors.webp";
+  var PAGE_LOOK = { home: [HERO, ""], journey: [HERO, ""], atlas: [MAP, "maghi"], guild: ["assets/img/places/place-18.webp", "guild"], bestiary: ["assets/img/monsters/ogre.webp", "101"], world: [HERO, "law"], library: ["assets/img/ui/library-sealed-shelf.webp", "library"] };
   var look = PAGE_LOOK[page] || [MAP, ""];
   var reduced = function () { return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; };
   var bgBox = document.createElement("div");

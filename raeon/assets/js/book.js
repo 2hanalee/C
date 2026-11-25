@@ -6,7 +6,8 @@
   "use strict";
   var R = window.RAEON, U = R.ui, esc = U.esc;
   var GRADES = ["F", "D", "D+", "C", "C+", "B", "A", "A+", "S", "SS", "SSS"];
-  var CREST = { beast: "✶", kin: "⚔", undead: "☠", blood: "✠", "dragon-sea": "≈", construct: "⚙", demon: "♆", rift: "◎" };
+  var CREST = { beast: 1, kin: 1, undead: 1, blood: 1, "dragon-sea": 1, construct: 1, demon: 1, rift: 1 };
+  var crestImg = function (m) { return m.book === "romance" ? "❀" : CREST[m.family] ? '<img src="assets/img/ui/crest-' + m.family + '.webp" alt="" width="256" height="256">' : "✶"; };
   var KIND = { hub: "중심지", edge: "변경", danger: "위험 지대", special: "특별한 장소", region: "지역", other: "장소" };
   var regionById = U.byId(R.regions), charById = U.byId(R.characters), metaById = U.byId(R.books);
   var monsterByName = {};
@@ -59,7 +60,7 @@
     }).join("") + "</div>";
   };
   var drawnPlate = function (m) {
-    return '<div class="plate-card"><div class="plate-frame"><div class="crest" aria-hidden="true">' + (m.book === "romance" ? "❀" : CREST[m.family] || "✶") + "</div>" +
+    return '<div class="plate-card"><div class="plate-frame"><div class="crest" aria-hidden="true">' + crestImg(m) + "</div>" +
       "<h3>" + esc(m.quoted ? "‘" + m.name + "’" : m.name) + "</h3>" + (m.en ? '<p class="en">' + esc(m.en) + "</p>" : "") +
       '<div class="risk"><span>위험도</span><strong class="' + U.gradeClass(m.grade) + '">' + esc(m.grade) + "</strong></div></div></div>";
   };
@@ -87,7 +88,7 @@
   var page = {
     toc: function (e, side, b) {
       var meta = e.meta, entries = b.entries;
-      var title = '<span class="bk-orn" aria-hidden="true"></span><p class="bk-kicker">' + esc(meta.scope || "") + '</p><h2 class="bk-title bk-cover-title">' + esc(meta.title || BOOKS[b.kind].short) + "</h2>" +
+      var title = '<img class="bk-cover" src="assets/img/ui/book-' + (b.kind === "101" ? "101" : b.kind) + '-cover.webp" alt="" width="510" height="760"><p class="bk-kicker">' + esc(meta.scope || "") + '</p><h2 class="bk-title bk-cover-title">' + esc(meta.title || BOOKS[b.kind].short) + "</h2>" +
         (meta.line ? '<blockquote class="bk-quote">“' + esc(meta.line) + "”</blockquote>" : "");
       var last = b.last > 0 && b.last < entries.length ? '<p class="bk-resume"><button type="button" data-goto="' + b.last + '">지난번에 덮은 곳: ' + esc(entries[b.last].unit) + " " + esc(entries[b.last].toc) + " →</button></p>" : "";
       var count = '<p class="bk-count">' + (b.kind === "maghi" ? (R.regions || []).length + "장, 장소 " + (R.places || []).length + "곳" : (entries.length - 1) + "종") + "이 실려 있습니다.</p>";
@@ -390,7 +391,7 @@
     var idx = 0;
     if (at) B.entries.forEach(function (e, n) { if (e.id === at) idx = n; });
     B.i = idx;
-    dlg.classList.toggle("maghi", kind === "maghi");
+    dlg.className = "bookv " + kind + (dlg.classList.contains("opening") ? " opening" : "");
     dlg.setAttribute("aria-label", ((metaById[BOOKS[kind].meta] || {}).title || BOOKS[kind].short) + " 책 보기");
     fill();
     document.documentElement.classList.add("bk-lock");

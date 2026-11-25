@@ -4,7 +4,7 @@
 (function () {
   "use strict";
   var R = window.RAEON, root = document.documentElement;
-  var ANCHOR = '<svg class="intro-anchor" width="84" height="96" viewBox="0 0 84 96" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><circle cx="42" cy="12" r="8"/><path d="M42 20v66M24 34h36M10 62c4 14 16 24 32 24s28-10 32-24M10 62l-6 6M10 62l8 4M74 62l6 6M74 62l-8 4"/></svg>';
+  var ANCHOR = '<img class="intro-anchor" src="assets/img/ui/logo-anchor.webp" alt="" width="395" height="512">';
   var box = null, timers = [];
   var later = function (ms, fn) { timers.push(setTimeout(fn, ms)); };
 

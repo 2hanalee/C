@@ -12,7 +12,8 @@
   var books = (R.books || []).map(function (b) {
     var href = { "monster-101": "bestiary.html", maghi: "atlas.html", romance: "bestiary.html#romance", rift: "bestiary.html#rift" }[b.id] || "library.html";
     var cls = { "monster-101": "book-101", maghi: "maghi", romance: "romance", rift: "rift" }[b.id] || "";
-    return '<a class="spine ' + cls + '" href="' + href + '"><b>' + esc(b.title) + "</b><span>" + esc(b.scope || "") + "</span>" + (b.line ? "<q>" + esc(b.line) + "</q>" : "") + "</a>";
+    var cov = { "monster-101": "101", maghi: "maghi", romance: "romance", rift: "rift" }[b.id];
+    return '<a class="spine ' + cls + '" href="' + href + '">' + (cov ? '<img class="spine-cover" src="assets/img/ui/book-' + cov + '-cover.webp" alt="" width="510" height="760" loading="lazy">' : "") + '<b>' + esc(b.title) + "</b><span>" + esc(b.scope || "") + "</span>" + (b.line ? "<q>" + esc(b.line) + "</q>" : "") + "</a>";
   }).join("");
 
   app.innerHTML =

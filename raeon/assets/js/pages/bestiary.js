@@ -6,7 +6,8 @@
   var all = R.monsters || [];
   var byId = U.byId(all), regions = U.byId(R.regions), chars = U.byId(R.characters);
   var GRADES = ["F", "D", "D+", "C", "C+", "B", "A", "A+", "S", "SS", "SSS"];
-  var CREST = { beast: "✶", kin: "⚔", undead: "☠", blood: "✠", "dragon-sea": "≈", construct: "⚙", demon: "♆", rift: "◎" };
+  var CREST = { beast: 1, kin: 1, undead: 1, blood: 1, "dragon-sea": 1, construct: 1, demon: 1, rift: 1 };
+  var crestImg = function (m) { return m.book === "romance" ? "❀" : CREST[m.family] ? '<img src="assets/img/ui/crest-' + m.family + '.webp" alt="" width="256" height="256">' : "✶"; };
   var BOOK = {
     "101": { id: "monster-101", title: "오우거도 알아듣는 마물 101종 총해록", short: "총해록", src: "《오우거도 알아듣는 마물 101종 총해록 발췌》", cls: "", band: "" },
     romance: { id: "romance", title: "노바카사와 21명의 마물 연애록", short: "연애록", src: "《노바카사와 21명의 마물 연애록 발췌》", cls: "romance", band: "romance" },
@@ -15,7 +16,7 @@
   var state = { book: "101", grade: "", region: "", q: "" };
 
   var nameOf = function (m) { return m.quoted ? "‘" + m.name + "’" : m.name; };
-  var crest = function (m) { return m.book === "romance" ? "❀" : CREST[m.family] || "✶"; };
+  var crest = crestImg;
 
   var frame = function (m, mini) {
     var b = BOOK[m.book] || BOOK["101"];
@@ -28,7 +29,7 @@
   };
   var card = function (m) {
     if (!U.isOpen(m)) {
-      return '<div class="plate-card mini ' + (BOOK[m.book] || {}).cls + '"><div class="plate-frame"><div class="crest" aria-hidden="true">✉</div><h3>봉인된 항목</h3><div class="risk"><span>위험도</span><strong class="rift">???</strong></div></div></div>';
+      return '<div class="plate-card mini ' + (BOOK[m.book] || {}).cls + '"><div class="plate-frame"><div class="crest" aria-hidden="true"><img src="assets/img/ui/wax-seal.webp" alt="" width="320" height="328"></div><h3>봉인된 항목</h3><div class="risk"><span>위험도</span><strong class="rift">???</strong></div></div></div>';
     }
     return '<a class="plate-card mini ' + (BOOK[m.book] || {}).cls + '" href="#' + m.id + '">' + frame(m, true) + "</a>";
   };

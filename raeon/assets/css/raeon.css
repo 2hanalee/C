@@ -518,3 +518,89 @@ html.intro-pending body > :not(.intro) { visibility: hidden; animation: intro-fa
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-delay: 0s !important; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+
+/* ═════════ 그림 에셋 층(11월 25일, ChatGPT 에셋 S~C) ═════════
+   재질(종이, 지도 용지, 가죽), 문장, 장식을 그림으로 바꾼다. 그림이 없으면 위의 CSS 그림이 그대로 남는다. */
+:root { --paper: url("../img/ui/paper-parchment.webp"); --mapgrid: url("../img/ui/paper-mapgrid.webp"); --leather-img: url("../img/ui/leather-tile.webp"); }
+main, .leaf, .chapter .page, .term-sheet, .bookmark, .seal.opened { background-image: var(--paper); background-size: 480px; }
+body[data-page="home"] main, body[data-page="journey"] main, body[data-page="atlas"] main { background-image: none; }
+body[data-book="maghi"] .leaf { background-image: var(--mapgrid); background-size: 480px; }
+
+/* 로고와 장식 */
+.brand::before { width: 1.3rem; height: 1.7rem; background: url("../img/ui/logo-anchor.webp") center / contain no-repeat; -webkit-mask: none; mask: none; }
+.cover::before { width: 4.2rem; height: 5.4rem; background: url("../img/ui/logo-anchor.webp") center / contain no-repeat; -webkit-mask: none; mask: none; filter: drop-shadow(0 0 16px rgba(201, 164, 92, .35)); }
+.cover::after { content: ""; display: block; width: min(24rem, 80%); height: 2.4rem; margin: 1.2rem auto 0; background: url("../img/ui/ornament-divider.webp") center / contain no-repeat; opacity: .9; }
+
+/* 가죽 */
+.spine, .btn.book-open, .on-sky .btn.book-open, .bk-resume button { background-image: linear-gradient(90deg, rgba(16, 14, 11, .55), rgba(16, 14, 11, .1) 25%), var(--leather-img); background-size: auto, 320px; }
+.spine { grid-template-columns: 4.4rem minmax(0, 1fr); column-gap: .9rem; align-items: start; padding-left: .9rem; }
+.spine::before { display: none; }
+.spine-cover { grid-row: 1 / span 4; width: 4.4rem; height: auto; border-radius: 1px 3px 3px 1px; box-shadow: 0 6px 14px rgba(0, 0, 0, .7); }
+.spine > :not(img) { grid-column: 2; }
+
+/* 이야기의 문: 두 권 모두 그림 문 */
+.door, .door:nth-child(2) { position: relative; min-height: 15rem; align-content: end; color: var(--parch); background: var(--leather) center / cover no-repeat; overflow: hidden; }
+.door:nth-child(1) { background-image: linear-gradient(90deg, rgba(16, 14, 11, .94) 0%, rgba(16, 14, 11, .72) 50%, rgba(16, 14, 11, .25)), url("../img/ui/door-story1.webp"); }
+.door:nth-child(2) { background-image: linear-gradient(90deg, rgba(16, 14, 11, .94) 0%, rgba(16, 14, 11, .72) 50%, rgba(16, 14, 11, .25)), url("../img/ui/door-story2.webp"); }
+.door .kicker, .door .go { color: var(--gold); }
+.door p, .door .meta { color: var(--parch-70); }
+.door:hover { background-size: cover; }
+
+/* 지도: 핀과 나침반 */
+.pin span { width: 1.1rem; height: 1.95rem; border-radius: 0; background: url("../img/ui/map-pin.webp") center / contain no-repeat; box-shadow: none; transform: translateY(-38%); filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .6)); }
+.pin:hover span, .pin[aria-pressed="true"] span { transform: translateY(-38%) scale(1.3); background: url("../img/ui/map-pin.webp") center / contain no-repeat; box-shadow: none; }
+.map::after { content: ""; position: absolute; right: 2%; top: 3%; width: clamp(3.5rem, 9vw, 6.5rem); aspect-ratio: 1; background: url("../img/ui/compass-rose.webp") center / contain no-repeat; opacity: .9; pointer-events: none; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .6)); }
+
+/* 마그히의 붉은 ✕ */
+.margin-note::before { content: ""; left: .7rem; top: .75rem; width: 1.15rem; height: 1.15rem; background: url("../img/ui/maghi-x.webp") center / contain no-repeat; }
+.margin-note.scholar::before, .margin-note.bard::before { background: none; }
+.margin-note.scholar::before { content: "✎"; width: auto; height: auto; }
+.margin-note.bard::before { content: "♪"; width: auto; height: auto; }
+.bk-danger { position: relative; padding-left: 2.6rem; }
+.bk-danger::before { content: ""; position: absolute; left: .8rem; top: .75rem; width: 1.2rem; height: 1.2rem; background: url("../img/ui/maghi-x.webp") center / contain no-repeat; }
+
+/* 밀랍 봉인 */
+.seal { padding-left: 3.6rem; }
+.seal::before { left: .7rem; top: .65rem; width: 2.3rem; height: 2.3rem; border-radius: 0; background: url("../img/ui/wax-seal.webp") center / contain no-repeat; box-shadow: none; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .35)); }
+.seal.opened { padding-left: 3.6rem; }
+.seal.opened::before { display: block; background-image: url("../img/ui/wax-seal-broken.webp"); }
+.bk-wax { border-radius: 0; background: url("../img/ui/wax-seal.webp") center / contain no-repeat; box-shadow: none; filter: drop-shadow(0 6px 10px rgba(42, 32, 24, .45)); }
+.seal-shelf { margin: 1rem 0; }
+.seal-shelf img { width: 100%; max-height: 22rem; object-fit: cover; object-position: center 40%; border-radius: 3px; box-shadow: 0 14px 30px -18px rgba(0, 0, 0, .9), 0 0 0 1px var(--gold); }
+
+/* 마물 문장 */
+.plate-frame .crest img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .6)); }
+.plate-card:not(.mini) .plate-frame .crest { width: 4.2rem; height: 4.2rem; }
+.plate-card.rift .plate-frame { background-image: linear-gradient(rgba(21, 18, 14, .55), rgba(21, 18, 14, .85)), url("../img/ui/rift-crack.webp"); background-size: auto, auto 140%; background-position: center, 70% center; background-repeat: no-repeat; }
+
+/* 책 뷰어: 종이, 금 틀, 끈, 모서리, 사진 모서리, 책 두께 */
+.bk-page { background-image: var(--paper); background-size: 520px; }
+.bk-page.left { background-image: linear-gradient(90deg, rgba(42, 32, 24, 0) 78%, rgba(42, 32, 24, .2)), var(--paper); background-size: auto, 520px; }
+.bk-page.right { background-image: linear-gradient(90deg, rgba(42, 32, 24, .2), rgba(42, 32, 24, 0) 22%), var(--paper); background-size: auto, 520px; }
+.bookv.maghi .bk-page, .bookv.maghi .bk-page.left, .bookv.maghi .bk-page.right { background-color: #E6D8B8; }
+.bookv.maghi .bk-page { background-image: var(--mapgrid); background-size: 520px; }
+.bookv.maghi .bk-page.left { background-image: linear-gradient(90deg, rgba(42, 32, 24, 0) 78%, rgba(42, 32, 24, .2)), var(--mapgrid); background-size: auto, 520px; }
+.bookv.maghi .bk-page.right { background-image: linear-gradient(90deg, rgba(42, 32, 24, .2), rgba(42, 32, 24, 0) 22%), var(--mapgrid); background-size: auto, 520px; }
+.bk-face.blank { background-image: linear-gradient(90deg, rgba(42, 32, 24, .2), rgba(42, 32, 24, 0) 30%), var(--paper); background-size: auto, 520px; }
+.bk-page.left::before, .bk-page.right::before { content: ""; position: absolute; top: 10px; width: 54px; height: 54px; background: url("../img/ui/ornament-corner.webp") center / contain no-repeat; opacity: .85; pointer-events: none; }
+.bk-page.left::before { left: 10px; }
+.bk-page.right::before { right: 10px; transform: scaleX(-1); }
+.bk-page.single::before { content: ""; position: absolute; top: 8px; left: 8px; width: 44px; height: 44px; background: url("../img/ui/ornament-corner.webp") center / contain no-repeat; opacity: .85; pointer-events: none; }
+.bk-ribbon { clip-path: none; background: url("../img/ui/ribbon-bookmark.webp") center top / 100% 100% no-repeat; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .45)); }
+.bk-book.is-wide::after { content: ""; position: absolute; z-index: -1; left: .6%; right: .6%; bottom: -14px; height: 22px; background: url("../img/ui/book-edge.webp") center / 100% 100% no-repeat; filter: brightness(.8); }
+.bk-plate { padding: 0; background: none; box-shadow: none; border: 18px solid transparent; border-image: url("../img/ui/frame-plate.webp") 46 / 18px stretch; filter: drop-shadow(0 3px 6px rgba(42, 32, 24, .45)); }
+.bk-plate img { border-radius: 1px; }
+.bk-tip::before, .bk-tip::after { width: 34px; height: 34px; background: url("../img/ui/photo-corner.webp") center / contain no-repeat; clip-path: none; }
+.bk-tip::before { left: -6px; top: -6px; }
+.bk-tip::after { right: -6px; bottom: -6px; transform: rotate(180deg); }
+.bk-cover { width: 7.5rem; height: auto; margin: .3rem 0 .4rem; border-radius: 2px 5px 5px 2px; box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .7); }
+.bookv.maghi .bk-book > .bk-page.right::after { content: ""; position: absolute; right: 1.2rem; bottom: 1.4rem; width: 6rem; height: 6rem; background: url("../img/ui/ink-stain-1.webp") center / contain no-repeat; opacity: .35; pointer-events: none; }
+
+/* 입장: 진짜 가죽 표지와 면지 */
+.intro-face { justify-content: flex-start; background: url("../img/ui/tome-cover.webp") center / 100% 100% no-repeat; box-shadow: 0 30px 60px rgba(0, 0, 0, .8); }
+.intro-face::before { display: none; }
+.intro-anchor { position: absolute; left: 50%; top: 34%; width: 20%; transform: translate(-50%, -50%); }
+.intro-name { position: absolute; left: 0; right: 0; top: 70%; text-align: center; font-size: clamp(1.7rem, 9vw, 2.3rem); text-shadow: 0 2px 6px rgba(0, 0, 0, .8); }
+.intro-latin { position: absolute; left: 0; right: 0; top: 82%; text-align: center; font-size: .66rem; }
+.intro.s2 .intro-anchor { filter: drop-shadow(0 0 14px rgba(243, 220, 156, .95)) brightness(1.15); }
+.intro-back { background: url("../img/ui/tome-endpaper.webp") center / cover no-repeat; }

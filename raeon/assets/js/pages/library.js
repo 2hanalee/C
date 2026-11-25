@@ -11,7 +11,7 @@
   var shelf = books.map(function (b) {
     var key = b.monsterBook === "101" ? "101" : b.id === "monster-101" ? "101" : b.id;
     var cls = key === "101" ? "book-101" : key;
-    return '<a class="spine ' + esc(cls) + '" href="' + esc(HREF[key] || "bestiary.html") + '"><b>' + esc(b.title) + "</b><span>" + esc(b.scope) + "</span>" +
+    return '<a class="spine ' + esc(cls) + '" href="' + esc(HREF[key] || "bestiary.html") + '"><img class="spine-cover" src="assets/img/ui/book-' + esc(key) + '-cover.webp" alt="" width="510" height="760" loading="lazy"><b>' + esc(b.title) + "</b><span>" + esc(b.scope) + "</span>" +
       (b.line ? "<q>" + esc(b.line) + "</q>" : "<span>해독되지 않은 문자가 섞인 문헌입니다.</span>") + "</a>";
   }).join("");
 
@@ -25,7 +25,7 @@
     '<h1 class="page-title">서고</h1>' +
     '<p class="lead">' + esc(R.booksIntro || "") + "</p>" +
     '<div class="shelf">' + shelf + "</div>" +
-    '<section class="section" id="seals"><h2>봉인 서가</h2><p>이야기를 읽어 가며 하나씩 풀리는 비밀을 모아 두었습니다. 책갈피를 꽂은 곳까지만 열립니다.</p>' + secrets + "</section>" +
+    '<section class="section" id="seals"><h2>봉인 서가</h2><p>이야기를 읽어 가며 하나씩 풀리는 비밀을 모아 두었습니다. 책갈피를 꽂은 곳까지만 열립니다.</p><figure class="seal-shelf"><img src="assets/img/ui/library-sealed-shelf.webp" alt="사슬과 밀랍 봉인으로 묶인 서가" width="667" height="1000" loading="lazy"></figure>' + secrets + "</section>" +
     '<section class="section" id="terms"><h2>색인</h2><p>본문에 나오는 용어를 모았습니다. 스포일러가 담긴 풀이는 봉인되어 있습니다.</p><dl class="form">' + terms + "</dl></section>" +
     '<section class="section"><h2>세계의 법칙</h2><p>닻과 마왕, 힘과 등급의 규칙은 별도의 책에 정리되어 있습니다.</p><p><a class="btn solid" href="world.html">세계의 법칙 읽기</a></p></section>';
 
