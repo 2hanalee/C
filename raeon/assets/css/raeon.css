@@ -388,3 +388,5 @@ body[data-page="atlas"] main { background: none; box-shadow: none; padding-top: 
 .on-sky .margin-note cite { color: rgba(251, 243, 228, .7); }
 .hero { padding: 1.5rem 0 .5rem; }
 @media (max-width: 899.98px) { main { margin-left: 8px; margin-right: 8px; border-radius: 3px; } body[data-page="home"] main, body[data-page="journey"] main, body[data-page="atlas"] main { margin-left: 0; margin-right: 0; } }
+a.go { min-height: 2.5rem; }
+.skip:focus { min-height: 2.75rem; display: inline-flex; align-items: center; }
