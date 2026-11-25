@@ -292,3 +292,99 @@ table.book th { font-family: var(--f-ui); font-size: .76rem; color: var(--ink-3)
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
 a.map { display: block; }
 .detail-grid > div { min-width: 0; }
+
+/* ═════════ C안: 하늘과 책의 이중 층 (11월 25일 재편) ═════════
+   바탕은 하늘이다. 지역과 장이 바뀔 때마다 하늘의 시간대와 색이 바뀐다.
+   내용은 그 하늘 아래 펼친 책의 종이(leaf)에 놓인다. 책마다 종이가 다르다. */
+:root {
+  --sky-a: #23345e; --sky-b: #b06f62; --sky-c: #efc49a; --sky-ink: #fbf3e4;
+  --leaf: #F7EFDC; --leaf-line: rgba(138, 106, 63, 0);
+}
+[data-sky="dawn"]        { --sky-a: #23345e; --sky-b: #b06f62; --sky-c: #efc49a; }
+[data-sky="laeon"]       { --sky-a: #3f78b4; --sky-b: #8fbde0; --sky-c: #e9efe2; }
+[data-sky="berham"]      { --sky-a: #5d7f9c; --sky-b: #b9cfdd; --sky-c: #eef2f4; }
+[data-sky="silvanir"]    { --sky-a: #4e6a63; --sky-b: #9db3a6; --sky-c: #dfe6da; }
+[data-sky="mortizen"]    { --sky-a: #26292e; --sky-b: #55585a; --sky-c: #9c978c; }
+[data-sky="sartion"]     { --sky-a: #8a3a17; --sky-b: #d9873b; --sky-c: #f4cf86; }
+[data-sky="astra"]       { --sky-a: #1f2a44; --sky-b: #4c5d80; --sky-c: #a9b6c9; }
+[data-sky="nocturna"]    { --sky-a: #110c19; --sky-b: #36182c; --sky-c: #6a2635; }
+[data-sky="seilia"]      { --sky-a: #2f6c9c; --sky-b: #8cc0db; --sky-c: #efe4c8; }
+[data-sky="watch-isle"]  { --sky-a: #243c58; --sky-b: #6787a3; --sky-c: #cdd8db; }
+[data-sky="shizunuma"]   { --sky-a: #4d3552; --sky-b: #c08797; --sky-c: #f1d6c6; }
+[data-sky="whisper-isles"] { --sky-a: #223468; --sky-b: #c25f66; --sky-c: #f3ad69; }
+[data-sky="itzaka"]      { --sky-a: #163a2d; --sky-b: #4f8a55; --sky-c: #d3cd88; }
+[data-sky="great-sea"]   { --sky-a: #0c2134; --sky-b: #2a5870; --sky-c: #80aeb8; }
+[data-sky="demon-realm"] { --sky-a: #150b10; --sky-b: #431820; --sky-c: #86301f; }
+[data-sky="funda"]       { --sky-a: #0b151d; --sky-b: #263b48; --sky-c: #758f9b; }
+[data-sky="erata"]       { --sky-a: #2f2150; --sky-b: #6c5096; --sky-c: #c3afdc; }
+[data-sky="aeris"]       { --sky-a: #567fb8; --sky-b: #bccfea; --sky-c: #f6ecd7; }
+[data-sky="dusk"]        { --sky-a: #1c2238; --sky-b: #5b4a6a; --sky-c: #c79478; }
+[data-sky="night"]       { --sky-a: #0d1220; --sky-b: #1f2a40; --sky-c: #4a4a5c; }
+
+html { background: var(--sky-a); }
+body {
+  background: var(--sky-a);
+  background-image:
+    radial-gradient(ellipse 60% 30% at 15% 22%, rgba(255, 255, 255, .10), transparent 70%),
+    radial-gradient(ellipse 50% 22% at 85% 40%, rgba(255, 255, 255, .08), transparent 70%),
+    linear-gradient(180deg, var(--sky-a) 0%, var(--sky-b) 55%, var(--sky-c) 100%);
+  background-attachment: fixed;
+  transition: background-color .6s;
+}
+/* 머리띠와 하단 탭은 하늘 위의 유리 */
+.top { background: rgba(14, 16, 24, .42); border-bottom: 1px solid rgba(255, 255, 255, .14); color: var(--sky-ink); }
+.brand span { color: rgba(251, 243, 228, .7); }
+.nav a { color: rgba(251, 243, 228, .82); }
+.nav a small { color: rgba(251, 243, 228, .55); }
+.nav a:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+.nav a[aria-current="page"] { color: #fff; box-shadow: inset 0 -2px 0 var(--gold-2); }
+.tabbar { background: rgba(14, 16, 24, .78); backdrop-filter: blur(8px); border-top: 1px solid rgba(255, 255, 255, .14); }
+.tabbar a { color: rgba(251, 243, 228, .7); }
+.tabbar a[aria-current="page"] { color: #fff; box-shadow: inset 0 2px 0 var(--gold-2); }
+
+/* 책의 종이: 기본적으로 본문 전체가 한 장의 종이 위에 놓인다 */
+main { margin-top: 1.25rem; margin-bottom: 2rem; padding: .5rem var(--gr) calc(var(--tab) + 2.5rem) var(--g);
+  background: var(--leaf); background-image: repeating-linear-gradient(180deg, transparent 0 31px, var(--leaf-line) 31px 32px);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .6), 0 0 0 1px rgba(138, 106, 63, .25); }
+@media (min-width: 900px) { main { border-radius: 3px; padding: 1rem 2.5rem 3rem; margin-top: 2rem; } }
+.foot { color: rgba(251, 243, 228, .75); border-top-color: rgba(255, 255, 255, .15); }
+.foot .linkish { color: rgba(251, 243, 228, .85); }
+
+/* 책마다 다른 종이 */
+body[data-book="maghi"]   { --leaf: #EFE2C3; --leaf-line: rgba(155, 59, 46, 0); }
+body[data-book="maghi"] main { background-image: linear-gradient(rgba(92, 127, 149, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(92, 127, 149, .07) 1px, transparent 1px); background-size: 48px 48px; }
+body[data-book="101"]     { --leaf: #F4ECD8; --leaf-line: rgba(92, 127, 149, .10); }
+body[data-book="romance"] { --leaf: #F7E9E6; --leaf-line: rgba(162, 71, 106, .07); }
+body[data-book="guild"]   { --leaf: #F8F2E3; }
+body[data-book="law"]     { --leaf: #F6EFDD; }
+body[data-book="library"] { --leaf: #F3E8D2; }
+
+/* 표지와 여정은 하늘이 주인공이다: 종이를 걷고 필요한 칸에만 종이를 깐다 */
+body[data-page="home"] main, body[data-page="journey"] main { background: none; box-shadow: none; padding-top: 0; }
+.on-sky, .on-sky .page-title, .on-sky .lead, .on-sky .kicker { color: var(--sky-ink); }
+.on-sky .lead, .on-sky .logline, .on-sky .tone { color: rgba(251, 243, 228, .88); text-shadow: 0 1px 12px rgba(0, 0, 0, .35); }
+.on-sky .page-title { text-shadow: 0 2px 24px rgba(0, 0, 0, .35); }
+.on-sky .band { color: rgba(251, 243, 228, .8); border-color: rgba(255, 255, 255, .25); background: rgba(0, 0, 0, .12); }
+.on-sky .band b { color: #fff; }
+.leaf { background: var(--leaf); padding: 1rem 1rem 1.25rem; margin: 1rem 0; border-radius: 3px; box-shadow: 0 24px 50px -28px rgba(0, 0, 0, .7), 0 0 0 1px rgba(138, 106, 63, .25); }
+@media (min-width: 900px) { .leaf { padding: 1.5rem 2rem 1.75rem; } }
+.cover { padding-top: 3.5rem; padding-bottom: 2rem; }
+.cover .page-title { color: #fff; }
+.cover .kicker { color: var(--gold-2); }
+
+/* 여정: 장마다 그 지역의 하늘 띠를 지나간다 */
+.chapters { border-top: 0; display: grid; gap: 1rem; }
+.chapter { display: block; padding: 0; border: 0; border-radius: 3px; overflow: hidden; box-shadow: 0 20px 40px -26px rgba(0, 0, 0, .8); }
+.chapter .sky-strip { position: relative; display: flex; align-items: flex-end; gap: .8rem; min-height: 7.5rem; padding: 1rem 1rem .8rem;
+  background: linear-gradient(180deg, var(--sky-a) 0%, var(--sky-b) 60%, var(--sky-c) 100%); color: #fff; }
+.chapter .sky-strip .num { color: var(--gold-2); font-size: 2rem; text-shadow: 0 1px 8px rgba(0, 0, 0, .4); }
+.chapter .sky-strip h3 { color: #fff; text-shadow: 0 1px 12px rgba(0, 0, 0, .45); }
+.chapter .sky-strip .where { font-family: var(--f-ui); font-size: .75rem; color: rgba(255, 255, 255, .85); }
+.chapter .page { background: var(--leaf); padding: .9rem 1rem 1rem; }
+.chapter.read .sky-strip::after { content: "책갈피"; position: absolute; top: 0; right: 1rem; padding: .9rem .35rem .4rem; background: var(--marker); color: #fff; font-family: var(--f-ui); font-size: .66rem; letter-spacing: .1em; writing-mode: vertical-rl; }
+body[data-page="atlas"] main { background: none; box-shadow: none; padding-top: 0; }
+.on-sky .crumbs a { color: rgba(251, 243, 228, .9); }
+.on-sky .margin-note { color: #fff3e6; background: rgba(0, 0, 0, .28); border-left-color: rgba(255, 220, 200, .6); }
+.on-sky .margin-note cite { color: rgba(251, 243, 228, .7); }
+.hero { padding: 1.5rem 0 .5rem; }
+@media (max-width: 899.98px) { main { margin-left: 8px; margin-right: 8px; border-radius: 3px; } body[data-page="home"] main, body[data-page="journey"] main, body[data-page="atlas"] main { margin-left: 0; margin-right: 0; } }

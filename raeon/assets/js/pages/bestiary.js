@@ -54,6 +54,8 @@
 
   var renderList = function () {
     var b = BOOK[state.book];
+    U.setBook(state.book === "romance" ? "romance" : "101");
+    U.setSky(state.book === "rift" ? "night" : state.book === "romance" ? "dusk" : "night");
     document.title = b.short + " · 라에온";
     var inBook = all.filter(function (m) { return m.book === state.book; });
     var regionIds = [];
@@ -83,6 +85,8 @@
 
   var renderItem = function (m) {
     document.title = m.name + " · 라에온";
+    U.setBook(m.book === "romance" ? "romance" : "101");
+    U.setSky((m.regions || [])[0] || "night");
     var b = BOOK[m.book] || BOOK["101"];
     var back = m.book === "101" ? "#" : "#" + m.book;
     if (!U.isOpen(m)) {

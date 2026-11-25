@@ -143,7 +143,15 @@
     }).join(" ");
   };
 
+  /* ── 하늘과 종이: 페이지마다 기본 하늘과 책 종이를 정하고, 화면이 바뀌면 하늘만 바꾼다 ── */
+  var PAGE_LOOK = { home: ["dawn", ""], journey: ["dawn", ""], atlas: ["dawn", "maghi"], guild: ["laeon", "guild"], bestiary: ["night", "101"], world: ["dusk", "law"], library: ["dusk", "library"] };
+  var look = PAGE_LOOK[document.body.getAttribute("data-page")] || ["dawn", ""];
+  var setSky = function (sky) { document.body.setAttribute("data-sky", sky || look[0]); };
+  var setBook = function (book) { if (book) document.body.setAttribute("data-book", book); else document.body.removeAttribute("data-book"); };
+  setSky(); setBook(look[1]);
+
   R.ui = {
+    setSky: setSky, setBook: setBook, defaultBook: look[1],
     esc: esc, josa: josa, byId: byId, store: store,
     ORDER: ORDER, POINT_NAME: POINT_NAME, bm: bm, setBm: setBm, reached: reached,
     isOpen: isOpen, seal: seal, condition: condition, linkTerms: linkTerms, openTerm: openTerm, chatButtons: chatButtons,
