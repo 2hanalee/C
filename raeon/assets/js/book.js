@@ -194,7 +194,8 @@
       else if (a === "next") go(B.i + 1);
       else if (a === "toc") go(0);
     });
-    dlg.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", function (e) {
+      if (!dlg.open || e.defaultPrevented) return;
       if (e.key === "ArrowRight") { e.preventDefault(); go(B.i + 1); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); go(B.i - 1); }
       else if (e.key === "Home") { e.preventDefault(); go(0); }
@@ -227,8 +228,11 @@
     var e = B.entries[B.i], n = B.entries.length;
     el.where.querySelector("b").textContent = (metaById[BOOKS[B.kind].meta] || {}).title || BOOKS[B.kind].short;
     el.where.querySelector("span").textContent = B.i ? " · " + e.unit + (e.type === "monster" ? " " + (U.isOpen(e.m) ? e.m.name : "봉인된 항목") : "") : " · 목차";
+    // 끝 장에서 단추가 잠기면 초점이 책 밖으로 빠지지 않게 다른 단추로 옮긴다
+    var ae = document.activeElement;
     el.prev.disabled = B.i <= 0;
     el.next.disabled = B.i >= n - 1;
+    if (dlg.open && (ae === el.next || ae === el.prev) && ae.disabled) (ae === el.next ? el.prev : el.next).focus();
     var pe = B.entries[B.i - 1], ne = B.entries[B.i + 1];
     el.prev.querySelector("span").textContent = pe ? (pe.type === "toc" ? "목차" : pe.toc) : "앞 장";
     el.next.querySelector("span").textContent = ne ? ne.toc : "다음 장";
