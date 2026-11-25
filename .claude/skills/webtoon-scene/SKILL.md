@@ -60,5 +60,8 @@ AI 캐릭터 채팅의 세계관 소개·도입부 웹툰을 한 장면씩 만�
 - 사용자가 `assets/`에 파일을 넣으면: `node renderer/render.mjs --src episodes/<작품>/canvas --assets assets --out output/<작품> --no-notes`
 - 검사 결과의 `미제공` 개수와 이름을 알려 주고, 크롭 위치가 어색한 컷은 캔버스에서 칸 높이나 `background-position`을 조정한다.
 
+## 6. 품질 패스 (선택)
+"퀄리티 올려줘", "분석하고 개선해줘" 요청이면 이 폴더의 `quality-pass.md`(마스터 프롬프트)를 그대로 따른다: 렌더링본 8항목 채점 → 담당별 개선 계획(한글은 Claude가 실제 폰트로, AI 이미지는 글자 없는 질감·장식만) → 실행 → 전후 점수 보고.
+
 ## 비공개 처리
 저장소가 public이면 다음은 커밋하지 않는다(.gitignore 대상): `knowledge/private/`, `episodes/*/`, `references/raw/`, `assets/` 원본, `output/`. 공개해도 되는 것은 렌더러·스킬·연출 규칙·레퍼런스 **분석**(기법만)뿐이다.

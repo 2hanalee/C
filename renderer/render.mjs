@@ -117,6 +117,20 @@ for (const b of boards) {
           missingNames.push(names[0]);
         }
       }
+      // 1-b) data-asset 슬롯: 글자 없는 질감·효과·장식 에셋(Canva/ChatGPT 생성분)을 지정 요소에 합성
+      let slotPlaced = 0;
+      const slotMissing = [];
+      for (const el of pg.querySelectorAll('[data-asset]')) {
+        const name = el.getAttribute('data-asset');
+        if (!assets[name]) { slotMissing.push(name); continue; }
+        el.style.backgroundImage = `url("file://${assets[name]}")`;
+        el.style.backgroundSize = el.getAttribute('data-fit') || 'contain';
+        el.style.backgroundRepeat = 'no-repeat';
+        el.style.backgroundPosition = 'center';
+        if (el.getAttribute('data-blend')) el.style.mixBlendMode = el.getAttribute('data-blend');
+        el.classList.add('has-asset');
+        slotPlaced++;
+      }
       // 2) 내용 높이: 가장 아래에 있는 요소의 바닥(남는 공간을 채우는 flex-grow 요소 자체는 제외)
       let contentBottom = 0;
       for (const el of pg.querySelectorAll('*')) {
@@ -158,7 +172,7 @@ for (const b of boards) {
       return {
         contentBottom: Math.round(contentBottom),
         overflow: Math.max(0, Math.round(contentBottom - PAGE_H)),
-        small, longBal, overlaps, placed, missing, missingNames,
+        small, longBal, overlaps, placed, missing, missingNames, slotPlaced, slotMissing: [...new Set(slotMissing)],
       };
     },
     { assets, PAGE_H, MIN_FONT, MAX_BAL_LINES },
@@ -172,7 +186,7 @@ for (const b of boards) {
   totalProblems += problems.length;
 
   const status = problems.length ? '⚠' : '✓';
-  console.log(`${status} ${b.title.padEnd(12)} 내용 ${String(report.contentBottom).padStart(5)}px / ${PAGE_H}px · 에셋 합성 ${report.placed} · 미제공 ${report.missing}`);
+  console.log(`${status} ${b.title.padEnd(12)} 내용 ${String(report.contentBottom).padStart(5)}px / ${PAGE_H}px · 에셋 합성 ${report.placed} · 미제공 ${report.missing} · 슬롯 ${report.slotPlaced}/${report.slotPlaced + report.slotMissing.length}`);
   for (const p of problems) console.log('    - ' + p);
 
   if (!CHECK_ONLY) {
